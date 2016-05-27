@@ -125,13 +125,6 @@ var utils = {
         }
     },
 
-    extend: function(obj, obj1) {
-        for (var key in obj1) {
-            obj[key] = obj1[key]
-        }
-        return obj
-    },
-
     wrapUser: function(user) {
         user.isSuperAdmin = user.role == 'superadmin'
         user.isAdmin = user.role == 'admin'

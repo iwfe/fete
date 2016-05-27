@@ -63,6 +63,7 @@ app.use(function *(next) {
 
 
     this.locals._now = new Date().getTime()
+    this.locals._user = null;
     try {
         yield next;
         // Handle 404 upstream.

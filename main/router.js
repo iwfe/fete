@@ -12,6 +12,7 @@ var parse = require('co-body');
 var wrap = require('co-monk')
 var db = require('../common/db')
 var userDao = wrap(db.get('user'));
+import _ from 'underscore';
 
 import utils from '../common/utils';
 
@@ -41,9 +42,8 @@ router.get('/', function *(next) {
     })
     console.log(user)
     console.log(this.render)
-    yield this.render('layout', {
-        user: 'John'
-      });
+    yield this.render('layout', _.extend({
+      }, this.locals));
     // var body = yield this.render('layout',{
     //     title: ''
     // });

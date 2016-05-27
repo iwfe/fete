@@ -1,0 +1,26 @@
+doctype html
+html
+    head
+        title #{title || '前端协作痛点'} - 尽在FETE
+        meta(http-equiv='X-UA-Compatible' content="IE=edge")
+        meta(charset='utf-8')
+        meta(name='Keywords' content='FETE')
+        meta(name='Description' content='FETE')
+        meta(name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
+        //- link(rel='shortcut icon' type='image/x-icon' href='/static/images/favicon.ico')
+        //- link(rel='stylesheet', href='#{staticFilter("/static/css/common/module.layout.css")}')
+        //- link(rel='stylesheet', href='#{staticFilter("/static/css/common/module.common.css")}')
+        link(rel='stylesheet', href='/static/layout.css')
+        block css
+    body
+        div#fete
+            block content
+        //- script(src='/static/js/common/module.dialog.js')
+        //- script(src='#{staticFilter("/static/js/common/module.layout.js")}')
+
+
+        -var user = JSON.stringify(_user)
+        script.
+            window.pageConfig = {
+                me: !{user} || {}
+            }

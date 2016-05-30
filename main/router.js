@@ -12,43 +12,37 @@ var parse = require('co-body');
 var wrap = require('co-monk')
 var db = require('../common/db')
 var userDao = wrap(db.get('user'));
-import _ from 'underscore';
 
 import utils from '../common/utils';
 
-// api管理
-// router.get('/api', function*(next) {
-//     this.body = yield utils.render('index', utils.extend({
-//         title: 'api管理'
-//     }, this.locals));
-// }).get('/api/(.*)', function*(netx) {
-//     this.body = yield utils.render('index', utils.extend({
-//         title: 'api管理'
-//     }, this.locals));
-// });
-// router.get('/', async (ctx, next) => {
-//     let user = yield userDao.findOne({
-//         username: 'jade'
-//     })
-//     // for(let item in user) 
-//         console.log(user.toString());
-//     await ctx.render('layout');
-// });
+import Index from './index';
+import Login from './login';
 
 // 首页
 router.get('/', function *(next) {
-    let user = yield userDao.findOne({
-        username: 'jade'
-    })
-    console.log(user)
-    console.log(this.render)
-    yield this.render('layout', _.extend({
-      }, this.locals));
-    // var body = yield this.render('layout',{
-    //     title: ''
-    // });
-    // console.log(body)
-    // this.body = body
+    var html = utils.reactRender(Index, {
+        number: 2
+    });
+    // let user = yield userDao.findOne({
+    //     username: 'jade'
+    // })
+    yield utils.render(this,{
+        html: html,
+        number: 2
+    });
+});
+
+router.get('/login', function *(next) {
+    var html = utils.reactRender(Login, {
+        number: 2
+    });
+    // let user = yield userDao.findOne({
+    //     username: 'jade'
+    // })
+    yield utils.render(this,{
+        html: html,
+        number: 2
+    });
 });
 
 export default router;;

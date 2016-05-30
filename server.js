@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 require('babel-core/register')({
-  presets: ['es2015-node5', 'stage-3']
+  presets: ['es2015-node5', 'stage-3', 'react']
 });
 var app = require('./app')
 

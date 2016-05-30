@@ -2,33 +2,34 @@
  * Created by zyy on 15/6/26.
  * zhangyuyu@superjia.com
  */
-var message = require('./message')
+import message from './message';
 // var nodemailer  = require("nodemailer");
-var views = require('co-views');
+// import views form 'co-views';
+import wrap from 'co-monk';
+import db from './db';
+import config from '../config.js';
+import crypto from 'crypto';
+import _ from 'underscore';
+import React from 'react';
+import ReactDom from 'react-dom/server';
 
-var wrap = require('co-monk')
-var db = require('./db')
 var userDao = wrap(db.get('user'));
+var loginUserStore = new Map();
 
-var config = require('../config.js');
-
-var crypto = require('crypto');
-
-var loginUserStore = [];
 
 var utils = {
     //json成功返回
-    success(res, value) {
-        res.body = {
+    success(ctx, value) {
+        ctx.body = {
             code: 200,
             data: value
         }
         return false;
     },
     //json失败返回
-    failed(res, code) {
+    failed(ctx, code) {
 
-        res.body = {
+        ctx.body = {
             code: code,
             message: message[code] || ''
         }
@@ -36,9 +37,26 @@ var utils = {
     },
 
     //渲染页面
-    render: views('./common', {
-        map: { html: 'jade' }
-    }),
+    // render: views('./common', {
+    //     map: { html: 'jade' }
+    // }),
+
+    //页面渲染
+    * render(ctx, data = {}) {
+        let staticTag = 'index';
+        let pathArr = ctx.path.split('/');
+        if(pathArr[1]) {
+            staticTag = pathArr[1];
+        }
+        yield ctx.render(data.tpl || 'layout', _.extend({
+            commonTag: '',
+            staticTag: staticTag
+        }, ctx.locals, data));
+    },
+
+    reactRender(component, data = {}) {
+        return ReactDom.renderToString(React.createElement(component, data));
+    },
 
     //是否登录
     * login(next, teamRole) {
@@ -51,15 +69,30 @@ var utils = {
     },
 
     //登录用户cookie管理
-    getLoginUser(ctx) {
+    * getLoginUser(ctx) {
         let feteauth = ctx.cookies.get('feteauth');
-        if(!feteauth) return null;
-        var decrypted = '';
-        var decipher = crypto.createDecipher('rc4', config.authKey);
+        if (!feteauth) return null;
+        let decrypted = '';
+        let decipher = crypto.createDecipher('rc4', config.authKey);
         decrypted += decipher.update(feteauth, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
-        console.log('解密：' + decrypted);
+        let auth = decrypted.split('|');
 
+        let username = auth[0];
+        let password = auth[1];
+        let ip = ctx.ip;
+        if (!auth[2] || auth[2] != ip) return null;
+
+        let user = loginUserStore.get(username);
+        if (!user) {
+            user = yield userDao.findOne({
+                username: username,
+                password: password
+            });
+            return user;
+        } else {
+            return (user.username === username && user.password === password) ? user : null;
+        }
     },
 
     //设置登录用户
@@ -70,7 +103,7 @@ var utils = {
             password: password
         });
 
-        if(!user) {
+        if (!user) {
             return false;
         }
 
@@ -82,13 +115,22 @@ var utils = {
         encrypted += cip.update(str, 'utf8', 'hex');
         encrypted += cip.final('hex');
         ctx.cookies.set('feteauth', encrypted);
+
+        loginUserStore.set(username, user);
     },
-    
+
     wrapUserPass(password) {
         var md5sum = crypto.createHash('md5');
         md5sum.update(password + config.passwordKey);
         md5sum = md5sum.digest('hex');
         return md5sum;
+    },
+
+    wrapUser: function(user) {
+        user.isSuperAdmin = user.role == 'superadmin'
+        user.isAdmin = user.role == 'admin'
+        user.isMember = user.role == 'member'
+        return user
     },
 
     isEmail: function(v) {
@@ -123,13 +165,6 @@ var utils = {
         } else {
             return false
         }
-    },
-
-    wrapUser: function(user) {
-        user.isSuperAdmin = user.role == 'superadmin'
-        user.isAdmin = user.role == 'admin'
-        user.isMember = user.role == 'member'
-        return user
     },
 
     //delta相差天数

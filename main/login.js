@@ -2,14 +2,14 @@
 * @Author: jade
 * @Date:   2016-05-24 23:35:15
 * @Last Modified by:   jade
-* @Last Modified time: 2016-05-31 00:06:21
+* @Last Modified time: 2016-05-31 00:00:02
 */
 
 'use strict';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var Index = React.createClass({
+var Login = React.createClass({
     getInitialState: function(){
         return {
             number: this.props.number,
@@ -62,7 +62,7 @@ var Index = React.createClass({
 });
 
 if(typeof document != 'undefined'){
-    ReactDOM.render(<Index number={2}/>, document.getElementById('main'));    
+    ReactDOM.render(<Login number={2}/>, document.getElementById('main'));    
 }
 
-export default Index;
+export default Login;

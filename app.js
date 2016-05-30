@@ -4,6 +4,11 @@ import logger from 'koa-logger';
 import views from 'koa-views';
 import mount from 'koa-mount';
 import serve from 'koa-static';
+import co from 'co';
+import config from './config';
+import utils from './common/utils';
+import _ from 'underscore';
+
 // import finalHandler from './lib/finalHandler';
 // import router from './router';
 
@@ -11,8 +16,8 @@ const app = new Koa();
 
 // var redisStore = require('koa-redis');
 
-var config = require('./config');
-var utils = require('./common/utils');
+
+
 
 // middleware
 app.use(views(`${__dirname}/view`, {
@@ -42,28 +47,21 @@ app.keys = ['fete'];
 // 
 // 
 
-app.use(function *(next) {
+app.use(function*(next) {
     this.locals = {}
 
     this.set({
             'Pragma': 'No-cache',
             'Cache-Control': 'no-cache'
-        })
-        // co(utils.setLoginUser(this, 'jade', '111111'));
+        });
+    // yield* utils.setLoginUser(this, 'jade1', '111111');
 
     //utils.getLoginUser(this);
 
-    // console.log(new Buffer('我是koajs').toString('base64'));
-    // this.cookies.set('test', new Buffer('我是koajs').toString('base64'))
-    //var user = this.session.user || null
-
-    // if (user) {
-    //     this.locals._user = utils.wrapUser(utils.extend({}, user));
-    // }
-
-
-    this.locals._now = new Date().getTime()
-    this.locals._user = null;
+    this.locals._now = new Date().getTime();
+    var user = _.extend({},yield* utils.getLoginUser(this));
+    delete user.password;
+    this.locals._user = user;
     try {
         yield next;
         // Handle 404 upstream.
@@ -89,30 +87,3 @@ app.on('error', function(err) {
 });
 
 module.exports = app;
-
-// var main = require('./main/router');
-// // var blog = require('./router/blog');
-// // var collects = require('./router/collects');
-// // var user = require('./router/user');
-// // var tag = require('./router/tag');
-// // var api = require('./router/api');
-
-// // app.use(blog.routes());
-// // app.use(collects.routes());
-// // app.use(user.routes());
-// // app.use(tag.routes());
-// // app.use(api.routes());
-
-// if(config.env == 'dev'){
-//     app.use(async serve(__dirname));
-// }
-// app.use(async main.routes());
-
-// // app.use(function *(next) {
-
-// // });
-
-// app.on('error', function(err){
-//     console.log('sent error %s to the cloud', err.message);
-//     console.log(err);
-// });

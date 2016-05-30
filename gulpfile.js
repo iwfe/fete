@@ -63,7 +63,8 @@ gulp.task('webpack', function(callback) {
         }
     }));
     var map = {
-        main: './main',
+        index: './main/index.js',
+        login: './main/login.js',
         user: './user',
         
         common: [
@@ -110,8 +111,8 @@ gulp.task('webpack', function(callback) {
 
         plugins: [
             new webpack.ProvidePlugin({
-                React: 'react',
-                ReactDom: 'react-dom'
+                // React: 'react',
+                // ReactDom: 'react-dom'
             }),
             new webpack.optimize.DedupePlugin(),
             new ExtractTextPlugin("[name].css"),
@@ -122,12 +123,14 @@ gulp.task('webpack', function(callback) {
             })
         ].concat(minfy),
         module: {
-            loaders: [{
+            loaders: [
+            {
                 test: /\.js[x]?$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
-                    compact: false
+                    compact: false,
+                    presets: ['react', 'es2015']
                 }
             }, {
                 test: /\.css$/,

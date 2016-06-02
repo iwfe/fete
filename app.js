@@ -16,9 +16,6 @@ const app = new Koa();
 
 // var redisStore = require('koa-redis');
 
-
-
-
 // middleware
 app.use(views(`${__dirname}/view`, {
     extension: 'jade'

@@ -64,27 +64,32 @@ gulp.task('webpack', function(callback) {
     }));
     var map = {
         index: './main/index.js',
-        login: './main/login.js',
+        login: [
+            './main/login.js',
+            './main/login.scss'
+        ],
         user: './user',
-        
-        common: [
+
+        react_common: [
             'react',
-            'react-dom'
+            'react-dom',
+            'antd/dist/antd.css',
+            './layout/layout.scss'
         ]
     };
 
 
-    if(entry) {
+    if (entry) {
         console.log('您需要编译的模块有：' + entry);
         var arr = entry.split(',');
         entry = {
             common: map.common
         }
-        for(var i = 0, len = arr.length; i < len; i++) {
+        for (var i = 0, len = arr.length; i < len; i++) {
             var item = arr[i];
             entry[item] = map[item];
         }
-    }else {
+    } else {
         entry = map;
     }
 
@@ -105,8 +110,7 @@ gulp.task('webpack', function(callback) {
         },
 
         resolve: {
-            alias: {
-            }
+            alias: {}
         },
 
         plugins: [
@@ -118,13 +122,12 @@ gulp.task('webpack', function(callback) {
             new ExtractTextPlugin("[name].css"),
             new WebpackNotifierPlugin(),
             new webpack.optimize.CommonsChunkPlugin({
-                name: ['common'],
+                name: ['react_common'],
                 minChunks: Infinity
             })
         ].concat(minfy),
         module: {
-            loaders: [
-            {
+            loaders: [{
                 test: /\.js[x]?$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',

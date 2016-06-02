@@ -33,15 +33,12 @@ router.get('/', function *(next) {
 });
 
 router.get('/login', function *(next) {
-    var html = utils.reactRender(Login, {
-        number: 2
-    });
     // let user = yield userDao.findOne({
     //     username: 'jade'
     // })
     yield utils.render(this,{
-        html: html,
-        number: 2
+        html: utils.reactRender(Login),
+        noHeader: true
     });
 });
 

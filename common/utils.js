@@ -12,6 +12,7 @@ import crypto from 'crypto';
 import _ from 'underscore';
 import React from 'react';
 import ReactDom from 'react-dom/server';
+import { Header } from '../layout/layout';
 
 var userDao = wrap(db.get('user'));
 var loginUserStore = new Map();
@@ -45,12 +46,14 @@ var utils = {
     * render(ctx, data = {}) {
         let staticTag = 'index';
         let pathArr = ctx.path.split('/');
-        if(pathArr[1]) {
+        if (pathArr[1]) {
             staticTag = pathArr[1];
         }
+        data.commonTag && (data.commonTag += '_');
         yield ctx.render(data.tpl || 'layout', _.extend({
-            commonTag: '',
-            staticTag: staticTag
+            commonTag: 'react_',
+            staticTag: staticTag,
+            header: (data.noHeader || this.reactRender(Header, { user: ctx.locals._user })) && ''
         }, ctx.locals, data));
     },
 

@@ -17,3 +17,5 @@
 Q&A:
 如果出现 Cannot find module 'mongodb'
 http://www.jianshu.com/p/0ea7ba2bc4a1
+
+整体架构介绍：

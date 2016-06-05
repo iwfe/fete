@@ -37,10 +37,13 @@ var utils = {
         return false;
     },
 
-    //渲染页面
-    // render: views('./common', {
-    //     map: { html: 'jade' }
-    // }),
+    isGet(method) {
+        return method.toLowerCase() === 'get';
+    },
+
+    isPost(method) {
+        return method.toLowerCase() === 'post';
+    },
 
     //页面渲染
     * render(ctx, data = {}) {
@@ -50,9 +53,15 @@ var utils = {
             staticTag = pathArr[1];
         }
         data.commonTag && (data.commonTag += '_');
+        //为每个页面添加数据
+        let staticTagMap = _.extend({}, data);
+        delete staticTagMap.html;
+        delete staticTagMap.header;
+        console.log(staticTagMap);
         yield ctx.render(data.tpl || 'layout', _.extend({
             commonTag: 'react_',
             staticTag: staticTag,
+            staticTagMap: staticTagMap,
             header: (data.noHeader || this.reactRender(Header, { user: ctx.locals._user })) && ''
         }, ctx.locals, data));
     },

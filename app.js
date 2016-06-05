@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
+// import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import views from 'koa-views';
 import mount from 'koa-mount';
@@ -8,9 +8,10 @@ import co from 'co';
 import config from './config';
 import utils from './common/utils';
 import _ from 'underscore';
-
-// import finalHandler from './lib/finalHandler';
-// import router from './router';
+// import parse from 'co-body';
+var parse = require('co-body')
+    // import finalHandler from './lib/finalHandler';
+    // import router from './router';
 
 const app = new Koa();
 
@@ -48,15 +49,22 @@ app.use(function*(next) {
     this.locals = {}
 
     this.set({
-            'Pragma': 'No-cache',
-            'Cache-Control': 'no-cache'
-        });
+        'Pragma': 'No-cache',
+        'Cache-Control': 'no-cache'
+    });
     // yield* utils.setLoginUser(this, 'jade1', '111111');
 
     //utils.getLoginUser(this);
 
     this.locals._now = new Date().getTime();
-    var user = _.extend({},yield* utils.getLoginUser(this));
+    let p = this.query;
+    try {
+        p = _.extend(p, yield parse(this));
+    } catch (e) {
+
+    }
+    this.parse = p;
+    var user = _.extend({}, yield * utils.getLoginUser(this));
     delete user.password;
     this.locals._user = user;
     try {

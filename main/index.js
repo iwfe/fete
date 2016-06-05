@@ -2,7 +2,7 @@
 * @Author: jade
 * @Date:   2016-05-24 23:35:15
 * @Last Modified by:   jade
-* @Last Modified time: 2016-05-31 10:59:46
+* @Last Modified time: 2016-06-05 23:32:22
 */
 
 'use strict';
@@ -29,6 +29,7 @@ var Index = React.createClass({
     },
 
     componentDidMount: function() {
+        return;
         console.log('add_listen');
         var self = this;
 
@@ -54,8 +55,9 @@ var Index = React.createClass({
 
     render: function() {
         return (
-            <div ref="num"  onClick={this.handleClick}>
-                {this.state.number}
+            <div className="mod-index">
+                <a href="/login">登录</a>
+                <a href="/logout">退出</a>
             </div>
         )
     }

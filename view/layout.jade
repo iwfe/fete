@@ -1,7 +1,7 @@
 doctype html
 html
     head
-        title #{title || '前端协作痛点'} - 尽在FETEdfd
+        title #{title || '前端协作痛点'} - 尽在FETE
         meta(http-equiv='X-UA-Compatible' content="IE=edge")
         meta(charset='utf-8')
         meta(name='Keywords' content='FETE')
@@ -17,13 +17,14 @@ html
         div#fete
             header#header !{header}
             section#main !{html}
-        script(src='/static/#{commonTag}common.js')
-        script(src='/static/#{staticTag}.js')
         //- script(src='#{staticFilter("/static/js/common/module.layout.js")}')
 
-
-        -var user = JSON.stringify(_user)
+        -var user = JSON.stringify(_user);
+        -var staticTagMapJson = JSON.stringify(staticTagMap);
         script.
             window.pageConfig = {
-                me: !{user} || {}
-            }
+                me: !{user} || {},
+                #{staticTag}: !{staticTagMapJson}
+            };
+        script(src='/static/#{commonTag}common.js')
+        script(src='/static/#{staticTag}.js')

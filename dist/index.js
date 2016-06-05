@@ -6,7 +6,7 @@ webpackJsonp([0],[
 	* @Author: jade
 	* @Date:   2016-05-24 23:35:15
 	* @Last Modified by:   jade
-	* @Last Modified time: 2016-05-31 10:59:46
+	* @Last Modified time: 2016-06-05 23:32:22
 	*/
 	
 	'use strict';
@@ -47,6 +47,7 @@ webpackJsonp([0],[
 	    },
 	
 	    componentDidMount: function componentDidMount() {
+	        return;
 	        console.log('add_listen');
 	        var self = this;
 	
@@ -73,8 +74,17 @@ webpackJsonp([0],[
 	    render: function render() {
 	        return _react2.default.createElement(
 	            'div',
-	            { ref: 'num', onClick: this.handleClick },
-	            this.state.number
+	            { className: 'mod-index' },
+	            _react2.default.createElement(
+	                'a',
+	                { href: '/login' },
+	                '登录'
+	            ),
+	            _react2.default.createElement(
+	                'a',
+	                { href: '/logout' },
+	                '退出'
+	            )
 	        );
 	    }
 	});

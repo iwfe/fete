@@ -6,7 +6,7 @@ import mount from 'koa-mount';
 import serve from 'koa-static';
 import co from 'co';
 import config from './config';
-import utils from './common/utils';
+import sutil from './common/sutil';
 import _ from 'underscore';
 // import parse from 'co-body';
 var parse = require('co-body')
@@ -52,9 +52,9 @@ app.use(function*(next) {
         'Pragma': 'No-cache',
         'Cache-Control': 'no-cache'
     });
-    // yield* utils.setLoginUser(this, 'jade1', '111111');
+    // yield* sutil.setLoginUser(this, 'jade1', '111111');
 
-    //utils.getLoginUser(this);
+    //sutil.getLoginUser(this);
 
     this.locals._now = new Date().getTime();
     let p = this.query;
@@ -64,7 +64,7 @@ app.use(function*(next) {
 
     }
     this.parse = p;
-    var user = _.extend({}, yield * utils.getLoginUser(this));
+    var user = _.extend({}, yield * sutil.getLoginUser(this));
     delete user.password;
     this.locals._user = user;
     try {

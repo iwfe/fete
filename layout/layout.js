@@ -2,7 +2,7 @@
 * @Author: jade
 * @Date:   2016-05-31 14:07:40
 * @Last Modified by:   jade
-* @Last Modified time: 2016-05-31 15:38:04
+* @Last Modified time: 2016-06-06 16:28:59
 */
 
 'use strict';
@@ -10,6 +10,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Menu from 'antd/lib/menu';
 import Icon from 'antd/lib/icon';
+import menus from './menu';
+import util from '../common/util';
+import _ from 'underscore';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -17,65 +20,60 @@ const MenuItemGroup = Menu.ItemGroup;
 class Header extends React.Component {
     constructor(props) {
         super(props);
-        
     }
-
     render() {
+        const user = this.props.user;
         return (
-            <Menu onClick={this.handleClick} mode="horizontal">
-                <Menu.Item key="mail">
-                    <Icon type="mail" />{this.props.user.username}
-                </Menu.Item>
-            </Menu>
+            <div className="header-wrap clearfix">
+                <div className="pull-left">
+                    <Menu onClick={this.handleClick} mode="horizontal" selectedKeys={[this.props.current]}>
+                        {
+                            this.props.menus.map( menu =>
+                                util.showIf(menu.subMenus,
+                                    <SubMenu title={menu.text}>
+                                        {
+                                            menu.subMenus && menu.subMenus.map(subMenu =>
+                                                <Menu.Item key={subMenu.key}>
+                                                    <a href={subMenu.link}>{subMenu.text}</a>
+                                                </Menu.Item>
+                                            )
+                                        }
+                                    </SubMenu>,
+                                    <Menu.Item key={menu.key}>
+                                        <a href={menu.link}>{menu.text}</a>
+                                    </Menu.Item>)
+                            )
+                        }
+                    </Menu>
+                </div>
+                <div className="pull-right">
+                    <Menu onClick={this.handleClick} mode="horizontal" selectedKeys={[this.props.current]}>
+                        {
+                            util.showIf(user.username,
+                                <SubMenu title={user.username}>
+                                    <Menu.Item><a href="/user/profile">个人设置</a></Menu.Item>
+                                    <Menu.Item><a href="/logout">退出</a></Menu.Item>
+                                </SubMenu>,
+                                <Menu.Item key="login">
+                                    <a href="/login">登录</a>
+                                </Menu.Item>)
+                        }
+                    </Menu>
+                </div>
+            </div>
         );
     }
 }
 
 if (typeof document != 'undefined') {
-    ReactDOM.render( 
-        <Header user = {pageConfig.me}/>, document.getElementById('header')
-    );    
+    const staticTag = pageConfig.staticTag;
+    const currentPageConfig = pageConfig[staticTag];
+    if(!currentPageConfig.noHeader) {
+        ReactDOM.render(
+            <Header user={pageConfig.me} current={staticTag} menus = {currentPageConfig.menus || menus}/>, document.getElementById('header')
+        );
+    }
+      
 }
 
 export {Header};
-
-// const App = React.createClass({
-//   getInitialState() {
-//     return {
-//       current: 'mail',
-//     };
-//   },
-//   handleClick(e) {
-//     console.log('click ', e);
-//     this.setState({
-//       current: e.key,
-//     });
-//   },
-//   render() {
-//     return (
-//       <Menu onClick={this.handleClick}
-//         selectedKeys={[this.state.current]}
-//         mode="horizontal">
-//         <Menu.Item key="mail">
-//           <Icon type="mail" />导航一
-//         </Menu.Item>
-//         <Menu.Item key="app" disabled>
-//           <Icon type="appstore" />导航二
-//         </Menu.Item>
-//         <SubMenu title={<span><Icon type="setting" />导航 - 子菜单</span>}>
-//           <MenuItemGroup title="分组1">
-//             <Menu.Item key="setting:1">选项1</Menu.Item>
-//             <Menu.Item key="setting:2">选项2</Menu.Item>
-//           </MenuItemGroup>
-//           <MenuItemGroup title="分组2">
-//             <Menu.Item key="setting:3">选项3</Menu.Item>
-//             <Menu.Item key="setting:4">选项4</Menu.Item>
-//           </MenuItemGroup>
-//         </SubMenu>
-//         <Menu.Item key="alipay">
-//           <a href="http://www.alipay.com/" target="_blank">导航四 - 链接</a>
-//         </Menu.Item>
-//       </Menu>
-//     );
-//   },
-// });

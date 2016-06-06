@@ -63,17 +63,14 @@ gulp.task('webpack', function(callback) {
         }
     }));
     var map = {
-        index: './main/index.js',
-        login: [
-            './main/login.js',
-            './main/login.scss'
-        ],
+        index: ['./main/index.js', './main/index.scss'],
+        login: ['./main/login.js', './main/login.scss'],
         user: './user',
-
         react_common: [
             'react',
             'react-dom',
             'antd/dist/antd.css',
+            './layout/layout.js',
             './layout/layout.scss'
         ]
     };

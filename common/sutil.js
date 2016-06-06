@@ -17,8 +17,7 @@ import { Header } from '../layout/layout';
 var userDao = wrap(db.get('user'));
 var loginUserStore = new Map();
 
-
-var utils = {
+var sutil = {
     //json成功返回
     success(ctx, value) {
         ctx.body = {
@@ -37,14 +36,6 @@ var utils = {
         return false;
     },
 
-    isGet(method) {
-        return method.toLowerCase() === 'get';
-    },
-
-    isPost(method) {
-        return method.toLowerCase() === 'post';
-    },
-
     //页面渲染
     * render(ctx, data = {}) {
         let staticTag = 'index';
@@ -57,12 +48,15 @@ var utils = {
         let staticTagMap = _.extend({}, data);
         delete staticTagMap.html;
         delete staticTagMap.header;
-        console.log(staticTagMap);
         yield ctx.render(data.tpl || 'layout', _.extend({
             commonTag: 'react_',
             staticTag: staticTag,
             staticTagMap: staticTagMap,
-            header: (data.noHeader || this.reactRender(Header, { user: ctx.locals._user })) && ''
+            header: data.noHeader ? '' : this.reactRender(Header, { 
+                user: ctx.locals._user, 
+                menus: data.menus || [] ,
+                current: staticTag
+            })
         }, ctx.locals, data));
     },
 
@@ -70,14 +64,68 @@ var utils = {
         return ReactDom.renderToString(React.createElement(component, data));
     },
 
+    * result(ctx, data) {
+        switch (ctx.accepts('json', 'html', 'text')) {
+            case 'json': 
+                if(data.value) {
+                    return this.success(ctx, data.value);
+                }
+                if(data.code) {
+                    return this.failed(ctx, data.code);
+                }
+                break;
+            default: 
+                if(data.redirect) {
+                    ctx.redirect(data.redirect);
+                }else{
+                    yield this.render(ctx, data);    
+                }
+        }
+    },
+
+    isGet(method) {
+        return method.toLowerCase() === 'get';
+    },
+
+    isPost(method) {
+        return method.toLowerCase() === 'post';
+    },
+
     //是否登录
     * login(next, teamRole) {
         var user = this.locals._user
         if (!user) {
-            utils.failed(this, 10001)
-            return true
+            return yield sutil.result(this, {
+                code: 10001,
+                redirect: '/login'
+            });
         }
         yield next
+    },
+
+    //team login
+    * teamLogin(next, teamId) {
+        let user = this.locals._user;
+        const redirect = '/team';
+        if (!user) {
+            return yield sutil.result(this, {
+                code: 10001,
+                redirect: '/login'
+            });
+        }
+
+        const team = _.find(user.teams, function(item){
+            return item.id === teamId;
+        });
+
+        if(!team) {
+            return yield sutil.result(this, {
+                code: 12001,
+                redirect: '/team'
+            });
+        }
+        user.team = team;
+        yield next;
     },
 
     //登录用户cookie管理
@@ -143,50 +191,7 @@ var utils = {
         user.isAdmin = user.role == 'admin'
         user.isMember = user.role == 'member'
         return user
-    },
-
-    isEmail: function(v) {
-        return /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(v);
-    },
-
-    isMobileNum: function(v) {
-        return /^1[3|4|5|7|8]\d{9}$/.test(v);
-    },
-
-    isMobile: function(req) {
-        var phoneReg = "\\b(ip(hone|od)|android|opera m(ob|in)i" + "|windows (phone|ce)|blackberry" + "|s(ymbian|eries60|amsung)|p(laybook|alm|rofile/midp" + "|laystation portable)|nokia|fennec|htc[-_]" + "|mobile|up.browser|[1-4][0-9]{2}x[1-4][0-9]{2})\\b"
-
-        var tableReg = "\\b(ipad|tablet|(Nexus 7)|up.browser" + "|[1-4][0-9]{2}x[1-4][0-9]{2})\\b"
-
-        var agent = req.header['user-agent'].toLowerCase()
-        if (!agent)
-            return false
-
-        if (!!new RegExp(phoneReg, 'igm').exec(agent) || !!new RegExp(tableReg, 'igm').exec(agent)) {
-            return true
-        }
-        return false
-    },
-
-    isWeixin: function(req) {
-        var agent = req.header('USER-AGENT').toLowerCase()
-        if (!agent)
-            return false
-        if (agent.match(/MicroMessenger/i) == 'micromessenger') {
-            return true
-        } else {
-            return false
-        }
-    },
-
-    //delta相差天数
-    fromNow: function(delta) {
-        var now = new Date()
-
-        delta = delta || delta * 86400000
-
-        return new Date(now.getFullYear(), now.getMonth(), now.getDay()) - delta;
-    },
+    }
 
     // sendMail: function(name, title){
     //     var transporter = nodemailer.createTransport();
@@ -210,4 +215,4 @@ var utils = {
     //     });
     // }
 }
-export default utils;
+export default sutil;

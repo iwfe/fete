@@ -2,7 +2,7 @@
 * @Author: jade
 * @Date:   2016-05-24 23:35:15
 * @Last Modified by:   jade
-* @Last Modified time: 2016-06-05 23:32:22
+* @Last Modified time: 2016-06-06 14:09:47
 */
 
 'use strict';
@@ -12,7 +12,6 @@ import ReactDOM from 'react-dom';
 var Index = React.createClass({
     getInitialState: function(){
         return {
-            number: this.props.number,
             val: 0
         }
     },
@@ -56,15 +55,14 @@ var Index = React.createClass({
     render: function() {
         return (
             <div className="mod-index">
-                <a href="/login">登录</a>
-                <a href="/logout">退出</a>
+                index
             </div>
         )
     }
 });
 
 if(typeof document != 'undefined'){
-    ReactDOM.render(<Index number={2}/>, document.getElementById('main'));    
+    ReactDOM.render(<Index/>, document.getElementById('main'));    
 }
 
 export default Index;

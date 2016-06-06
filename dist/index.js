@@ -1,12 +1,22 @@
-webpackJsonp([0],[
-/* 0 */
+webpackJsonp([0],{
+
+/***/ 0:
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(1);
+	module.exports = __webpack_require__(169);
+
+
+/***/ },
+
+/***/ 1:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
 	* @Author: jade
 	* @Date:   2016-05-24 23:35:15
 	* @Last Modified by:   jade
-	* @Last Modified time: 2016-06-05 23:32:22
+	* @Last Modified time: 2016-06-06 14:09:47
 	*/
 	
 	'use strict';
@@ -15,11 +25,11 @@ webpackJsonp([0],[
 	    value: true
 	});
 	
-	var _react = __webpack_require__(1);
+	var _react = __webpack_require__(2);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(38);
+	var _reactDom = __webpack_require__(39);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -30,7 +40,6 @@ webpackJsonp([0],[
 	
 	    getInitialState: function getInitialState() {
 	        return {
-	            number: this.props.number,
 	            val: 0
 	        };
 	    },
@@ -75,26 +84,21 @@ webpackJsonp([0],[
 	        return _react2.default.createElement(
 	            'div',
 	            { className: 'mod-index' },
-	            _react2.default.createElement(
-	                'a',
-	                { href: '/login' },
-	                '登录'
-	            ),
-	            _react2.default.createElement(
-	                'a',
-	                { href: '/logout' },
-	                '退出'
-	            )
+	            'index'
 	        );
 	    }
 	});
 	
 	if (typeof document != 'undefined') {
-	    _reactDom2.default.render(_react2.default.createElement(Index, { number: 2 }), document.getElementById('main'));
+	    _reactDom2.default.render(_react2.default.createElement(Index, null), document.getElementById('main'));
 	}
 	
 	exports.default = Index;
 
-/***/ }
-]);
+/***/ },
+
+/***/ 169:
+241
+
+});
 //# sourceMappingURL=index.js.map

@@ -4,7 +4,7 @@
  */
 import Router from 'koa-router';
 const router = new Router({
-    prefix: '/user'
+    prefix: '/team'
 });
 
 var wrap = require('co-monk');
@@ -13,23 +13,16 @@ var wrap = require('co-monk');
 
 var wrap = require('co-monk');
 var db = require('../common/db');
-var userDao = wrap(db.get('user'));
+var userDao = wrap(db.get('team'));
 
 import utils from '../common/utils';
 
 import Index from './index';
 
-// 首页
-router.get('/profile', function*(next) {
-    var html = utils.reactRender(Index, {
-        number: 2
-    });
-    // let user = yield userDao.findOne({
-    //     username: 'jade'
-    // })
+// 团队
+router.get('/(.*)', function*(next) {
+    
     yield utils.render(this, {
-        html: html,
-        number: 2
     });
 });
 

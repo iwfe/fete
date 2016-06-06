@@ -16,7 +16,8 @@ html
     body
         div#fete
             header#header !{header}
-            section#main !{html}
+            block content
+                section#main !{html}
         //- script(src='#{staticFilter("/static/js/common/module.layout.js")}')
 
         -var user = JSON.stringify(_user);
@@ -24,6 +25,7 @@ html
         script.
             window.pageConfig = {
                 me: !{user} || {},
+                staticTag: '#{staticTag}',
                 #{staticTag}: !{staticTagMapJson}
             };
         script(src='/static/#{commonTag}common.js')

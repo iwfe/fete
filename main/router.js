@@ -13,20 +13,20 @@ var wrap = require('co-monk')
 var db = require('../common/db')
 var userDao = wrap(db.get('user'));
 
-import utils from '../common/utils';
+import sutil from '../common/sutil';
 
 import Index from './index';
 import Login from './login';
 
 // 首页
 router.get('/', function*(next) {
-    var html = utils.reactRender(Index, {
+    var html = sutil.reactRender(Index, {
         number: 2
     });
     // let user = yield userDao.findOne({
     //     username: 'jade'
     // })
-    yield utils.render(this, {
+    yield sutil.render(this, {
         html: html,
         number: 2
     });
@@ -38,27 +38,27 @@ router.all('/login', function*(next) {
     // })
     const parse = this.parse;
     const username = parse.username;
-    const html = utils.reactRender(Login, {
+    const html = sutil.reactRender(Login, {
         username: username
     });
     if(this.locals._user.username) {
         this.redirect('/');
         return;
     }
-    if (utils.isGet(this.method)) {
-        yield utils.render(this, {
+    if (sutil.isGet(this.method)) {
+        yield sutil.render(this, {
             html: html,
             noHeader: true
         });
     } else {
-        const password = utils.wrapUserPass(parse.password);
+        const password = sutil.wrapUserPass(parse.password);
         const user = yield userDao.findOne({
             username: username,
             password: password
         });
 
         if (!user) {
-            yield utils.render(this, {
+            yield sutil.render(this, {
                 html: html,
                 noHeader: true,
                 username: username,
@@ -66,7 +66,7 @@ router.all('/login', function*(next) {
             });
         } else {
             const refer = this.get('Referrer') || '/';
-            yield utils.setLoginUser(this, username, parse.password);
+            yield sutil.setLoginUser(this, username, parse.password);
             this.redirect(refer);
         }
     }

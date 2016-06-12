@@ -8,7 +8,10 @@
         2）mongod --config /usr/local/etc/mongod.conf
     
     新增一个用户：db.user.insert({username:'jade',password:'d04a711547058ed0efe27d8c5203f58f'})
-
+    
+    登录测试用户：
+    用户名：jade
+    密码：111111
     
 
 

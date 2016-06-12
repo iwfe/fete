@@ -4,8 +4,8 @@
  */
 module.exports = {
     env: 'dev',
-    passwordKey: 'iwfe',
-    authKey: 'iwfe',
+    passwordKey: 'fete',
+    authKey: 'fete',
     mongodbConnection: '192.168.1.46/fete',
     // redis: {
     //     host: "localhost",

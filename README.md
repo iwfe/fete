@@ -3,9 +3,11 @@
 
 1， 已经安装好了远程的Mongodb，可以直接连接
     如果自己本地想安装可以参考如下：
-        mac安装mongodb，参考地址：http://www.jianshu.com/p/dd0c39bf7be4
-        1）brew install mongodb
-        2）mongod --config /usr/local/etc/mongod.conf
+    mac安装mongodb，参考地址：http://www.jianshu.com/p/dd0c39bf7be4
+    1）brew install mongodb
+    2）mongod --config /usr/local/etc/mongod.conf
+    
+    centeros安装mongodb参考：http://www.jianshu.com/p/0a4f9acf811d
     
     新增一个用户：db.user.insert({username:'jade',password:'d04a711547058ed0efe27d8c5203f58f'})
     

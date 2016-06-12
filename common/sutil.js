@@ -12,7 +12,9 @@ import crypto from 'crypto';
 import _ from 'underscore';
 import React from 'react';
 import ReactDom from 'react-dom/server';
-import { Header } from '../layout/layout';
+import {
+    Header
+} from '../layout/layout';
 
 var userDao = wrap(db.get('user'));
 var loginUserStore = new Map();
@@ -52,9 +54,9 @@ var sutil = {
             commonTag: 'react_',
             staticTag: staticTag,
             staticTagMap: staticTagMap,
-            header: data.noHeader ? '' : this.reactRender(Header, { 
-                user: ctx.locals._user, 
-                menus: data.menus || [] ,
+            header: data.noHeader ? '' : this.reactRender(Header, {
+                user: ctx.locals._user,
+                menus: data.menus || [],
                 current: staticTag
             })
         }, ctx.locals, data));
@@ -66,19 +68,19 @@ var sutil = {
 
     * result(ctx, data) {
         switch (ctx.accepts('json', 'html', 'text')) {
-            case 'json': 
-                if(data.value) {
+            case 'json':
+                if (data.value) {
                     return this.success(ctx, data.value);
                 }
-                if(data.code) {
+                if (data.code) {
                     return this.failed(ctx, data.code);
                 }
                 break;
-            default: 
-                if(data.redirect) {
+            default:
+                if (data.redirect) {
                     ctx.redirect(data.redirect);
-                }else{
-                    yield this.render(ctx, data);    
+                } else {
+                    yield this.render(ctx, data);
                 }
         }
     },
@@ -92,33 +94,36 @@ var sutil = {
     },
 
     //是否登录
-    * login(next, teamRole) {
+    * login(next) {
         var user = this.locals._user
-        if (!user) {
+        console.log('login----');
+        console.log(user);
+        if (!user.username) {
             return yield sutil.result(this, {
                 code: 10001,
-                redirect: '/login'
+                redirect: '/login?next=' + this.url
             });
         }
-        yield next
+        yield next;
     },
 
     //team login
-    * teamLogin(next, teamId) {
+    * teamLogin(next) {
         let user = this.locals._user;
+        const teamId = this.parse.teamId;
         const redirect = '/team';
         if (!user) {
             return yield sutil.result(this, {
                 code: 10001,
-                redirect: '/login'
+                redirect: '/login?next=' + this.url
             });
         }
 
-        const team = _.find(user.teams, function(item){
+        const team = _.find(user.teams, function(item) {
             return item.id === teamId;
         });
 
-        if(!team) {
+        if (!team) {
             return yield sutil.result(this, {
                 code: 12001,
                 redirect: '/team'

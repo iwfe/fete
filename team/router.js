@@ -15,15 +15,12 @@ var wrap = require('co-monk');
 var db = require('../common/db');
 var userDao = wrap(db.get('team'));
 
-import utils from '../common/utils';
-
-import Index from './index';
+import sutil from '../common/sutil';
 
 // 团队
-router.get('/(.*)', function*(next) {
-    
-    yield utils.render(this, {
-    });
+router.get('/', sutil.login, function*(next) {
+
+    yield sutil.render(this, {});
 });
 
-export default router;;
+export default router;

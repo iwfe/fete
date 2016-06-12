@@ -66,9 +66,11 @@ gulp.task('webpack', function(callback) {
         index: ['./main/index.js', './main/index.scss'],
         login: ['./main/login.js', './main/login.scss'],
         user: './user',
+        team: './team',
         react_common: [
             'react',
             'react-dom',
+            'react-router',
             'antd/dist/antd.css',
             './layout/layout.js',
             './layout/layout.scss'

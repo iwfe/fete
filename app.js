@@ -59,7 +59,7 @@ app.use(function*(next) {
     this.locals._now = new Date().getTime();
     let p = this.query;
     try {
-        p = _.extend(p, yield parse(this));
+        p = _.extend(p, yield parse(this), this.params);
     } catch (e) {
 
     }
@@ -75,16 +75,22 @@ app.use(function*(next) {
     } catch (error) {
         this.status = error.status || 500;
         if (this.status === 404) {
-            yield this.render('error', { error });
+            yield this.render('error', {
+                error
+            });
         } else {
-            yield this.render('error', { error });
+            yield this.render('error', {
+                error
+            });
         }
         this.app.emit('error', error, this);
     }
 });
 
 import main from './main/router';
+import team from './team/router';
 app.use(main.routes());
+app.use(team.routes());
 
 app.on('error', function(err) {
     console.log('sent error %s to the cloud', err.message);

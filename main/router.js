@@ -41,7 +41,7 @@ router.all('/login', function*(next) {
     const html = sutil.reactRender(Login, {
         username: username
     });
-    if(this.locals._user.username) {
+    if (this.locals._user.username) {
         this.redirect('/');
         return;
     }
@@ -65,14 +65,16 @@ router.all('/login', function*(next) {
                 error: '用户名或密码不正确'
             });
         } else {
-            const refer = this.get('Referrer') || '/';
+            const refer = parse.next || this.get('Referrer') || '/';
+            console.log('referrer' + this.get('Referrer'))
+            console.log(refer)
             yield sutil.setLoginUser(this, username, parse.password);
             this.redirect(refer);
         }
     }
 });
 
-router.get('/logout', function* (next) {
+router.get('/logout', function*(next) {
     this.cookies.set('feteauth', null);
     this.redirect('/login');
 });

@@ -27,7 +27,9 @@
 
 
 Q&A:
-如果出现 Cannot find module 'mongodb'
+1，如果出现 Cannot find module 'mongodb'
 http://www.jianshu.com/p/0ea7ba2bc4a1
+2，如果安装node-sass好，后使用不了，可能是需要rebuild下，该问题出现在node 6.x版本
+npm rebuild node-sass
 
 整体架构介绍：

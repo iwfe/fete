@@ -28,6 +28,7 @@
         "co-views": "*",
         "css-loader": "^0.16.0",
         "sass-loader": "^3.1.2",
+        "node-sass": "^3.4.2",
         "emit": "0.0.2",
         "exports-loader": "^0.6.2",
         "extract-text-webpack-plugin": "^0.8.2",

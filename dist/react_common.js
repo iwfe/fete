@@ -27757,11 +27757,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
-	* @Author: jade
-	* @Date:   2016-05-31 14:07:40
-	* @Last Modified by:   jade
-	* @Last Modified time: 2016-06-06 16:28:59
-	*/
+	 * @Author: jade
+	 * @Date:   2016-05-31 14:07:40
+	 * @Last Modified by:   jade
+	 * @Last Modified time: 2016-06-15 18:23:45
+	 */
 	
 	'use strict';
 	
@@ -27836,7 +27836,7 @@
 	                        this.props.menus.map(function (menu) {
 	                            return _util2.default.showIf(menu.subMenus, _react2.default.createElement(
 	                                SubMenu,
-	                                { title: menu.text },
+	                                { key: menu.key, title: menu.text },
 	                                menu.subMenus && menu.subMenus.map(function (subMenu) {
 	                                    return _react2.default.createElement(
 	                                        _menu2.default.Item,

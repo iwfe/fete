@@ -61,6 +61,11 @@
         "react-dom": "^15.0.1",
         "react-hot-loader": "^1.2.8",
         "react-router": "*",
+        "react-redux": "^4.0.0",
+        "redux": "^3.0.0",
+        "redux-logger": "^2.0.2",
+        "redux-thunk": "^0.1.0",
+        "redux-devtools": "*",
         "style-loader": "~0.12.3",
         "swig": "*",
         "through2": "*",
@@ -69,7 +74,8 @@
         "webpack-dev-server": "^1.10.1",
         "gulp-zip": "*",
         "fs-extra": "*",
-        "underscore": "*"
+        "underscore": "*",
+        "whatwg-fetch": "*"
     },
     "devDependencies": {
         "gulp": "^3.8.11",

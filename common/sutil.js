@@ -96,8 +96,6 @@ var sutil = {
     //是否登录
     * login(next) {
         var user = this.locals._user
-        console.log('login----');
-        console.log(user);
         if (!user.username) {
             return yield sutil.result(this, {
                 code: 10001,

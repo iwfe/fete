@@ -6,14 +6,11 @@ import Router from 'koa-router';
 const router = new Router({
     prefix: '/team'
 });
-
-var wrap = require('co-monk');
-// var parse = require('co-body');
-// import convert from 'koa-convert';
-
-var wrap = require('co-monk');
-var db = require('../common/db');
-var userDao = wrap(db.get('team'));
+const wrap = require('co-monk');
+const db = require('../common/db');
+const userDao = wrap(db.get('user'));
+const teamDao = wrap(db.get('team'));
+import uuid from 'node-uuid';
 
 import sutil from '../common/sutil';
 
@@ -21,6 +18,37 @@ import sutil from '../common/sutil';
 router.get('/', sutil.login, function*(next) {
 
     yield sutil.render(this, {});
+});
+
+router.get('/:id', sutil.login, function*(next) {
+
+    yield sutil.render(this, {});
+});
+
+router.get('/list', sutil.login, function*(next) {
+    const user = this.locals._user;
+    const teamIds = user.teams;
+    let teams = [];
+    if (teamIds && teamIds.length) {
+        teams = yield teamDao.find({
+            _id: teamIds
+        });
+    }
+    console.log(teams);
+    sutil.success(this, teams);
+});
+
+router.post('/add', sutil.login, function*(next) {
+    const user = this.locals._user;
+    const teamIds = user.teams;
+    let teams = [];
+    if (teamIds && teamIds.length) {
+        teams = yield teamDao.find({
+            _id: teamIds
+        });
+    }
+    console.log(teams);
+    sutil.success(this, teams);
 });
 
 export default router;

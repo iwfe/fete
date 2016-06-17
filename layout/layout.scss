@@ -2,22 +2,31 @@
 * @Author: jade
 * @Date:   2016-05-31 14:07:54
 * @Last Modified by:   jade
-* @Last Modified time: 2016-06-06 14:58:11
+* @Last Modified time: 2016-06-16 11:42:09
 */
+html,body {
+    background-color: #ececec;
+    min-height: 100%;
+}
+#fete {
+    min-height: 100%;
+}
 #header {
+    background-color: #fff;
     border-bottom: 1px solid #e9e9e9;
     box-shadow: 0 1px 6px hsla(0,0%,39%,.2);
 }
 .header-wrap {
     width: 1200px;
     margin: 0 auto;
-    
     .ant-menu-horizontal {
         border-bottom: none;
     }
 }
 #main {
     width: 1200px;
-    margin: 0 auto;
-    padding-top: 10px;
+    min-height: 400px;
+    margin: 10px auto;
+    padding: 16px;
+    background-color: #fff;
 }

@@ -1,9 +1,9 @@
 /*
-* @Author: jade
-* @Date:   2016-05-31 14:07:40
-* @Last Modified by:   jade
-* @Last Modified time: 2016-06-06 16:28:59
-*/
+ * @Author: jade
+ * @Date:   2016-05-31 14:07:40
+ * @Last Modified by:   jade
+ * @Last Modified time: 2016-06-15 18:23:45
+ */
 
 'use strict';
 import React from 'react';
@@ -30,7 +30,7 @@ class Header extends React.Component {
                         {
                             this.props.menus.map( menu =>
                                 util.showIf(menu.subMenus,
-                                    <SubMenu title={menu.text}>
+                                    <SubMenu key={menu.key} title={menu.text}>
                                         {
                                             menu.subMenus && menu.subMenus.map(subMenu =>
                                                 <Menu.Item key={subMenu.key}>
@@ -68,12 +68,14 @@ class Header extends React.Component {
 if (typeof document != 'undefined') {
     const staticTag = pageConfig.staticTag;
     const currentPageConfig = pageConfig[staticTag];
-    if(!currentPageConfig.noHeader) {
+    if (!currentPageConfig.noHeader) {
         ReactDOM.render(
             <Header user={pageConfig.me} current={staticTag} menus = {currentPageConfig.menus || menus}/>, document.getElementById('header')
         );
     }
-      
+
 }
 
-export {Header};
+export {
+    Header
+};

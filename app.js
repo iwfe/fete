@@ -89,8 +89,10 @@ app.use(function*(next) {
 
 import main from './main/router';
 import team from './team/router';
+import apiModule from './api/router';
 app.use(main.routes());
 app.use(team.routes());
+app.use(apiModule.routes());
 
 app.on('error', function(err) {
     console.log('sent error %s to the cloud', err.message);

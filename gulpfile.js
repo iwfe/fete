@@ -247,3 +247,98 @@ gulp.task('publish', function() {
     // auto.pull(argv.name);
     //gulp.start('webpack');
 })
+
+
+
+//webpack vue 静态处理
+gulp.task('vue', function(callback) {
+    isProduct = argv.product;
+    isWatch = !isProduct;
+
+    var minfy = [];
+    isProduct && minfy.push(new webpack.optimize.UglifyJsPlugin({
+        compress: {
+            warnings: false
+        }
+    }));
+    //webpack配置文件
+    var vue_config = {
+        watch: isWatch,
+        entry: {
+            api: './api/index.js',
+            vue_common: [
+                'vue',
+                'vue-router',
+                'underscore',
+                'vueCommon',
+                'bootstrap/dist/css/bootstrap.css'
+            ]
+        },
+        debug: true,
+
+        devtool: (isProduct ? false : 'source-map'),
+
+        output: {
+            path: './dist/',
+            filename: '[name].js',
+            publicPath: ''
+        },
+
+        resolve: {
+            alias: {
+                vueCommon: path.resolve('./common/vue_common.js')
+            }
+        },
+
+        plugins: [
+            new webpack.ProvidePlugin({
+                _: 'underscore',
+                Vue: 'vue',
+                VueRouter: 'vue-router',
+                vueCommon: 'vueCommon'
+            }),
+            new webpack.optimize.DedupePlugin(),
+            new ExtractTextPlugin("[name].css"),
+            new webpack.optimize.CommonsChunkPlugin('vue_common', 'vue_common.js'),
+            new WebpackNotifierPlugin({ excludeWarnings: true, alwaysNotify: false })
+        ].concat(minfy),
+
+        module: {
+            loaders: [{
+                test: /\.js[x]?$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader'
+            }, {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+            }, {
+                test: /\.less$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader')
+            }, {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
+            }, {
+                test: /\.vue$/,
+                loader: 'vue'
+            }, {
+                test: /\.(png|jpg|gif|woff|woff2|ttf|eot|svg)$/,
+                loader: "file-loader?name=[name]_[sha512:hash:base64:7].[ext]"
+            }]
+        },
+        babel: {
+            presets: ['es2015', 'stage-3'],
+            plugins: ['transform-runtime']
+        },
+        vue: {
+            loaders: {
+                css: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+                less: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader'),
+                sass: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
+            }
+        }
+    };
+
+    webpack(vue_config, function(err, stats) {
+        console.log(stats.toString());
+    });
+});

@@ -271,7 +271,7 @@ gulp.task('vue', function(callback) {
                 'vue-router',
                 'underscore',
                 'vueCommon',
-                'bootstrap/dist/css/bootstrap.css'
+                'antd/dist/antd.css'
             ]
         },
         debug: true,

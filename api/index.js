@@ -5,10 +5,6 @@ router.map({
     '/api': {
         name: 'index',
         component: require('./index.vue')
-    },
-    '/api/:id': {
-        name: 'index',
-        component: require('./index.vue')
     }
 });
 

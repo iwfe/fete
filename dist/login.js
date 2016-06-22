@@ -3,7 +3,7 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(173);
-	module.exports = __webpack_require__(239);
+	module.exports = __webpack_require__(243);
 
 
 /***/ },
@@ -213,15 +213,15 @@ webpackJsonp([1],[
 	
 	var _form2 = _interopRequireDefault(_form);
 	
-	var _input = __webpack_require__(222);
+	var _input = __webpack_require__(225);
 	
 	var _input2 = _interopRequireDefault(_input);
 	
-	var _col = __webpack_require__(225);
+	var _col = __webpack_require__(229);
 	
 	var _col2 = _interopRequireDefault(_col);
 	
-	var _Alert = __webpack_require__(229);
+	var _Alert = __webpack_require__(233);
 	
 	var _Alert2 = _interopRequireDefault(_Alert);
 	
@@ -435,6 +435,15 @@ webpackJsonp([1],[
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _initialiseProps.call(_this), _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
+	  Button.prototype.componentWillUnmount = function componentWillUnmount() {
+	    if (this.clickedTimeout) {
+	      clearTimeout(this.clickedTimeout);
+	    }
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	    }
+	  };
+	
 	  // Handle auto focus when click button in Chrome
 	
 	
@@ -475,7 +484,8 @@ webpackJsonp([1],[
 	        type: htmlType || 'button',
 	        className: classes,
 	        onMouseUp: this.handleMouseUp,
-	        onClick: this.handleClick }),
+	        onClick: this.handleClick
+	      }),
 	      iconType ? _react2["default"].createElement(_icon2["default"], { type: iconType }) : null,
 	      kids
 	    );
@@ -509,7 +519,7 @@ webpackJsonp([1],[
 	    // Add click effect
 	    var buttonNode = (0, _reactDom.findDOMNode)(_this2);
 	    _this2.clearButton(buttonNode);
-	    setTimeout(function () {
+	    _this2.clickedTimeout = setTimeout(function () {
 	      return buttonNode.className += ' ' + _this2.props.prefixCls + '-clicked';
 	    }, 10);
 	    clearTimeout(_this2.timeout);
@@ -607,15 +617,15 @@ webpackJsonp([1],[
 	
 	var _Form2 = _interopRequireDefault(_Form);
 	
-	var _FormItem = __webpack_require__(181);
+	var _FormItem = __webpack_require__(184);
 	
 	var _FormItem2 = _interopRequireDefault(_FormItem);
 	
-	var _ValueMixin = __webpack_require__(182);
+	var _ValueMixin = __webpack_require__(185);
 	
 	var _ValueMixin2 = _interopRequireDefault(_ValueMixin);
 	
-	var _createDOMForm = __webpack_require__(183);
+	var _createDOMForm = __webpack_require__(186);
 	
 	var _createDOMForm2 = _interopRequireDefault(_createDOMForm);
 	
@@ -662,6 +672,10 @@ webpackJsonp([1],[
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
+	var _reactAddonsPureRenderMixin = __webpack_require__(181);
+	
+	var _reactAddonsPureRenderMixin2 = _interopRequireDefault(_reactAddonsPureRenderMixin);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -682,6 +696,14 @@ webpackJsonp([1],[
 	
 	    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
 	  }
+	
+	  Form.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _reactAddonsPureRenderMixin2["default"].shouldComponentUpdate.apply(this, args);
+	  };
 	
 	  Form.prototype.getChildContext = function getChildContext() {
 	    return {
@@ -729,6 +751,95 @@ webpackJsonp([1],[
 /* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(182);
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactComponentWithPureRenderMixin
+	 */
+	
+	'use strict';
+	
+	var shallowCompare = __webpack_require__(183);
+	
+	/**
+	 * If your React component's render function is "pure", e.g. it will render the
+	 * same result given the same props and state, provide this mixin for a
+	 * considerable performance boost.
+	 *
+	 * Most React components have pure render functions.
+	 *
+	 * Example:
+	 *
+	 *   var ReactComponentWithPureRenderMixin =
+	 *     require('ReactComponentWithPureRenderMixin');
+	 *   React.createClass({
+	 *     mixins: [ReactComponentWithPureRenderMixin],
+	 *
+	 *     render: function() {
+	 *       return <div className={this.props.className}>foo</div>;
+	 *     }
+	 *   });
+	 *
+	 * Note: This only checks shallow equality for props and state. If these contain
+	 * complex data structures this mixin may have false-negatives for deeper
+	 * differences. Only mixin to components which have simple props and state, or
+	 * use `forceUpdate()` when you know deep data structures have changed.
+	 *
+	 * See https://facebook.github.io/react/docs/pure-render-mixin.html
+	 */
+	var ReactComponentWithPureRenderMixin = {
+	  shouldComponentUpdate: function (nextProps, nextState) {
+	    return shallowCompare(this, nextProps, nextState);
+	  }
+	};
+	
+	module.exports = ReactComponentWithPureRenderMixin;
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	* @providesModule shallowCompare
+	*/
+	
+	'use strict';
+	
+	var shallowEqual = __webpack_require__(130);
+	
+	/**
+	 * Does a shallow comparison for props and state.
+	 * See ReactComponentWithPureRenderMixin
+	 * See also https://facebook.github.io/react/docs/shallow-compare.html
+	 */
+	function shallowCompare(instance, nextProps, nextState) {
+	  return !shallowEqual(instance.props, nextProps) || !shallowEqual(instance.state, nextState);
+	}
+	
+	module.exports = shallowCompare;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -746,6 +857,10 @@ webpackJsonp([1],[
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
+	var _reactAddonsPureRenderMixin = __webpack_require__(181);
+	
+	var _reactAddonsPureRenderMixin2 = _interopRequireDefault(_reactAddonsPureRenderMixin);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
 	function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
@@ -758,16 +873,6 @@ webpackJsonp([1],[
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : _defaults(subClass, superClass); }
 	
-	function prefixClsFn(prefixCls) {
-	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-	    args[_key - 1] = arguments[_key];
-	  }
-	
-	  return args.map(function (s) {
-	    return prefixCls + '-' + s;
-	  }).join(' ');
-	}
-	
 	var FormItem = (_temp = _class = function (_React$Component) {
 	  _inherits(FormItem, _React$Component);
 	
@@ -777,6 +882,14 @@ webpackJsonp([1],[
 	    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
 	  }
 	
+	  FormItem.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    return _reactAddonsPureRenderMixin2["default"].shouldComponentUpdate.apply(this, args);
+	  };
+	
 	  FormItem.prototype.getLayoutClass = function getLayoutClass(colDef) {
 	    if (!colDef) {
 	      return '';
@@ -784,8 +897,8 @@ webpackJsonp([1],[
 	    var span = colDef.span;
 	    var offset = colDef.offset;
 	
-	    var col = span ? 'col-' + span : '';
-	    var offsetCol = offset ? ' col-offset-' + offset : '';
+	    var col = span ? 'ant-col-' + span : '';
+	    var offsetCol = offset ? ' ant-col-offset-' + offset : '';
 	    return col + offsetCol;
 	  };
 	
@@ -821,12 +934,11 @@ webpackJsonp([1],[
 	  };
 	
 	  FormItem.prototype.renderHelp = function renderHelp() {
-	    var props = this.props;
-	    var prefixCls = props.prefixCls;
+	    var prefixCls = this.props.prefixCls;
 	    var help = this.getHelpMsg();
 	    return help ? _react2["default"].createElement(
 	      'div',
-	      { className: prefixClsFn(prefixCls, 'explain'), key: 'help' },
+	      { className: prefixCls + '-explain', key: 'help' },
 	      help
 	    ) : null;
 	  };
@@ -838,7 +950,7 @@ webpackJsonp([1],[
 	
 	    return extra ? _react2["default"].createElement(
 	      'span',
-	      { className: prefixClsFn(prefixCls, 'extra') },
+	      { className: prefixCls + '-extra' },
 	      extra
 	    ) : null;
 	  };
@@ -921,10 +1033,16 @@ webpackJsonp([1],[
 	
 	    var className = (0, _classnames2["default"])((_classNames = {}, _defineProperty(_classNames, this.getLayoutClass(labelCol), true), _defineProperty(_classNames, props.prefixCls + '-item-required', required), _classNames));
 	
+	    // remove user input colon
+	    var label = props.label;
+	    if (typeof label === 'string' && label.trim() !== '') {
+	      label = props.label.replace(/：|:$/, '');
+	    }
+	
 	    return props.label ? _react2["default"].createElement(
 	      'label',
 	      { htmlFor: props.id || this.getId(), className: className, key: 'label' },
-	      props.label
+	      label
 	    ) : null;
 	  };
 	
@@ -981,7 +1099,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 182 */
+/* 185 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1015,7 +1133,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 183 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1026,19 +1144,19 @@ webpackJsonp([1],[
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _createBaseForm = __webpack_require__(184);
+	var _createBaseForm = __webpack_require__(187);
 	
 	var _createBaseForm2 = _interopRequireDefault(_createBaseForm);
 	
-	var _createForm = __webpack_require__(218);
+	var _createForm = __webpack_require__(221);
 	
-	var _utils = __webpack_require__(185);
+	var _utils = __webpack_require__(188);
 	
 	var _reactDom = __webpack_require__(39);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _domScrollIntoView = __webpack_require__(219);
+	var _domScrollIntoView = __webpack_require__(222);
 	
 	var _domScrollIntoView2 = _interopRequireDefault(_domScrollIntoView);
 	
@@ -1140,7 +1258,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 184 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1155,9 +1273,9 @@ webpackJsonp([1],[
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _utils = __webpack_require__(185);
+	var _utils = __webpack_require__(188);
 	
-	var _asyncValidator = __webpack_require__(187);
+	var _asyncValidator = __webpack_require__(190);
 	
 	var _asyncValidator2 = _interopRequireDefault(_asyncValidator);
 	
@@ -1167,6 +1285,7 @@ webpackJsonp([1],[
 	
 	var defaultValidateTrigger = 'onChange';
 	var defaultTrigger = defaultValidateTrigger;
+	var atom = {};
 	
 	function createBaseForm() {
 	  var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -1207,7 +1326,8 @@ webpackJsonp([1],[
 	          this.fields = mapPropsToFields(nextProps);
 	        }
 	      },
-	      onChange: function onChange(name, action) {
+	      onChange: function onChange(name_, action) {
+	        var name = name_;
 	        var fieldMeta = this.getFieldMeta(name);
 	        var validate = fieldMeta.validate;
 	
@@ -1219,13 +1339,20 @@ webpackJsonp([1],[
 	          fieldMeta[action].apply(fieldMeta, args);
 	        }
 	        var value = fieldMeta.getValueFromEvent ? fieldMeta.getValueFromEvent.apply(fieldMeta, args) : _utils.getValueFromEvent.apply(undefined, args);
-	        var field = this.getField(name, true);
-	        this.setFields(_defineProperty({}, name, _extends({}, field, {
+	        var fieldContent = void 0;
+	        var nameKeyObj = (0, _utils.getNameKeyObj)(name);
+	        if (this.getFieldMeta(nameKeyObj.name).exclusive) {
+	          name = nameKeyObj.name;
+	        }
+	        var field = this.getField(name);
+	        fieldContent = _extends({}, field, {
 	          value: value,
 	          dirty: (0, _utils.hasRules)(validate)
-	        })));
+	        });
+	        this.setFields(_defineProperty({}, name, fieldContent));
 	      },
-	      onChangeValidate: function onChangeValidate(name, action) {
+	      onChangeValidate: function onChangeValidate(name_, action) {
+	        var name = name_;
 	        var fieldMeta = this.getFieldMeta(name);
 	
 	        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
@@ -1236,7 +1363,11 @@ webpackJsonp([1],[
 	          fieldMeta[action].apply(fieldMeta, args);
 	        }
 	        var value = fieldMeta.getValueFromEvent ? fieldMeta.getValueFromEvent.apply(fieldMeta, args) : _utils.getValueFromEvent.apply(undefined, args);
-	        var field = this.getField(name, true);
+	        var nameKeyObj = (0, _utils.getNameKeyObj)(name);
+	        if (this.getFieldMeta(nameKeyObj.name).exclusive) {
+	          name = nameKeyObj.name;
+	        }
+	        var field = this.getField(name);
 	        field.value = value;
 	        field.dirty = true;
 	        this.validateFieldsInternal([field], {
@@ -1256,20 +1387,12 @@ webpackJsonp([1],[
 	      getFieldMeta: function getFieldMeta(name) {
 	        return this.fieldsMeta[name];
 	      },
-	      getField: function getField(name, copy) {
-	        var ret = this.fields[name];
-	        if (ret) {
-	          ret.name = name;
-	        }
-	        if (copy) {
-	          if (ret) {
-	            return _extends({}, ret);
-	          }
-	          return {
-	            name: name
-	          };
-	        }
-	        return ret;
+	      getField: function getField(name) {
+	        var fields = this.fields;
+	
+	        return _extends({}, fields[name], {
+	          name: name
+	        });
 	      },
 	      getFieldProps: function getFieldProps(name) {
 	        var _this = this;
@@ -1286,19 +1409,41 @@ webpackJsonp([1],[
 	        var _fieldOption$valuePro = fieldOption.valuePropName;
 	        var valuePropName = _fieldOption$valuePro === undefined ? 'value' : _fieldOption$valuePro;
 	        var getValueProps = fieldOption.getValueProps;
+	        var exclusive = fieldOption.exclusive;
 	        var _fieldOption$validate = fieldOption.validateTrigger;
 	        var validateTrigger = _fieldOption$validate === undefined ? defaultValidateTrigger : _fieldOption$validate;
 	        var _fieldOption$validate2 = fieldOption.validate;
 	        var validate = _fieldOption$validate2 === undefined ? [] : _fieldOption$validate2;
 	
+	        var nameKeyObj = (0, _utils.getNameKeyObj)(name);
+	        var leadingName = nameKeyObj.name;
+	        var key = nameKeyObj.key;
+	        var fieldsMeta = this.fieldsMeta;
 	
-	        var fieldMeta = this.fieldsMeta[name] || {};
+	        var fieldMeta = void 0;
+	        var leadingFieldMeta = fieldsMeta[leadingName];
+	
+	        if (key) {
+	          leadingFieldMeta = fieldsMeta[leadingName] = fieldsMeta[leadingName] || {};
+	          leadingFieldMeta.virtual = !exclusive;
+	          // exclusive allow getFieldProps('x', {initialValue})
+	          // non-exclusive does not allow getFieldProps('x', {initialValue})
+	          leadingFieldMeta.hidden = !exclusive;
+	          leadingFieldMeta.exclusive = exclusive;
+	          fieldMeta = fieldsMeta[name] = fieldsMeta[name] || {};
+	        } else {
+	          fieldMeta = fieldsMeta[name] = fieldsMeta[name] || {};
+	        }
 	
 	        if ('initialValue' in fieldOption) {
 	          fieldMeta.initialValue = fieldOption.initialValue;
 	        }
 	
 	        var inputProps = {};
+	
+	        if (key) {
+	          inputProps.key = key;
+	        }
 	
 	        if (fieldNameProp) {
 	          inputProps[fieldNameProp] = name;
@@ -1338,10 +1483,13 @@ webpackJsonp([1],[
 	        if (trigger && validateRules.every(checkRule)) {
 	          inputProps[trigger] = this.getCacheBind(name, trigger, this.onChange);
 	        }
-	        var field = this.getField(name);
-	        var fieldValue = fieldMeta.initialValue;
+	        var field = exclusive ? this.getField(leadingName) : this.getField(name);
+	        var fieldValue = atom;
 	        if (field && 'value' in field) {
 	          fieldValue = field.value;
+	        }
+	        if (fieldValue === atom) {
+	          fieldValue = exclusive ? fieldsMeta[leadingName].initialValue : fieldMeta.initialValue;
 	        }
 	        if (getValueProps) {
 	          inputProps = _extends({}, inputProps, getValueProps(fieldValue));
@@ -1355,7 +1503,7 @@ webpackJsonp([1],[
 	          validate: validateRules
 	        });
 	
-	        this.fieldsMeta[name] = meta;
+	        fieldsMeta[name] = meta;
 	
 	        if (fieldMetaProp) {
 	          inputProps[fieldMetaProp] = meta;
@@ -1379,7 +1527,7 @@ webpackJsonp([1],[
 	      getFieldsValue: function getFieldsValue(names) {
 	        var _this2 = this;
 	
-	        var fields = names || this.getValidFieldsName();
+	        var fields = names || (0, _utils.flatFieldNames)(this.getValidFieldsName());
 	        var allValues = {};
 	        fields.forEach(function (f) {
 	          allValues[f] = _this2.getFieldValue(f);
@@ -1394,15 +1542,30 @@ webpackJsonp([1],[
 	      getFieldInstance: function getFieldInstance(name) {
 	        return this.instances[name];
 	      },
-	      getValueFromFields: function getValueFromFields(name, fields) {
-	        var fieldsMeta = this.fieldsMeta;
-	
+	      getValueFromFieldsInternal: function getValueFromFieldsInternal(name, fields) {
 	        var field = fields[name];
 	        if (field && 'value' in field) {
 	          return field.value;
 	        }
-	        var fieldMeta = fieldsMeta[name];
+	        var fieldMeta = this.fieldsMeta[name];
 	        return fieldMeta && fieldMeta.initialValue;
+	      },
+	      getValueFromFields: function getValueFromFields(name, fields) {
+	        var fieldsMeta = this.fieldsMeta;
+	
+	        if (fieldsMeta[name] && fieldsMeta[name].virtual) {
+	          var ret = {};
+	          for (var fieldKey in fieldsMeta) {
+	            if (fieldsMeta.hasOwnProperty(fieldKey)) {
+	              var nameKeyObj = (0, _utils.getNameKeyObj)(fieldKey);
+	              if (nameKeyObj.name === name && nameKeyObj.key) {
+	                ret[nameKeyObj.key] = this.getValueFromFieldsInternal(fieldKey, fields);
+	              }
+	            }
+	          }
+	          return ret;
+	        }
+	        return this.getValueFromFieldsInternal(name, fields);
 	      },
 	      getRules: function getRules(fieldMeta, action) {
 	        var actionRules = fieldMeta.validate.filter(function (item) {
@@ -1412,14 +1575,22 @@ webpackJsonp([1],[
 	        });
 	        return (0, _utils.flattenArray)(actionRules);
 	      },
-	      setFields: function setFields(fields) {
+	      setFields: function setFields(fields_) {
 	        var _this3 = this;
 	
-	        var originalFields = this.fields;
-	        var nowFields = _extends({}, originalFields, fields);
 	        var fieldsMeta = this.fieldsMeta;
+	        var fields = fields_;
+	        var nowFields = _extends({}, this.fields, fields);
 	        var nowValues = {};
 	        Object.keys(fieldsMeta).forEach(function (f) {
+	          var _getNameKeyObj = (0, _utils.getNameKeyObj)(f);
+	
+	          var name = _getNameKeyObj.name;
+	          var key = _getNameKeyObj.key;
+	
+	          if (key && fieldsMeta[name].exclusive) {
+	            return;
+	          }
 	          nowValues[f] = _this3.getValueFromFields(f, nowFields);
 	        });
 	        var changedFieldsName = Object.keys(fields);
@@ -1427,14 +1598,11 @@ webpackJsonp([1],[
 	          var value = nowValues[f];
 	          var fieldMeta = fieldsMeta[f];
 	          if (fieldMeta && fieldMeta.normalize) {
-	            var nowValue = fieldMeta.normalize(value, _this3.getValueFromFields(f, originalFields), nowValues);
+	            var nowValue = fieldMeta.normalize(value, _this3.getValueFromFields(f, _this3.fields), nowValues);
 	            if (nowValue !== value) {
 	              nowFields[f] = _extends({}, nowFields[f], {
 	                value: nowValue
 	              });
-	              if (changedFieldsName.indexOf(f) === -1) {
-	                changedFieldsName.push(f);
-	              }
 	            }
 	          }
 	        });
@@ -1443,7 +1611,7 @@ webpackJsonp([1],[
 	          (function () {
 	            var changedFields = {};
 	            changedFieldsName.forEach(function (f) {
-	              changedFields[f] = nowFields[f];
+	              changedFields[f] = _this3.getField(f);
 	            });
 	            onFieldsChange(_this3.props, changedFields);
 	          })();
@@ -1451,16 +1619,29 @@ webpackJsonp([1],[
 	        this.forceUpdate();
 	      },
 	      setFieldsValue: function setFieldsValue(fieldsValue) {
-	        var fields = {};
+	        var newFields = {};
+	        var fieldsMeta = this.fieldsMeta;
+	        var fields = this.fields;
+	
 	        for (var name in fieldsValue) {
 	          if (fieldsValue.hasOwnProperty(name)) {
-	            fields[name] = {
-	              name: name,
-	              value: fieldsValue[name]
-	            };
+	            var value = fieldsValue[name];
+	            if (fieldsMeta[name] && fieldsMeta[name].virtual) {
+	              (0, _utils.clearVirtualField)(name, fields, fieldsMeta);
+	              for (var key in value) {
+	                if (value.hasOwnProperty(key)) {
+	                  newFields[(0, _utils.getNameKeyStr)(name, key)] = value[key];
+	                }
+	              }
+	            } else {
+	              newFields[name] = {
+	                name: name,
+	                value: value
+	              };
+	            }
 	          }
 	        }
-	        this.setFields(fields);
+	        this.setFields(newFields);
 	      },
 	      setFieldsInitialValue: function setFieldsInitialValue(initialValues) {
 	        var fieldsMeta = this.fieldsMeta;
@@ -1479,6 +1660,7 @@ webpackJsonp([1],[
 	          delete this.fieldsMeta[name];
 	          delete this.fields[name];
 	          delete this.instances[name];
+	          delete this.cachedBind[name];
 	          return;
 	        }
 	        var fieldMeta = this.getFieldMeta(name);
@@ -1522,13 +1704,12 @@ webpackJsonp([1],[
 	          allFields[name] = newField;
 	        });
 	        this.setFields(allFields);
-	        var nowFields = this.fields;
 	        // in case normalize
 	        Object.keys(allValues).forEach(function (f) {
-	          allValues[f] = nowFields[f].value;
+	          allValues[f] = _this4.getFieldValue(f);
 	        });
 	        if (callback && (0, _utils.isEmptyObject)(allFields)) {
-	          callback((0, _utils.isEmptyObject)(alreadyErrors) ? null : alreadyErrors, this.getFieldsValue(fieldNames));
+	          callback((0, _utils.isEmptyObject)(alreadyErrors) ? null : alreadyErrors, this.getFieldsValue((0, _utils.flatFieldNames)(fieldNames)));
 	          return;
 	        }
 	        var validator = new _asyncValidator2["default"](allRules);
@@ -1553,7 +1734,7 @@ webpackJsonp([1],[
 	          var nowAllFields = {};
 	          Object.keys(allRules).forEach(function (name) {
 	            var fieldErrors = errorsGroup[name];
-	            var nowField = _this4.getField(name, true);
+	            var nowField = _this4.getField(name);
 	            // avoid concurrency problems
 	            if (nowField.value !== allValues[name]) {
 	              expired.push({
@@ -1583,7 +1764,7 @@ webpackJsonp([1],[
 	                };
 	              });
 	            }
-	            callback((0, _utils.isEmptyObject)(errorsGroup) ? null : errorsGroup, _this4.getFieldsValue(fieldNames));
+	            callback((0, _utils.isEmptyObject)(errorsGroup) ? null : errorsGroup, _this4.getFieldsValue((0, _utils.flatFieldNames)(fieldNames)));
 	          }
 	        });
 	      },
@@ -1602,7 +1783,7 @@ webpackJsonp([1],[
 	          if (!(0, _utils.hasRules)(fieldMeta.validate)) {
 	            return null;
 	          }
-	          var field = _this5.getField(name, true);
+	          var field = _this5.getField(name);
 	          field.value = _this5.getFieldValue(name);
 	          return field;
 	        }).filter(function (f) {
@@ -1610,7 +1791,7 @@ webpackJsonp([1],[
 	        });
 	        if (!fields.length) {
 	          if (callback) {
-	            callback(null, this.getFieldsValue(fieldNames));
+	            callback(null, this.getFieldsValue((0, _utils.flatFieldNames)(fieldNames)));
 	          }
 	          return;
 	        }
@@ -1629,17 +1810,21 @@ webpackJsonp([1],[
 	        return this.getFieldMember(name, 'validating');
 	      },
 	      isFieldsValidating: function isFieldsValidating(ns) {
+	        var _this6 = this;
+	
 	        var names = ns || this.getValidFieldsName();
-	        return names.some(this.isFieldValidating);
+	        return names.some(function (n) {
+	          return _this6.isFieldValidating(n);
+	        });
 	      },
 	      isSubmitting: function isSubmitting() {
 	        return this.state.submitting;
 	      },
 	      submit: function submit(callback) {
-	        var _this6 = this;
+	        var _this7 = this;
 	
 	        var fn = function fn() {
-	          _this6.setState({
+	          _this7.setState({
 	            submitting: false
 	          });
 	        };
@@ -1685,7 +1870,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 185 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1693,6 +1878,9 @@ webpackJsonp([1],[
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	exports.argumentContainer = argumentContainer;
 	exports.getValueFromEvent = getValueFromEvent;
 	exports.getErrorStrs = getErrorStrs;
@@ -1700,9 +1888,15 @@ webpackJsonp([1],[
 	exports.flattenArray = flattenArray;
 	exports.mirror = mirror;
 	exports.hasRules = hasRules;
+	exports.startsWith = startsWith;
 	exports.getParams = getParams;
+	exports.getNameKeyStr = getNameKeyStr;
+	exports.getNameKeyObj = getNameKeyObj;
+	exports.flatFields = flatFields;
+	exports.flatFieldNames = flatFieldNames;
+	exports.clearVirtualField = clearVirtualField;
 	
-	var _hoistNonReactStatics = __webpack_require__(186);
+	var _hoistNonReactStatics = __webpack_require__(189);
 	
 	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
 	
@@ -1762,6 +1956,10 @@ webpackJsonp([1],[
 	  return false;
 	}
 	
+	function startsWith(str, prefix) {
+	  return str.lastIndexOf(prefix, 0) === 0;
+	}
+	
 	function getParams(ns, opt, cb) {
 	  var names = ns;
 	  var callback = cb;
@@ -1790,10 +1988,70 @@ webpackJsonp([1],[
 	    options: options
 	  };
 	}
+	
+	var NAME_KEY_SEP = '.';
+	
+	function getNameKeyStr(name, key) {
+	  if (key) {
+	    return '' + name + NAME_KEY_SEP + key;
+	  }
+	  return name;
+	}
+	
+	function getNameKeyObj(str) {
+	  var index = str.indexOf(NAME_KEY_SEP);
+	  if (str.indexOf(NAME_KEY_SEP) !== -1) {
+	    var name = str.slice(0, index);
+	    var key = str.slice(index + NAME_KEY_SEP.length);
+	    return {
+	      name: name,
+	      key: key
+	    };
+	  }
+	  return {
+	    name: str
+	  };
+	}
+	
+	function flatFields(fields_, fieldsMeta) {
+	  var fields = _extends({}, fields_);
+	  Object.keys(fields).forEach(function (k) {
+	    if (fieldsMeta[k] && fieldsMeta[k].virtual) {
+	      var value = fields[k];
+	      // flatten
+	      for (var k2 in value) {
+	        if (value.hasOwnProperty(k2)) {
+	          fields[getNameKeyStr(k, k2)] = value[k2];
+	        }
+	      }
+	      delete fields[k];
+	    }
+	  });
+	  return fields;
+	}
+	
+	function flatFieldNames(names) {
+	  var ret = {};
+	  names.forEach(function (n) {
+	    ret[getNameKeyObj(n).name] = 1;
+	  });
+	  return Object.keys(ret);
+	}
+	
+	function clearVirtualField(name, fields, fieldsMeta) {
+	  if (fieldsMeta[name] && fieldsMeta[name].virtual) {
+	    /* eslint no-loop-func:0 */
+	    Object.keys(fields).forEach(function (ok) {
+	      if (getNameKeyObj(ok).name === name) {
+	        delete fields[ok];
+	      }
+	    });
+	  }
+	}
 
 /***/ },
-/* 186 */,
-/* 187 */
+/* 189 */,
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1806,17 +2064,17 @@ webpackJsonp([1],[
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
-	var _validator = __webpack_require__(189);
+	var _validator = __webpack_require__(192);
 	
 	var _validator2 = _interopRequireDefault(_validator);
 	
-	var _messages2 = __webpack_require__(210);
+	var _messages2 = __webpack_require__(213);
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
-	var _lodash = __webpack_require__(211);
+	var _lodash = __webpack_require__(214);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -2069,7 +2327,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 188 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -2260,7 +2518,7 @@ webpackJsonp([1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 189 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2269,26 +2527,26 @@ webpackJsonp([1],[
 	  value: true
 	});
 	exports["default"] = {
-	  string: __webpack_require__(190),
-	  method: __webpack_require__(198),
-	  number: __webpack_require__(199),
-	  "boolean": __webpack_require__(200),
-	  regexp: __webpack_require__(201),
-	  integer: __webpack_require__(202),
-	  "float": __webpack_require__(203),
-	  array: __webpack_require__(204),
-	  object: __webpack_require__(205),
-	  "enum": __webpack_require__(206),
-	  pattern: __webpack_require__(207),
-	  email: __webpack_require__(208),
-	  url: __webpack_require__(208),
-	  date: __webpack_require__(209),
-	  hex: __webpack_require__(208)
+	  string: __webpack_require__(193),
+	  method: __webpack_require__(201),
+	  number: __webpack_require__(202),
+	  "boolean": __webpack_require__(203),
+	  regexp: __webpack_require__(204),
+	  integer: __webpack_require__(205),
+	  "float": __webpack_require__(206),
+	  array: __webpack_require__(207),
+	  object: __webpack_require__(208),
+	  "enum": __webpack_require__(209),
+	  pattern: __webpack_require__(210),
+	  email: __webpack_require__(211),
+	  url: __webpack_require__(211),
+	  date: __webpack_require__(212),
+	  hex: __webpack_require__(211)
 	};
 	module.exports = exports['default'];
 
 /***/ },
-/* 190 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2297,11 +2555,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2339,7 +2597,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 191 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2348,17 +2606,17 @@ webpackJsonp([1],[
 	  value: true
 	});
 	exports["default"] = {
-	  required: __webpack_require__(192),
-	  whitespace: __webpack_require__(193),
-	  type: __webpack_require__(194),
-	  range: __webpack_require__(195),
-	  "enum": __webpack_require__(196),
-	  pattern: __webpack_require__(197)
+	  required: __webpack_require__(195),
+	  whitespace: __webpack_require__(196),
+	  type: __webpack_require__(197),
+	  range: __webpack_require__(198),
+	  "enum": __webpack_require__(199),
+	  pattern: __webpack_require__(200)
 	};
 	module.exports = exports['default'];
 
 /***/ },
-/* 192 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2367,7 +2625,7 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
@@ -2394,7 +2652,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 193 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2403,7 +2661,7 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
@@ -2430,7 +2688,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 194 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2441,11 +2699,11 @@ webpackJsonp([1],[
 	
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
-	var _required = __webpack_require__(192);
+	var _required = __webpack_require__(195);
 	
 	var _required2 = _interopRequireDefault(_required);
 	
@@ -2539,7 +2797,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 195 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2548,7 +2806,7 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
@@ -2607,7 +2865,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 196 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2616,7 +2874,7 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
@@ -2646,7 +2904,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 197 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2655,7 +2913,7 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	var util = _interopRequireWildcard(_util);
 	
@@ -2684,7 +2942,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 198 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2693,11 +2951,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2730,7 +2988,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 199 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2739,11 +2997,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2777,7 +3035,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 200 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2786,9 +3044,9 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
@@ -2823,7 +3081,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 201 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2832,11 +3090,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2869,7 +3127,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 202 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2878,11 +3136,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2916,7 +3174,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 203 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2925,11 +3183,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -2963,7 +3221,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 204 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2972,11 +3230,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3010,7 +3268,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 205 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3019,11 +3277,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3056,7 +3314,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 206 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3065,11 +3323,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3104,7 +3362,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 207 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3113,11 +3371,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3153,7 +3411,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 208 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3162,11 +3420,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3190,7 +3448,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 209 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3199,11 +3457,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _rule = __webpack_require__(191);
+	var _rule = __webpack_require__(194);
 	
 	var _rule2 = _interopRequireDefault(_rule);
 	
-	var _util = __webpack_require__(188);
+	var _util = __webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -3231,7 +3489,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 210 */
+/* 213 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3298,7 +3556,7 @@ webpackJsonp([1],[
 	var messages = exports.messages = newMessages();
 
 /***/ },
-/* 211 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3309,11 +3567,11 @@ webpackJsonp([1],[
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 */
-	var baseClone = __webpack_require__(212),
-	    isPlainObject = __webpack_require__(214),
-	    keysIn = __webpack_require__(215),
-	    rest = __webpack_require__(216),
-	    root = __webpack_require__(217);
+	var baseClone = __webpack_require__(215),
+	    isPlainObject = __webpack_require__(217),
+	    keysIn = __webpack_require__(218),
+	    rest = __webpack_require__(219),
+	    root = __webpack_require__(220);
 	
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -4594,7 +4852,7 @@ webpackJsonp([1],[
 
 
 /***/ },
-/* 212 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -6383,10 +6641,10 @@ webpackJsonp([1],[
 	
 	module.exports = baseClone;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(213)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(216)(module), (function() { return this; }())))
 
 /***/ },
-/* 213 */
+/* 216 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -6402,7 +6660,7 @@ webpackJsonp([1],[
 
 
 /***/ },
-/* 214 */
+/* 217 */
 /***/ function(module, exports) {
 
 	/**
@@ -6543,7 +6801,7 @@ webpackJsonp([1],[
 
 
 /***/ },
-/* 215 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -7060,10 +7318,10 @@ webpackJsonp([1],[
 	
 	module.exports = keysIn;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(213)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(216)(module), (function() { return this; }())))
 
 /***/ },
-/* 216 */
+/* 219 */
 /***/ function(module, exports) {
 
 	/**
@@ -7414,7 +7672,7 @@ webpackJsonp([1],[
 
 
 /***/ },
-/* 217 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -7477,10 +7735,10 @@ webpackJsonp([1],[
 	
 	module.exports = root;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(213)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(216)(module), (function() { return this; }())))
 
 /***/ },
-/* 218 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7490,7 +7748,7 @@ webpackJsonp([1],[
 	});
 	exports.mixin = undefined;
 	
-	var _createBaseForm = __webpack_require__(184);
+	var _createBaseForm = __webpack_require__(187);
 	
 	var _createBaseForm2 = _interopRequireDefault(_createBaseForm);
 	
@@ -7524,10 +7782,10 @@ webpackJsonp([1],[
 	exports["default"] = createForm;
 
 /***/ },
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7536,11 +7794,11 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _Input = __webpack_require__(223);
+	var _Input = __webpack_require__(226);
 	
 	var _Input2 = _interopRequireDefault(_Input);
 	
-	var _Group = __webpack_require__(224);
+	var _Group = __webpack_require__(228);
 	
 	var _Group2 = _interopRequireDefault(_Group);
 	
@@ -7551,7 +7809,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 223 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7563,7 +7821,7 @@ webpackJsonp([1],[
 	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	var _class, _temp2;
+	var _class, _temp;
 	
 	var _react = __webpack_require__(2);
 	
@@ -7572,6 +7830,10 @@ webpackJsonp([1],[
 	var _classnames = __webpack_require__(176);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _calculateNodeHeight = __webpack_require__(227);
+	
+	var _calculateNodeHeight2 = _interopRequireDefault(_calculateNodeHeight);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -7592,25 +7854,76 @@ webpackJsonp([1],[
 	  return value;
 	}
 	
-	var Input = (_temp2 = _class = function (_React$Component) {
-	  _inherits(Input, _React$Component);
+	function onNextFrame(cb) {
+	  if (window.requestAnimationFrame) {
+	    return window.requestAnimationFrame(cb);
+	  }
+	  return window.setTimeout(cb, 1);
+	}
 	
-	  function Input() {
-	    var _temp, _this, _ret;
+	function clearNextFrameAction(nextFrameId) {
+	  if (window.cancelAnimationFrame) {
+	    window.cancelAnimationFrame(nextFrameId);
+	  } else {
+	    window.clearTimeout(nextFrameId);
+	  }
+	}
 	
+	var Input = (_temp = _class = function (_Component) {
+	  _inherits(Input, _Component);
+	
+	  function Input(props) {
 	    _classCallCheck(this, Input);
 	
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 	
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.handleKeyDown = function (e) {
+	    _this.handleKeyDown = function (e) {
 	      if (e.keyCode === 13) {
 	        _this.props.onPressEnter(e);
 	      }
 	      _this.props.onKeyDown(e);
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	    };
+	
+	    _this.handleTextareaChange = function (e) {
+	      _this.resizeTextarea();
+	      if (_this.props.onChange) {
+	        _this.props.onChange(e);
+	      }
+	    };
+	
+	    _this.resizeTextarea = function () {
+	      var _this$props = _this.props;
+	      var type = _this$props.type;
+	      var autosize = _this$props.autosize;
+	
+	      if (type !== 'textarea' || !autosize || !_this.refs.input) {
+	        return;
+	      }
+	      var minRows = autosize ? autosize.minRows : null;
+	      var maxRows = autosize ? autosize.maxRows : null;
+	      var textareaStyles = (0, _calculateNodeHeight2["default"])(_this.refs.input, false, minRows, maxRows);
+	      _this.setState({ textareaStyles: textareaStyles });
+	    };
+	
+	    _this.state = {
+	      textareaStyles: null
+	    };
+	    return _this;
 	  }
+	
+	  Input.prototype.componentDidMount = function componentDidMount() {
+	    this.resizeTextarea();
+	  };
+	
+	  Input.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	    // Re-render with the new content then recalculate the height as required.
+	    if (this.props.value !== nextProps.value) {
+	      if (this.nextFrameActionId) {
+	        clearNextFrameAction(this.nextFrameActionId);
+	      }
+	      this.nextFrameActionId = onNextFrame(this.resizeTextarea);
+	    }
+	  };
 	
 	  Input.prototype.renderLabledInput = function renderLabledInput(children) {
 	    var _classNames;
@@ -7652,7 +7965,6 @@ webpackJsonp([1],[
 	
 	    var inputClassName = (0, _classnames2["default"])((_classNames2 = {}, _defineProperty(_classNames2, prefixCls, true), _defineProperty(_classNames2, prefixCls + '-sm', props.size === 'small'), _defineProperty(_classNames2, prefixCls + '-lg', props.size === 'large'), _defineProperty(_classNames2, props.className, !!props.className), _classNames2));
 	
-	    var placeholder = props.placeholder;
 	    if ('value' in props) {
 	      props.value = fixControlledValue(props.value);
 	      // Input elements must be either controlled or uncontrolled,
@@ -7662,11 +7974,19 @@ webpackJsonp([1],[
 	
 	    switch (props.type) {
 	      case 'textarea':
-	        return _react2["default"].createElement('textarea', _extends({}, props, { placeholder: placeholder,
-	          className: inputClassName, onKeyDown: this.handleKeyDown, ref: 'input' }));
+	        return _react2["default"].createElement('textarea', _extends({}, props, {
+	          style: _extends({}, props.style, this.state.textareaStyles),
+	          className: inputClassName,
+	          onKeyDown: this.handleKeyDown,
+	          onChange: this.handleTextareaChange,
+	          ref: 'input'
+	        }));
 	      default:
-	        return _react2["default"].createElement('input', _extends({}, props, { placeholder: placeholder,
-	          className: inputClassName, onKeyDown: this.handleKeyDown, ref: 'input' }));
+	        return _react2["default"].createElement('input', _extends({}, props, {
+	          className: inputClassName,
+	          onKeyDown: this.handleKeyDown,
+	          ref: 'input'
+	        }));
 	    }
 	  };
 	
@@ -7675,32 +7995,155 @@ webpackJsonp([1],[
 	  };
 	
 	  return Input;
-	}(_react2["default"].Component), _class.defaultProps = {
+	}(_react.Component), _class.defaultProps = {
 	  defaultValue: '',
 	  disabled: false,
 	  prefixCls: 'ant-input',
 	  type: 'text',
 	  onPressEnter: function onPressEnter() {},
-	  onKeyDown: function onKeyDown() {}
+	  onKeyDown: function onKeyDown() {},
+	
+	  autosize: false
 	}, _class.propTypes = {
-	  type: _react2["default"].PropTypes.string,
-	  id: _react2["default"].PropTypes.oneOfType([_react2["default"].PropTypes.string, _react2["default"].PropTypes.number]),
-	  size: _react2["default"].PropTypes.oneOf(['small', 'default', 'large']),
-	  disabled: _react2["default"].PropTypes.bool,
-	  value: _react2["default"].PropTypes.any,
-	  defaultValue: _react2["default"].PropTypes.any,
-	  className: _react2["default"].PropTypes.string,
-	  addonBefore: _react2["default"].PropTypes.node,
-	  addonAfter: _react2["default"].PropTypes.node,
-	  prefixCls: _react2["default"].PropTypes.string,
-	  onPressEnter: _react2["default"].PropTypes.func,
-	  onKeyDown: _react2["default"].PropTypes.func
-	}, _temp2);
+	  type: _react.PropTypes.string,
+	  id: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
+	  size: _react.PropTypes.oneOf(['small', 'default', 'large']),
+	  disabled: _react.PropTypes.bool,
+	  value: _react.PropTypes.any,
+	  defaultValue: _react.PropTypes.any,
+	  className: _react.PropTypes.string,
+	  addonBefore: _react.PropTypes.node,
+	  addonAfter: _react.PropTypes.node,
+	  prefixCls: _react.PropTypes.string,
+	  autosize: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.object]),
+	  onPressEnter: _react.PropTypes.func,
+	  onKeyDown: _react.PropTypes.func
+	}, _temp);
 	exports["default"] = Input;
 	module.exports = exports['default'];
 
 /***/ },
-/* 224 */
+/* 227 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = calculateNodeHeight;
+	// Thanks to https://github.com/andreypopp/react-textarea-autosize/
+	
+	/**
+	 * calculateNodeHeight(uiTextNode, useCache = false)
+	 */
+	
+	var HIDDEN_TEXTAREA_STYLE = '\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
+	
+	var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
+	
+	var computedStyleCache = {};
+	var hiddenTextarea = void 0;
+	
+	function calculateNodeStyling(node) {
+	  var useCache = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	
+	  var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
+	
+	  if (useCache && computedStyleCache[nodeRef]) {
+	    return computedStyleCache[nodeRef];
+	  }
+	
+	  var style = window.getComputedStyle(node);
+	
+	  var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
+	
+	  var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
+	
+	  var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
+	
+	  var sizingStyle = SIZING_STYLE.map(function (name) {
+	    return name + ':' + style.getPropertyValue(name);
+	  }).join(';');
+	
+	  var nodeInfo = {
+	    sizingStyle: sizingStyle,
+	    paddingSize: paddingSize,
+	    borderSize: borderSize,
+	    boxSizing: boxSizing
+	  };
+	
+	  if (useCache && nodeRef) {
+	    computedStyleCache[nodeRef] = nodeInfo;
+	  }
+	
+	  return nodeInfo;
+	}
+	
+	function calculateNodeHeight(uiTextNode) {
+	  var useCache = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+	  var minRows = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	  var maxRows = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+	
+	  if (!hiddenTextarea) {
+	    hiddenTextarea = document.createElement('textarea');
+	    document.body.appendChild(hiddenTextarea);
+	  }
+	
+	  // Copy all CSS properties that have an impact on the height of the content in
+	  // the textbox
+	
+	  var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache);
+	
+	  var paddingSize = _calculateNodeStyling.paddingSize;
+	  var borderSize = _calculateNodeStyling.borderSize;
+	  var boxSizing = _calculateNodeStyling.boxSizing;
+	  var sizingStyle = _calculateNodeStyling.sizingStyle;
+	
+	  // Need to have the overflow attribute to hide the scrollbar otherwise
+	  // text-lines will not calculated properly as the shadow will technically be
+	  // narrower for content
+	
+	  hiddenTextarea.setAttribute('style', sizingStyle + ';' + HIDDEN_TEXTAREA_STYLE);
+	  hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
+	
+	  var minHeight = -Infinity;
+	  var maxHeight = Infinity;
+	  var height = hiddenTextarea.scrollHeight;
+	
+	  if (boxSizing === 'border-box') {
+	    // border-box: add border, since height = content + padding + border
+	    height = height + borderSize;
+	  } else if (boxSizing === 'content-box') {
+	    // remove padding, since height = content
+	    height = height - paddingSize;
+	  }
+	
+	  if (minRows !== null || maxRows !== null) {
+	    // measure height of a textarea with a single row
+	    hiddenTextarea.value = '';
+	    var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+	    if (minRows !== null) {
+	      minHeight = singleRowHeight * minRows;
+	      if (boxSizing === 'border-box') {
+	        minHeight = minHeight + paddingSize + borderSize;
+	      }
+	      height = Math.max(minHeight, height);
+	    }
+	    if (maxRows !== null) {
+	      maxHeight = singleRowHeight * maxRows;
+	      if (boxSizing === 'border-box') {
+	        maxHeight = maxHeight + paddingSize + borderSize;
+	      }
+	      height = Math.min(maxHeight, height);
+	    }
+	  }
+	  return { height: height, minHeight: minHeight, maxHeight: maxHeight };
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7741,7 +8184,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 225 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7750,13 +8193,13 @@ webpackJsonp([1],[
 	  value: true
 	});
 	
-	var _layout = __webpack_require__(226);
+	var _layout = __webpack_require__(230);
 	
 	exports["default"] = _layout.Col;
 	module.exports = exports['default'];
 
 /***/ },
-/* 226 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7766,11 +8209,11 @@ webpackJsonp([1],[
 	});
 	exports.Col = exports.Row = undefined;
 	
-	var _row = __webpack_require__(227);
+	var _row = __webpack_require__(231);
 	
 	var _row2 = _interopRequireDefault(_row);
 	
-	var _col = __webpack_require__(228);
+	var _col = __webpack_require__(232);
 	
 	var _col2 = _interopRequireDefault(_col);
 	
@@ -7780,7 +8223,7 @@ webpackJsonp([1],[
 	exports.Col = _col2["default"];
 
 /***/ },
-/* 227 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7840,8 +8283,8 @@ webpackJsonp([1],[
 	    var others = _objectWithoutProperties(_props, ['type', 'justify', 'align', 'className', 'gutter', 'style', 'children']);
 	
 	    var classes = (0, _classnames2["default"])((_classNames = {
-	      row: !type
-	    }, _defineProperty(_classNames, 'row-' + type, type), _defineProperty(_classNames, 'row-' + type + '-' + justify, justify), _defineProperty(_classNames, 'row-' + type + '-' + align, align), _defineProperty(_classNames, className, className), _classNames));
+	      'ant-row': !type
+	    }, _defineProperty(_classNames, 'ant-row-' + type, type), _defineProperty(_classNames, 'ant-row-' + type + '-' + justify, justify), _defineProperty(_classNames, 'ant-row-' + type + '-' + align, align), _defineProperty(_classNames, className, className), _classNames));
 	    var rowStyle = gutter > 0 ? _extends({
 	      marginLeft: gutter / -2,
 	      marginRight: gutter / -2
@@ -7878,7 +8321,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 228 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7933,9 +8376,9 @@ webpackJsonp([1],[
 	    } else if (_typeof(props[size]) === 'object') {
 	      sizeProps = props[size] || {};
 	    }
-	    sizeClassObj = _extends({}, sizeClassObj, (_extends2 = {}, _defineProperty(_extends2, 'col-' + size + '-' + sizeProps.span, sizeProps.span !== undefined), _defineProperty(_extends2, 'col-' + size + '-order-' + sizeProps.order, sizeProps.order), _defineProperty(_extends2, 'col-' + size + '-offset-' + sizeProps.offset, sizeProps.offset), _defineProperty(_extends2, 'col-' + size + '-push-' + sizeProps.push, sizeProps.push), _defineProperty(_extends2, 'col-' + size + '-pull-' + sizeProps.pull, sizeProps.pull), _extends2));
+	    sizeClassObj = _extends({}, sizeClassObj, (_extends2 = {}, _defineProperty(_extends2, 'ant-col-' + size + '-' + sizeProps.span, sizeProps.span !== undefined), _defineProperty(_extends2, 'ant-col-' + size + '-order-' + sizeProps.order, sizeProps.order), _defineProperty(_extends2, 'ant-col-' + size + '-offset-' + sizeProps.offset, sizeProps.offset), _defineProperty(_extends2, 'ant-col-' + size + '-push-' + sizeProps.push, sizeProps.push), _defineProperty(_extends2, 'ant-col-' + size + '-pull-' + sizeProps.pull, sizeProps.pull), _extends2));
 	  });
-	  var classes = (0, _classnames2["default"])(_extends((_extends3 = {}, _defineProperty(_extends3, 'col-' + span, span !== undefined), _defineProperty(_extends3, 'col-order-' + order, order), _defineProperty(_extends3, 'col-offset-' + offset, offset), _defineProperty(_extends3, 'col-push-' + push, push), _defineProperty(_extends3, 'col-pull-' + pull, pull), _defineProperty(_extends3, className, !!className), _extends3), sizeClassObj));
+	  var classes = (0, _classnames2["default"])(_extends((_extends3 = {}, _defineProperty(_extends3, 'ant-col-' + span, span !== undefined), _defineProperty(_extends3, 'ant-col-order-' + order, order), _defineProperty(_extends3, 'ant-col-offset-' + offset, offset), _defineProperty(_extends3, 'ant-col-push-' + push, push), _defineProperty(_extends3, 'ant-col-pull-' + pull, pull), _defineProperty(_extends3, className, !!className), _extends3), sizeClassObj));
 	
 	  return _react2["default"].createElement(
 	    'div',
@@ -7960,7 +8403,7 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 229 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7980,7 +8423,7 @@ webpackJsonp([1],[
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _rcAnimate = __webpack_require__(230);
+	var _rcAnimate = __webpack_require__(234);
 	
 	var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 	
@@ -8088,7 +8531,8 @@ webpackJsonp([1],[
 	      { component: '',
 	        showProp: 'data-show',
 	        transitionName: 'slide-up',
-	        onEnd: this.animationEnd },
+	        onEnd: this.animationEnd
+	      },
 	      _react2["default"].createElement(
 	        'div',
 	        { 'data-show': this.state.closing, className: alertCls },
@@ -8124,16 +8568,16 @@ webpackJsonp([1],[
 	module.exports = exports['default'];
 
 /***/ },
-/* 230 */,
-/* 231 */,
-/* 232 */,
-/* 233 */,
 /* 234 */,
 /* 235 */,
 /* 236 */,
 /* 237 */,
 /* 238 */,
-/* 239 */
-301
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */
+305
 ]);
 //# sourceMappingURL=login.js.map

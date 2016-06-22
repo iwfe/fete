@@ -20,7 +20,7 @@ webpackJsonp([3],{
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _reactRouter = __webpack_require__(241);
+	var _reactRouter = __webpack_require__(245);
 	
 	var _button = __webpack_require__(174);
 	
@@ -30,23 +30,23 @@ webpackJsonp([3],{
 	
 	var _icon2 = _interopRequireDefault(_icon);
 	
-	var _card = __webpack_require__(347);
+	var _card = __webpack_require__(351);
 	
 	var _card2 = _interopRequireDefault(_card);
 	
-	var _col = __webpack_require__(225);
+	var _col = __webpack_require__(229);
 	
 	var _col2 = _interopRequireDefault(_col);
 	
-	var _row = __webpack_require__(348);
+	var _row = __webpack_require__(352);
 	
 	var _row2 = _interopRequireDefault(_row);
 	
-	var _team = __webpack_require__(349);
+	var _team = __webpack_require__(353);
 	
 	var _team2 = _interopRequireDefault(_team);
 	
-	__webpack_require__(350);
+	__webpack_require__(354);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -135,7 +135,7 @@ webpackJsonp([3],{
 	        _react2.default.createElement(_reactRouter.Route, { path: ':id', component: Home })
 	    )
 	), document.getElementById('main'));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(342)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(346)))
 
 /***/ },
 
@@ -245,6 +245,15 @@ webpackJsonp([3],{
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _initialiseProps.call(_this), _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
+	  Button.prototype.componentWillUnmount = function componentWillUnmount() {
+	    if (this.clickedTimeout) {
+	      clearTimeout(this.clickedTimeout);
+	    }
+	    if (this.timeout) {
+	      clearTimeout(this.timeout);
+	    }
+	  };
+	
 	  // Handle auto focus when click button in Chrome
 	
 	
@@ -285,7 +294,8 @@ webpackJsonp([3],{
 	        type: htmlType || 'button',
 	        className: classes,
 	        onMouseUp: this.handleMouseUp,
-	        onClick: this.handleClick }),
+	        onClick: this.handleClick
+	      }),
 	      iconType ? _react2["default"].createElement(_icon2["default"], { type: iconType }) : null,
 	      kids
 	    );
@@ -319,7 +329,7 @@ webpackJsonp([3],{
 	    // Add click effect
 	    var buttonNode = (0, _reactDom.findDOMNode)(_this2);
 	    _this2.clearButton(buttonNode);
-	    setTimeout(function () {
+	    _this2.clickedTimeout = setTimeout(function () {
 	      return buttonNode.className += ' ' + _this2.props.prefixCls + '-clicked';
 	    }, 10);
 	    clearTimeout(_this2.timeout);
@@ -402,7 +412,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 225:
+/***/ 229:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -411,14 +421,14 @@ webpackJsonp([3],{
 	  value: true
 	});
 	
-	var _layout = __webpack_require__(226);
+	var _layout = __webpack_require__(230);
 	
 	exports["default"] = _layout.Col;
 	module.exports = exports['default'];
 
 /***/ },
 
-/***/ 226:
+/***/ 230:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -428,11 +438,11 @@ webpackJsonp([3],{
 	});
 	exports.Col = exports.Row = undefined;
 	
-	var _row = __webpack_require__(227);
+	var _row = __webpack_require__(231);
 	
 	var _row2 = _interopRequireDefault(_row);
 	
-	var _col = __webpack_require__(228);
+	var _col = __webpack_require__(232);
 	
 	var _col2 = _interopRequireDefault(_col);
 	
@@ -443,7 +453,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 227:
+/***/ 231:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -503,8 +513,8 @@ webpackJsonp([3],{
 	    var others = _objectWithoutProperties(_props, ['type', 'justify', 'align', 'className', 'gutter', 'style', 'children']);
 	
 	    var classes = (0, _classnames2["default"])((_classNames = {
-	      row: !type
-	    }, _defineProperty(_classNames, 'row-' + type, type), _defineProperty(_classNames, 'row-' + type + '-' + justify, justify), _defineProperty(_classNames, 'row-' + type + '-' + align, align), _defineProperty(_classNames, className, className), _classNames));
+	      'ant-row': !type
+	    }, _defineProperty(_classNames, 'ant-row-' + type, type), _defineProperty(_classNames, 'ant-row-' + type + '-' + justify, justify), _defineProperty(_classNames, 'ant-row-' + type + '-' + align, align), _defineProperty(_classNames, className, className), _classNames));
 	    var rowStyle = gutter > 0 ? _extends({
 	      marginLeft: gutter / -2,
 	      marginRight: gutter / -2
@@ -542,7 +552,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 228:
+/***/ 232:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -597,9 +607,9 @@ webpackJsonp([3],{
 	    } else if (_typeof(props[size]) === 'object') {
 	      sizeProps = props[size] || {};
 	    }
-	    sizeClassObj = _extends({}, sizeClassObj, (_extends2 = {}, _defineProperty(_extends2, 'col-' + size + '-' + sizeProps.span, sizeProps.span !== undefined), _defineProperty(_extends2, 'col-' + size + '-order-' + sizeProps.order, sizeProps.order), _defineProperty(_extends2, 'col-' + size + '-offset-' + sizeProps.offset, sizeProps.offset), _defineProperty(_extends2, 'col-' + size + '-push-' + sizeProps.push, sizeProps.push), _defineProperty(_extends2, 'col-' + size + '-pull-' + sizeProps.pull, sizeProps.pull), _extends2));
+	    sizeClassObj = _extends({}, sizeClassObj, (_extends2 = {}, _defineProperty(_extends2, 'ant-col-' + size + '-' + sizeProps.span, sizeProps.span !== undefined), _defineProperty(_extends2, 'ant-col-' + size + '-order-' + sizeProps.order, sizeProps.order), _defineProperty(_extends2, 'ant-col-' + size + '-offset-' + sizeProps.offset, sizeProps.offset), _defineProperty(_extends2, 'ant-col-' + size + '-push-' + sizeProps.push, sizeProps.push), _defineProperty(_extends2, 'ant-col-' + size + '-pull-' + sizeProps.pull, sizeProps.pull), _extends2));
 	  });
-	  var classes = (0, _classnames2["default"])(_extends((_extends3 = {}, _defineProperty(_extends3, 'col-' + span, span !== undefined), _defineProperty(_extends3, 'col-order-' + order, order), _defineProperty(_extends3, 'col-offset-' + offset, offset), _defineProperty(_extends3, 'col-push-' + push, push), _defineProperty(_extends3, 'col-pull-' + pull, pull), _defineProperty(_extends3, className, !!className), _extends3), sizeClassObj));
+	  var classes = (0, _classnames2["default"])(_extends((_extends3 = {}, _defineProperty(_extends3, 'ant-col-' + span, span !== undefined), _defineProperty(_extends3, 'ant-col-order-' + order, order), _defineProperty(_extends3, 'ant-col-offset-' + offset, offset), _defineProperty(_extends3, 'ant-col-push-' + push, push), _defineProperty(_extends3, 'ant-col-pull-' + pull, pull), _defineProperty(_extends3, className, !!className), _extends3), sizeClassObj));
 	
 	  return _react2["default"].createElement(
 	    'div',
@@ -625,7 +635,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 342:
+/***/ 346:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -637,7 +647,7 @@ webpackJsonp([3],{
 	
 	'use strict';
 	
-	var _message = __webpack_require__(343);
+	var _message = __webpack_require__(347);
 	
 	var _message2 = _interopRequireDefault(_message);
 	
@@ -1148,7 +1158,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 343:
+/***/ 347:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1161,17 +1171,13 @@ webpackJsonp([3],{
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _rcNotification = __webpack_require__(344);
+	var _rcNotification = __webpack_require__(348);
 	
 	var _rcNotification2 = _interopRequireDefault(_rcNotification);
 	
 	var _icon = __webpack_require__(177);
 	
 	var _icon2 = _interopRequireDefault(_icon);
-	
-	var _warning = __webpack_require__(244);
-	
-	var _warning2 = _interopRequireDefault(_warning);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 	
@@ -1241,7 +1247,6 @@ webpackJsonp([3],{
 	
 	  // Departed usage, please use warning()
 	  warn: function warn(content, duration, onClose) {
-	    (0, _warning2["default"])(false, 'message.warn() is departed, please use message.warning()');
 	    return notice(content, duration, 'warning', onClose);
 	  },
 	  warning: function warning(content, duration, onClose) {
@@ -1272,7 +1277,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 344:
+/***/ 348:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1281,7 +1286,7 @@ webpackJsonp([3],{
 	  value: true
 	});
 	
-	var _Notification = __webpack_require__(345);
+	var _Notification = __webpack_require__(349);
 	
 	var _Notification2 = _interopRequireDefault(_Notification);
 	
@@ -1292,7 +1297,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 345:
+/***/ 349:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1311,17 +1316,17 @@ webpackJsonp([3],{
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _rcAnimate = __webpack_require__(230);
+	var _rcAnimate = __webpack_require__(234);
 	
 	var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 	
-	var _rcUtil = __webpack_require__(308);
+	var _rcUtil = __webpack_require__(312);
 	
 	var _classnames = __webpack_require__(176);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
-	var _Notice = __webpack_require__(346);
+	var _Notice = __webpack_require__(350);
 	
 	var _Notice2 = _interopRequireDefault(_Notice);
 	
@@ -1447,7 +1452,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 346:
+/***/ 350:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1538,7 +1543,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 347:
+/***/ 351:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1644,7 +1649,7 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 348:
+/***/ 352:
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1653,14 +1658,14 @@ webpackJsonp([3],{
 	  value: true
 	});
 	
-	var _layout = __webpack_require__(226);
+	var _layout = __webpack_require__(230);
 	
 	exports["default"] = _layout.Row;
 	module.exports = exports['default'];
 
 /***/ },
 
-/***/ 349:
+/***/ 353:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1688,7 +1693,7 @@ webpackJsonp([3],{
 	
 	var _icon2 = _interopRequireDefault(_icon);
 	
-	var _card = __webpack_require__(347);
+	var _card = __webpack_require__(351);
 	
 	var _card2 = _interopRequireDefault(_card);
 	
@@ -1724,8 +1729,8 @@ webpackJsonp([3],{
 
 /***/ },
 
-/***/ 350:
-301
+/***/ 354:
+305
 
 });
 //# sourceMappingURL=team.js.map

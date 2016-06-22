@@ -1,3 +1,13 @@
+/**
+* @Author: lancui
+* @Date:   2016-06-22 12:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-22 13:06:65
+*/
+
+
+
 import Router from 'koa-router';
 const router = new Router({
     prefix: '/api'
@@ -5,7 +15,7 @@ const router = new Router({
 
 var wrap = require('co-monk');
 // var parse = require('co-body');
-// import convert from 'koa-convert';
+// import convert from 'koa-convert';  
 
 var wrap = require('co-monk');
 var db = require('../common/db');

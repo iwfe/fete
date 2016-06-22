@@ -1,7 +1,7 @@
 /**
  * Created by zyy on 15/4/29.
  * zhangyuyu@superjia.com
-//  */
+ //  */
 
 var gulp = require('gulp'),
     argv = require('yargs').argv,
@@ -28,7 +28,7 @@ var entry = null;
 //gulp --product
 //gulp --zip
 //gulp --entry index,map 个别模块的打包
-gulp.task('default', function() {
+gulp.task('default', function () {
     isProduct = argv.product;
     isWatch = !isProduct;
     entry = argv.entry;
@@ -52,7 +52,7 @@ gulp.task('default', function() {
 });
 
 //webpack静态处理
-gulp.task('webpack', function(callback) {
+gulp.task('webpack', function (callback) {
     var minfy = [];
     isProduct && minfy.push(new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -157,28 +157,28 @@ gulp.task('webpack', function(callback) {
     };
 
 
-    webpack(config, function(err, stats) {
+    webpack(config, function (err, stats) {
         console.log(stats.toString());
     });
 });
 
-gulp.task('img', function() {
+gulp.task('img', function () {
     gulp.src([
-            './img/**',
-        ])
+        './img/**',
+    ])
         .pipe(gulp.dest('./dist/img'));
     gulp.src([
-            './global/img/**'
-        ])
+        './global/img/**'
+    ])
         .pipe(gulp.dest('./dist/img/common'));
 
 });
 
-gulp.task('sham', function() {
+gulp.task('sham', function () {
     gulp.src('./global/lib/es5-shim-sham.js').pipe(gulp.dest('./dist'));
 })
 
-gulp.task('zip', function() {
+gulp.task('zip', function () {
     var fullpath = './tmpdist/' + project;
     fse.removeSync('./dist/' + project + '.zip');
     fse.copySync('./dist', fullpath);
@@ -187,29 +187,29 @@ gulp.task('zip', function() {
         .pipe(gulp.dest('./tmpdist'));
 })
 
-gulp.task('zip-clean', ['zip'], function() {
+gulp.task('zip-clean', ['zip'], function () {
     fse.emptydirSync('./dist');
     fse.copySync('./tmpdist/' + project + '.zip', './dist/' + project + '.zip');
     fse.remove('./tmpdist');
 })
 
-gulp.task('img_watch', function() {
+gulp.task('img_watch', function () {
     gulp.watch(['./img/**', './global/img/**'], ['img']);
 });
 
-gulp.task('html', function() {
+gulp.task('html', function () {
     gulp.src([
-            './html/**',
-        ])
+        './html/**',
+    ])
         .pipe(gulp.dest('./dist/html'));
 });
 
-gulp.task('html_watch', function() {
+gulp.task('html_watch', function () {
     gulp.watch('./html/**', ['html']);
 });
 
 // 自动化相关
-gulp.task('auto-branch', function() {
+gulp.task('auto-branch', function () {
     if (!argv.name) {
         console.log('请指定版本号');
         return false;
@@ -218,11 +218,11 @@ gulp.task('auto-branch', function() {
     auto.creatBranch(argv.name);
 })
 
-gulp.task('auto-upload', ['webpack'], function() {
+gulp.task('auto-upload', ['webpack'], function () {
     auto.upload();
 })
 
-gulp.task('publish', function() {
+gulp.task('publish', function () {
     auto.init(gulp);
 
     gulp.start('axtest');
@@ -249,9 +249,8 @@ gulp.task('publish', function() {
 })
 
 
-
 //webpack vue 静态处理
-gulp.task('vue', function(callback) {
+gulp.task('vue', function (callback) {
     isProduct = argv.product;
     isWatch = !isProduct;
 
@@ -293,6 +292,7 @@ gulp.task('vue', function(callback) {
         plugins: [
             new webpack.ProvidePlugin({
                 _: 'underscore',
+                fetch: path.resolve('./common/fetch'),
                 Vue: 'vue',
                 VueRouter: 'vue-router',
                 vueCommon: 'vueCommon'
@@ -300,7 +300,7 @@ gulp.task('vue', function(callback) {
             new webpack.optimize.DedupePlugin(),
             new ExtractTextPlugin("[name].css"),
             new webpack.optimize.CommonsChunkPlugin('vue_common', 'vue_common.js'),
-            new WebpackNotifierPlugin({ excludeWarnings: true, alwaysNotify: false })
+            new WebpackNotifierPlugin({excludeWarnings: true, alwaysNotify: true})
         ].concat(minfy),
 
         module: {
@@ -338,7 +338,7 @@ gulp.task('vue', function(callback) {
         }
     };
 
-    webpack(vue_config, function(err, stats) {
+    webpack(vue_config, function (err, stats) {
         console.log(stats.toString());
     });
 });

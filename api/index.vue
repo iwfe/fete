@@ -1,30 +1,32 @@
 <template>
     <div>
-        <vue-nav></vue-nav>
-        api page!
+        <div v-for="item in apiList">
+            {{item.title}} -- {{item.url}} -- {{item.method}}
+        </div>
     </div>
 </template>
 
 <script type="text/babel">
     export default {
-        components: {
-        
-        },
+        components: {},
         data () {
             return {
-
+                apiList: []
             }
         },
-        props: {
-
-        },
+        props: {},
         ready() {
-            this.$nextTick(function(){
-                componentHandler.upgradeAllRegistered();
-            });
+            this.getList();
         },
         methods: {
-
+            getList () {
+                fetch('/api/apis', {
+                    body: {prdId: '111'}
+                }).then(res = > {
+                    this.apiList = res.data;
+            })
+                ;
+            }
         }
     }
 </script>

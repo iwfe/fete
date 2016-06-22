@@ -12,11 +12,11 @@
         },
         data () {
             return {
-            
+
             }
         },
         props: {
-            
+
         },
         ready() {
             this.$nextTick(function(){
@@ -24,11 +24,11 @@
             });
         },
         methods: {
-            
+
         }
     }
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
-    
+
 </style>

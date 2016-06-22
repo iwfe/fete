@@ -3,7 +3,7 @@
 @Date:   2016-06-16 10:06:25
 @Email:  geyuanjun.sh@superjia.com
 @Last modified by:   geyuanjun
-@Last modified time: 2016-06-22 12:20:31
+@Last modified time: 2016-06-22 12:23:12
 -->
 
 
@@ -37,11 +37,13 @@
 
 
 Q&A:
-1. 如果出现 Cannot find module 'mongodb'
+1, 如果出现 Cannot find module 'mongodb'
     http://www.jianshu.com/p/0ea7ba2bc4a1
-2. 如果安装node-sass好，后使用不了，可能是需要rebuild下，该问题出现在node 6.x版本
+
+2, 如果安装node-sass好，后使用不了，可能是需要rebuild下，该问题出现在node 6.x版本
     `npm rebuild node-sass`
-3. 在运行启动命令：supervisor --harmony server.js后，如果出现类似以下报错
+
+3, 在运行启动命令：supervisor --harmony server.js后，如果出现类似以下报错
 ```
 assert.js:89
   throw new assert.AssertionError({

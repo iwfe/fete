@@ -51,7 +51,7 @@
     "koa-onerror": "^1.2.1",
     "koa-router": "*",
     "koa-static": "*",
-    "koa-views": "*",
+    "koa-views": "^4.1.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
     "monk": "*",

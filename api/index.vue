@@ -5,7 +5,7 @@
             @click="showDetail(item.id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
-
+        <list></list>
         <slide-menu></slide-menu>
     </div>
 </template>
@@ -13,10 +13,11 @@
 <script type="text/babel">
     import TopNav from './top_nav.vue';
     import SlideMenu from './components/slide_menu.vue';
-
+    import List from './list.vue';
     export default {
         components: {
-            SlideMenu
+            SlideMenu,
+            List
         },
         data () {
             return {

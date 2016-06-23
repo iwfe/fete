@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!--<top-nav></top-nav>-->
         <div v-for="item in apiList">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
@@ -11,9 +10,7 @@
     import TopNav from './top_nav.vue';
 
     export default {
-        components: {
-            TopNav
-        },
+        components: {},
         data () {
             return {
                 apiList: []

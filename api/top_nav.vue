@@ -12,15 +12,14 @@
                 </div>
             </div>
 
-
             <div class="right menu">
                 <a class="item">消息</a>
                 <div class="ui pointing dropdown link item">
                     <span class="text" v-text="username"></span>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="header">Categories</div>
-                        <div class="item">Home Goods</div>
+                        <a class="item" href="/user/profile">个人设置</a>
+                        <a class="item" href="/logout">退出</a>
                     </div>
                 </div>
             </div>
@@ -33,8 +32,9 @@
 
     export default Vue.extend({
         name: 'top-nav',
-        attached: function () {
-            $('.ui.dropdown').dropdown({on: 'hover'});
+        replace: false,
+        attached () {
+            $('.ui.dropdown').dropdown({transition: 'drop', on: 'hover'});
         },
         data () {
             return {

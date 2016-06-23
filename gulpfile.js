@@ -270,7 +270,13 @@ gulp.task('vue', function (callback) {
                 'vue-router',
                 'underscore',
                 'vueCommon',
-                'antd/dist/antd.css'
+                'jquery',
+                'semantic-ui/dist/components/transition.css',
+                'semantic-ui/dist/components/transition.js',
+                'semantic-ui/dist/components/dropdown.css',
+                'semantic-ui/dist/components/dropdown.js',
+                'semantic-ui/dist/components/menu.css',
+                './layout/layout.scss'
             ]
         },
         debug: true,
@@ -292,6 +298,8 @@ gulp.task('vue', function (callback) {
         plugins: [
             new webpack.ProvidePlugin({
                 _: 'underscore',
+                $: 'jquery',
+                jQuery: 'jquery',
                 fetch: path.resolve('./common/fetch'),
                 Vue: 'vue',
                 VueRouter: 'vue-router',

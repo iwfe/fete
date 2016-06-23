@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--<top-nav></top-nav>-->
         <div v-for="item in apiList">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
@@ -7,8 +8,12 @@
 </template>
 
 <script type="text/babel">
+    import TopNav from './top_nav.vue';
+
     export default {
-        components: {},
+        components: {
+            TopNav
+        },
         data () {
             return {
                 apiList: []
@@ -16,6 +21,8 @@
         },
         props: {},
         ready() {
+            new TopNav().$mount('#header');
+
             this.getList();
         },
         methods: {

@@ -271,6 +271,7 @@ gulp.task('vue', function (callback) {
                 'underscore',
                 'vueCommon',
                 'jquery',
+                'semantic-ui/dist/components/reset.css',
                 'semantic-ui/dist/components/transition.css',
                 'semantic-ui/dist/components/transition.js',
                 'semantic-ui/dist/components/dropdown.css',

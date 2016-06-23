@@ -22,10 +22,9 @@
             getList () {
                 fetch('/api/apis', {
                     body: {prdId: '111'}
-                }).then(res = > {
+                }).then(res => {
                     this.apiList = res.data;
-            })
-                ;
+                });
             }
         }
     }

@@ -3,29 +3,18 @@
         <top-nav></top-nav>
     </header>
     <section id="main">
-        <div class="list-item"
-            v-for="item in apiList"
-            @click="showDetail(item.id, $event)">
-            {{item.title}} -- {{item.url}} -- {{item.method}}
-        </div>
-        <list></list>
-        <slide-menu></slide-menu>
+        <router-view></router-view>
     </section>
 </template>
 
 <script type="text/babel">
     import TopNav from './top_nav.vue';
-    import SlideMenu from './components/slide_menu.vue';
-    import List from './list.vue';
     export default {
         components: {
-            TopNav,
-            SlideMenu,
-            List
+            TopNav
         },
         data () {
             return {
-                apiList: []
             }
         },
         props: {},

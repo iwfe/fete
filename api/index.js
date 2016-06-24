@@ -3,7 +3,7 @@
 * @Date:   2016-06-22 14:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-24 13:06:28
+* @Last modified time: 2016-06-24 15:06:36
 */
 
 
@@ -14,11 +14,17 @@ let router = vueCommon.createRouter();
 router.map({
     '/api': {
         name: 'index',
-        component: require('./index.vue')
-    },
-    '/api/message': {
-        name: 'message',
-        component: require('./message.vue')
+        component: require('./index.vue'),
+        subRoutes: {
+            '': {
+                name: 'list',
+                component: require('./list.vue')
+            },
+            '/message': {
+                name: 'message',
+                component: require('./message.vue')
+            }
+        }
     }
 });
 

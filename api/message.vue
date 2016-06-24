@@ -2,6 +2,7 @@
 
 <template>
     <div>
+        aaa
         <div v-for="item in msgList">
             {{item.createTime}}：{{item.userName}} {{item.operation}} {{item.desc}} -- {{item.status}}
         </div>
@@ -9,24 +10,19 @@
 </template>
 
 <script type="text/babel">
-    import TopNav from './top_nav.vue';
     export default{
         data() {
             return {
                 msgList: []
             }
         },
-        components:{
-            TopNav
-        },
         ready() {
-            new TopNav().$mount('#header');
             this.getMsgList();
         },
         methods: {
             getMsgList() {
                 fetch('/api/messages', {
-                    body: {userId: pageConfig.me._id}
+                    body: {toUsers: pageConfig.me._id}
                 }).then(res => {
                     this.msgList = res.data;
                 });

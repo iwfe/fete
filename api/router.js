@@ -2,8 +2,8 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-22 13:06:65
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-24 14:06:96
  */
 
 
@@ -24,6 +24,13 @@ import sutil from '../common/sutil';
 
 // api 管理平台
 router.get('/', sutil.login, function*(next) {
+    yield sutil.render(this, {
+        commonTag: 'vue',
+        html: '',
+        staticTag: 'api',
+        noHeader: true
+    });
+}).get('/message', sutil.login, function*(next) {
     yield sutil.render(this, {
         commonTag: 'vue',
         html: '<router-view></router-view>',
@@ -67,6 +74,15 @@ router.delete('/apis', sutil.login, function*(next) {
     } else {
         sutil.failed(this, 150002);
     }
+});
+
+// CURD for message
+var msgDao = wrap(db.get('message'));
+router.get('/messages', sutil.login, function* (next) {
+    if (!this.parse.userId) {
+        sutil.failed(this, 1003);
+    }
+    sutil.success(this, yield msgDao.find({userId: this.parse.userId}));
 });
 
 

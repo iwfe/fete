@@ -14,7 +14,7 @@
 
 
             <div class="right menu">
-                <a class="item">消息</a>
+                <a class="item" v-link="{name: 'message'}">消息</a>
                 <div class="ui pointing dropdown link item">
                     <span class="text" v-text="username"></span>
                     <i class="dropdown icon"></i>
@@ -38,6 +38,7 @@
         },
         data () {
             return {
+                userId: pageConfig.me._id,
                 username: pageConfig.me.username,
                 menus: menus
             }

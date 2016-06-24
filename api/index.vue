@@ -1,6 +1,8 @@
 <template>
     <div>
         <!--<top-nav></top-nav>-->
+        <a class="item" v-link="{name: 'message'}">消息</a>
+
         <div v-for="item in apiList">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>

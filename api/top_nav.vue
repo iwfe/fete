@@ -1,7 +1,7 @@
 <template>
     <div class="header-wrap clearfix">
         <div class="ui secondary pointing menu">
-            <a class="item" :class="{'active': item.key === 'api'}" href="{{item.link}}" v-if="!item.subMenus" v-for="item in menus">
+            <a class="item" :class="{'active': item.key === 'api'}" v-link="{path: item.link}" v-if="!item.subMenus" v-for="item in menus">
                 {{item.text}}
             </a>
             <div class="ui pointing dropdown link item" v-if="item.subMenus" v-for="item in menus">
@@ -50,13 +50,15 @@
 <style lang="sass" rel="stylesheet/scss" type="text/css">
     $blue: #2db7f5;
 
-    .ui.secondary.pointing.menu {
+    .ui.secondary.pointing.menu,
+    .right.menu {
         border: none;
-        .item {
-            padding-top: 0;
-            padding-bottom: 0;
+        font-size: 12px;
+
+        > .item {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
             line-height: 47px;
-            font-size: 12px;
             font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
 
             &:hover {

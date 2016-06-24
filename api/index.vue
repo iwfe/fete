@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <header id="header">
+        <top-nav></top-nav>
+    </header>
+    <section id="main">
         <div class="list-item"
             v-for="item in apiList"
             @click="showDetail(item.id, $event)">
@@ -7,7 +10,7 @@
         </div>
         <list></list>
         <slide-menu></slide-menu>
-    </div>
+    </section>
 </template>
 
 <script type="text/babel">
@@ -16,6 +19,7 @@
     import List from './list.vue';
     export default {
         components: {
+            TopNav,
             SlideMenu,
             List
         },
@@ -26,8 +30,6 @@
         },
         props: {},
         ready() {
-            new TopNav().$mount('#header');
-
             this.getList();
         },
         methods: {

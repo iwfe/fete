@@ -22,5 +22,6 @@ router.map({
     }
 });
 
+document.getElementById('fete').innerHTML = '<router-view></router-view>';
 let app = Vue.extend({});
 router.start(app, "#fete");

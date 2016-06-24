@@ -63,6 +63,7 @@ app.use(function*(next) {
     } catch (e) {
 
     }
+
     this.parse = p;
     var user = _.extend({}, yield * sutil.getLoginUser(this));
     delete user.password;

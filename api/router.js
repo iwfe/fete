@@ -7,12 +7,14 @@
  */
 
 
+import _ from 'underscore';
+import Mock from 'mockjs'
 import Router from 'koa-router';
 const router = new Router({
     prefix: '/api'
 });
 
-var wrap = require('co-monk');
+// var wrap = require('co-monk');
 // var parse = require('co-body');
 // import convert from 'koa-convert';
 
@@ -26,7 +28,7 @@ import sutil from '../common/sutil';
 router.get('/', sutil.login, function*(next) {
     yield sutil.render(this, {
         commonTag: 'vue',
-        html: '<router-view></router-view>',
+        html: '',
         staticTag: 'api',
         noHeader: true
     });
@@ -69,5 +71,31 @@ router.delete('/apis', sutil.login, function*(next) {
     }
 });
 
+
+// api for mock 
+router.all('/mock/:productId/:prdId?/mock/*', function*(next) {
+    this.parse = _.extend(this.parse, this.params);
+
+    let tmpUrlArr = this.request.path.split('/mock');
+    let realUrl = tmpUrlArr[tmpUrlArr.length - 1];
+
+    let filter = {
+        productId: this.parse.productId,
+        url: realUrl
+    }
+    if (this.parse.prdId) {
+        filter.prdId = this.parse.prdId;
+    }
+
+    let apiItems = yield apiDao.find(filter);
+    if (apiItems && apiItems.length > 0) {
+        let data = Mock.mock(JSON.parse(apiItems[0].outputMock));
+        // 这里就不要用 sutil 的 success 方法了
+        this.body = data;
+        return false;
+    } else {
+        sutil.failed(this, 150003);
+    }
+});
 
 export default router;

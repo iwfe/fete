@@ -54,6 +54,7 @@
     "koa-views": "^4.1.0",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
+    "mockjs": "^1.0.1-beta2",
     "monk": "*",
     "node-sass": "^3.4.2",
     "node-uuid": "*",

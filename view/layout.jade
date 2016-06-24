@@ -15,9 +15,12 @@ html
         block css
     body
         div#fete
-            header#header !{header}
-            block content
-                section#main !{html}
+            -if(commonTag=='vue_')
+                div
+            -else
+                header#header !{header}
+                block content
+                    section#main !{html}
         //- script(src='#{staticFilter("/static/js/common/module.layout.js")}')
 
         -var user = JSON.stringify(_user);

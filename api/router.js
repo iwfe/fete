@@ -48,8 +48,11 @@ router.get('/apis', sutil.login, function*(next) {
     }
     let data = yield apiDao.find(
         {prdId: this.parse.prdId},
-        {fields: {title: 1, url: 1, method: 1}
-    });
+        {
+            fields: {title: 1, url: 1, method: 1},
+            sort: {createAt: -1}
+        }
+    );
     sutil.success(this, data);
 });
 router.post('/apis', sutil.login, function*(next) {

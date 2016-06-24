@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <section id="main">
         <div class="list-item"
             v-for="item in apiList"
             @click="showDetail(item.id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
         <slide-menu></slide-menu>
-    </div>
+    </section>
 </template>
 
 <script type="text/babel">
@@ -41,6 +41,15 @@
     }
 </script>
 
-<style>
-
+<style lang="sass" rel="stylesheet/scss" type="text/css">
+    .list-item {
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #eee;
+        margin-bottom: -1px;
+        cursor: pointer;
+        &:hover {
+            background-color: #fafafa;
+        }
+    }
 </style>

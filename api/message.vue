@@ -1,11 +1,11 @@
 /* 消息列表 */
 
 <template>
-    <div>
+    <section id="main">
         <div v-for="item in msgList">
             {{item.createTime}}：{{item.userName}} {{item.operation}} {{item.desc}} -- {{item.status}}
         </div>
-    </div>
+    </section>
 </template>
 
 <script type="text/babel">

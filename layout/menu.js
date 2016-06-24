@@ -11,10 +11,6 @@ const menus = [{
     text: '首页',
     link: '/'
 }, {
-    key: 'api',
-    text: 'API',
-    link: '/api'
-}, {
     key: 'msg',
     text: '消息',
     link: '/msg',
@@ -23,6 +19,11 @@ const menus = [{
         text: '首页',
         link: '/'
     }]
+}, {
+    key: 'api',
+    text: 'API',
+    link: '/api',
+    isVueLink: true
 }];
 
 export default menus;

@@ -46,7 +46,11 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.prdId) {
         sutil.failed(this, 1003);
     }
-    sutil.success(this, yield apiDao.find({prdId: this.parse.prdId}));
+    let data = yield apiDao.find(
+        {prdId: this.parse.prdId},
+        {fields: {title: 1, url: 1, method: 1}
+    });
+    sutil.success(this, data);
 });
 router.post('/apis', sutil.login, function*(next) {
     let insertResult = yield apiDao.insert(

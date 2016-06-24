@@ -2,7 +2,6 @@
 
 <template>
     <div>
-        aaa
         <div v-for="item in msgList">
             {{item.createTime}}：{{item.userName}} {{item.operation}} {{item.desc}} -- {{item.status}}
         </div>

@@ -3,7 +3,7 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-24 15:06:67
+* @Last modified time: 2016-06-24 15:06:05
  */
 
 
@@ -78,16 +78,6 @@ router.delete('/apis', sutil.login, function*(next) {
     }
 });
 
-// CURD for message
-var msgDao = wrap(db.get('message'));
-router.get('/messages', sutil.login, function* (next) {
-    if (!this.parse.toUsers) {
-        sutil.failed(this, 1003);
-    }
-    sutil.success(this, yield msgDao.find({toUsers: this.parse.toUsers}));
-});
-
-
 // api for mock
 router.all('/mock/:productId/:prdId?/mock/*', function*(next) {
     this.parse = _.extend(this.parse, this.params);
@@ -113,5 +103,9 @@ router.all('/mock/:productId/:prdId?/mock/*', function*(next) {
         sutil.failed(this, 150003);
     }
 });
+
+// message router
+var messageRouter = require('./router_message.js');
+messageRouter(router);
 
 export default router;

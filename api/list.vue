@@ -1,7 +1,5 @@
 <template>
-    <div>
-
-    </div>
+    <div>11111</div>
 </template>
 
 <script type="text/babel">
@@ -18,11 +16,7 @@
         },
         methods: {
             getList () {
-                fetch('/api/apis', {
-                    body: {prdId: '111'}
-                }).then(res => {
-                    this.list = res.data;
-                });
+
             }
         }
     }

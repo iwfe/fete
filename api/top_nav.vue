@@ -1,7 +1,7 @@
 <template>
     <div class="header-wrap clearfix">
-        <div class="ui menu">
-            <a class="item" href="{{item.link}}" v-if="!item.subMenus" v-for="item in menus">
+        <div class="ui secondary pointing menu">
+            <a class="item" :class="{'active': item.key === 'api'}" href="{{item.link}}" v-if="!item.subMenus" v-for="item in menus">
                 {{item.text}}
             </a>
             <div class="ui pointing dropdown link item" v-if="item.subMenus" v-for="item in menus">
@@ -12,15 +12,14 @@
                 </div>
             </div>
 
-
             <div class="right menu">
                 <a class="item" v-link="{name: 'message'}">消息</a>
                 <div class="ui pointing dropdown link item">
                     <span class="text" v-text="username"></span>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="header">Categories</div>
-                        <div class="item">Home Goods</div>
+                        <a class="item" href="/user/profile">个人设置</a>
+                        <a class="item" href="/logout">退出</a>
                     </div>
                 </div>
             </div>
@@ -33,8 +32,9 @@
 
     export default Vue.extend({
         name: 'top-nav',
-        attached: function () {
-            $('.ui.dropdown').dropdown({on: 'hover'});
+        replace: false,
+        attached () {
+            $('.ui.dropdown').dropdown({transition: 'drop', on: 'hover'});
         },
         data () {
             return {
@@ -48,5 +48,25 @@
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
+    $blue: #2db7f5;
 
+    .ui.secondary.pointing.menu {
+        border: none;
+        .item {
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 47px;
+            font-size: 12px;
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;
+
+            &:hover {
+                color: $blue !important;
+                border-bottom: 2px solid $blue;
+            }
+        }
+    }
+    .item.active {
+        font-weight: normal !important;
+        border-color: $blue !important;
+    }
 </style>

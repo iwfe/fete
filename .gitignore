@@ -37,3 +37,7 @@ node_modules
 dist
 
 config.js
+
+semantic
+
+semantic.json

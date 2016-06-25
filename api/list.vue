@@ -5,16 +5,12 @@
             @click="showDetail(item.id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
-        <slide-menu></slide-menu>
     </section>
 </template>
 
 <script type="text/babel">
-    import SlideMenu from './components/slide_menu.vue';
-
     export default {
         components: {
-            SlideMenu
         },
         data () {
             return {
@@ -34,7 +30,7 @@
                 });
             },
             showDetail (id, e) {
-                this.$broadcast('slide-menu-open');
+                this.$parent.$broadcast('slide-menu-open');
                 e.stopPropagation();   // 阻止冒泡
             }
         }

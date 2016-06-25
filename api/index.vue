@@ -3,22 +3,24 @@
         <top-nav></top-nav>
     </header>
     <router-view transition="fadeInDown"></router-view>
+    <slide-menu v-if="$route.name === 'list'"></slide-menu>
 </template>
 
 <script type="text/babel">
     import TopNav from './top_nav.vue';
+    import SlideMenu from './components/slide_menu.vue';
+
     export default {
         components: {
-            TopNav
+            TopNav,
+            SlideMenu
         },
         data () {
             return {
             }
         },
         props: {},
-        ready() {
-            this.getList();
-        },
+        ready() {},
         methods: {}
     }
 </script>

@@ -1,11 +1,10 @@
 /**
-* @Author: lancui
-* @Date:   2016-06-22 12:06:00
-* @Email:  lancui@superjia.com
-* @Last modified by:   lancui
-* @Last modified time: 2016-06-22 13:06:65
-*/
-
+ * @Author: lancui
+ * @Date:   2016-06-22 12:06:00
+ * @Email:  lancui@superjia.com
+ * @Last modified by:   lancui
+ * @Last modified time: 2016-06-22 13:06:65
+ */
 
 
 import Router from 'koa-router';
@@ -24,7 +23,7 @@ var apiDao = wrap(db.get('api'));
 import sutil from '../common/sutil';
 
 // api 管理平台
-router.get('/', sutil.login, function* (next) {
+router.get('/', sutil.login, function*(next) {
     yield sutil.render(this, {
         commonTag: 'vue',
         html: '<router-view></router-view>',
@@ -33,34 +32,42 @@ router.get('/', sutil.login, function* (next) {
     });
 });
 
-// CURD api demo
-router.get('/data', sutil.login, function* (next) {
-    // yield sutil.success(this, {success: 'aa'});
-    sutil.success(this, yield apiDao.find({}));
+// CURD for api
+router.get('/apis', sutil.login, function*(next) {
+    if (!this.parse.prdId) {
+        sutil.failed(this, 1003);
+    }
+    sutil.success(this, yield apiDao.find({prdId: this.parse.prdId}));
 });
-router.post('/data', sutil.login, function* (next) {
-    let insertResult = yield apiDao.insert({
-        title: 'test',
-        url: '/api/test/list',
-        method: 'get',
-        input: '{"a": "a", "b": 1}',
-        output: '{"msg": "aa", "err_code": 0}',
-        create_time: new Date(),
-        update_time: new Date()
-    });
+router.post('/apis', sutil.login, function*(next) {
+    let insertResult = yield apiDao.insert(
+        _.extend(this.parse.apiData, {
+                createAt: new Date,
+                operatorId: this.local._user._id,
+                operatorName: this.local._user.username
+            }
+        )
+    );
     if (insertResult) {
-        sutil.success(this, {msg: 'add success', err_code: 0});
+        sutil.success(this, insertResult);
     } else {
-        sutil.failed(this, {msg: 'add failed', err_code: -1});
+        sutil.failed(this, 150001);
     }
 });
-router.put('/data', sutil.login, function* (next) {
+router.put('/apis', sutil.login, function*(next) {
     yield sutil.success(this, {success: 'aa'});
 });
-router.delete('/data', sutil.login, function* (next) {
-    yield sutil.success(this, {success: 'aa'});
+router.delete('/apis', sutil.login, function*(next) {
+    if (!this.parse.apiId) {
+        sutil.failed(this, 1003);
+    }
+    let deleteResult = yield apiDao.remove({_id: this.parse.apiId});
+    if (insertResult) {
+        sutil.success(this, deleteResult);
+    } else {
+        sutil.failed(this, 150002);
+    }
 });
 
 
-//
 export default router;

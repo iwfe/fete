@@ -77,7 +77,9 @@
     "vue-router": "^0.7.13",
     "webpack": "~1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "whatwg-fetch": "*"
+    "whatwg-fetch": "*",
+    "classnames": "*",
+    "set-iterm2-badge": "*"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

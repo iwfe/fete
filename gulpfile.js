@@ -10,6 +10,12 @@ var gulp = require('gulp'),
     path = require('path'),
     util = require('util'),
     zip = require('gulp-zip');
+try{
+    var setIterm2Badge = require('set-iterm2-badge')('FETE gulp');    
+}catch(e){
+
+}
+
 
 
 // var auto = require('./automate.js');
@@ -300,7 +306,10 @@ gulp.task('vue', function(callback) {
             new webpack.optimize.DedupePlugin(),
             new ExtractTextPlugin("[name].css"),
             new webpack.optimize.CommonsChunkPlugin('vue_common', 'vue_common.js'),
-            new WebpackNotifierPlugin({ excludeWarnings: true, alwaysNotify: false })
+            new WebpackNotifierPlugin({
+                excludeWarnings: true,
+                alwaysNotify: false
+            })
         ].concat(minfy),
 
         module: {

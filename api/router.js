@@ -21,6 +21,9 @@ const router = new Router({
 var wrap = require('co-monk');
 var db = require('../common/db');
 var apiDao = wrap(db.get('api'));
+var teamDao = wrap(db.get('team'));
+var productDao = wrap(db.get('product'));
+var prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil';
 
@@ -39,6 +42,18 @@ router.get('/', sutil.login, function*(next) {
         staticTag: 'api',
         noHeader: true
     });
+});
+
+// api 列表页，获取 团队，产品，prd 下拉列表的数据
+router.get('/dropdown', sutil.login, function*(next) {
+    let teams = yield teamDao.find({}, {fields: {name: 1}});
+    // _.each(teams, function (item) {
+    //     item.products = yield productDao.find({}, {fields: {name: 1}});
+    //     _.each(item.products, pItem => {
+    //         pItem.prds = yield prdDao.find({}, {fields: {name: 1}});
+    //     });
+    // })
+    sutil.success(this, teams);
 });
 
 // CURD for api

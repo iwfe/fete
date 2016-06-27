@@ -5,6 +5,9 @@
             @click="showDetail(item._id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
+        <button class="ui icon button">
+            <i class="cloud icon"></i>
+        </button>
     </section>
 </template>
 

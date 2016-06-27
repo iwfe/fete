@@ -36,14 +36,10 @@
                 // just for test
                 fetch('/api/apis', {
                     method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
+                    body: {
                         name: '中文',
                         apiId: id
-                    })
+                    }
                 }).then(res => {
                     console.log(res);
                 });

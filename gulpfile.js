@@ -347,7 +347,8 @@ gulp.task('vue', function (callback) {
         },
         babel: {
             presets: ['es2015', 'stage-3'],
-            plugins: ['transform-runtime']
+            plugins: ['transform-runtime'],
+            cacheDirectory: '.tmp'
         },
         vue: {
             loaders: {

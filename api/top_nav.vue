@@ -5,7 +5,7 @@
                 {{item.text}}
             </a>
             <div class="ui dropdown link item" v-if="item.subMenus" v-for="item in menus">
-                <span class="text">{{item.text}}</span>
+                {{item.text}}
                 <div class="menu">
                     <a class="item" href="{{subItem.link}}" v-for="subItem in item.subMenus">{{subItem.text}}</a>
                 </div>
@@ -15,7 +15,7 @@
             <div class="right menu">
                 <a class="item" v-link="{name: 'message'}">消息</a>
                 <div class="ui pointing dropdown link item">
-                    <span class="text" v-text="username"></span>
+                    {{username}}
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <a class="item" href="/user/profile">个人设置</a>

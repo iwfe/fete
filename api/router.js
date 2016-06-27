@@ -8,7 +8,7 @@
 
 
 import _ from 'underscore';
-import Mock from 'mockjs'
+import Mock from 'mockjs';
 import Router from 'koa-router';
 const router = new Router({
     prefix: '/api'
@@ -56,14 +56,17 @@ router.get('/apis', sutil.login, function*(next) {
     sutil.success(this, data);
 });
 router.post('/apis', sutil.login, function*(next) {
-    let insertResult = yield apiDao.insert(
-        _.extend(this.parse.apiData, {
-                createAt: new Date,
-                operatorId: this.local._user._id,
-                operatorName: this.local._user.username
-            }
-        )
-    );
+    console.log(this.parse);    // just for test
+    console.log(this.locals);    // just for test
+    let insertResult = 'a';     // just for test
+    // let insertResult = yield apiDao.insert(
+    //     _.extend(this.parse.apiData, {
+    //             createAt: new Date,
+    //             operatorId: this.locals._user._id,
+    //             operatorName: this.locals._user.username
+    //         }
+    //     )
+    // );
     if (insertResult) {
         sutil.success(this, insertResult);
     } else {

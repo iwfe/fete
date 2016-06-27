@@ -104,9 +104,7 @@ router.delete('/apis', sutil.login, function*(next) {
 });
 
 // api for mock
-router.all('/mock/:productId/:prdId?/mock/*', function*(next) {
-    this.parse = _.extend(this.parse, this.params);
-
+router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, function*(next) {
     let tmpUrlArr = this.request.path.split('/mock');
     let realUrl = tmpUrlArr[tmpUrlArr.length - 1];
 

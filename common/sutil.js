@@ -194,6 +194,11 @@ var sutil = {
         user.isAdmin = user.role == 'admin'
         user.isMember = user.role == 'member'
         return user
+    },
+
+    * setRouterParams (next) {
+        this.parse = _.extend(this.parse, this.params);
+        yield next;
     }
 
     // sendMail: function(name, title){

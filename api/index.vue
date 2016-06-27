@@ -2,40 +2,63 @@
     <header id="header">
         <top-nav></top-nav>
     </header>
-    <section id="main">
-        <router-view></router-view>
-    </section>
+    <router-view transition="fadeInDown"></router-view>
+    <slide-menu v-if="$route.name === 'list'"></slide-menu>
 </template>
 
 <script type="text/babel">
     import TopNav from './top_nav.vue';
+    import SlideMenu from './components/slide_menu.vue';
+
     export default {
         components: {
-            TopNav
+            TopNav,
+            SlideMenu
         },
         data () {
             return {
             }
         },
         props: {},
-        ready() {
-            
-        },
-        methods: {
-
-        }
+        ready() {},
+        methods: {}
     }
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
-    .list-item {
-        height: 40px;
-        line-height: 40px;
-        border: 1px solid #eee;
-        margin-bottom: -1px;
-        cursor: pointer;
-        &:hover {
-            background-color: #fafafa;
+    @-webkit-keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            -webkit-transform: translateY(-20px);
         }
+        100% {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+        }
+    }
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fadeInDown-transition {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-name: fadeInDown;
+        animation-name: fadeInDown;
+    }
+    .fadeInDown-enter {
+        display: block;
+    }
+    .fadeInDown-leave {
+        display: none;
     }
 </style>

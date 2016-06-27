@@ -1,20 +1,16 @@
 <template>
-    <div>
+    <section id="main">
         <div class="list-item"
             v-for="item in apiList"
-            @click="showDetail(item.id, $event)">
+            @click="showDetail(item._id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
-        <slide-menu></slide-menu>
-    </div>
+    </section>
 </template>
 
 <script type="text/babel">
-    import SlideMenu from './components/slide_menu.vue';
-
     export default {
         components: {
-            SlideMenu
         },
         data () {
             return {
@@ -34,13 +30,37 @@
                 });
             },
             showDetail (id, e) {
-                this.$broadcast('slide-menu-open');
+                this.$parent.$broadcast('slide-menu-open');
                 e.stopPropagation();   // 阻止冒泡
+
+                // just for test
+                fetch('/api/apis', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: '中文',
+                        apiId: id
+                    })
+                }).then(res => {
+                    console.log(res);
+                });
             }
         }
     }
 </script>
 
-<style>
-
+<style lang="sass" rel="stylesheet/scss" type="text/css">
+    .list-item {
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #eee;
+        margin-bottom: -1px;
+        cursor: pointer;
+        &:hover {
+            background-color: #fafafa;
+        }
+    }
 </style>

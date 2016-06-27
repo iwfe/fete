@@ -1,5 +1,4 @@
 /* 消息列表 */
-
 <template>
     <div class="msg-list">
         <table class="ui selectable celled table">

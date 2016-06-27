@@ -2,7 +2,7 @@
     <section id="main">
         <div class="list-item"
             v-for="item in apiList"
-            @click="showDetail(item.id, $event)">
+            @click="showDetail(item._id, $event)">
             {{item.title}} -- {{item.url}} -- {{item.method}}
         </div>
     </section>
@@ -32,6 +32,21 @@
             showDetail (id, e) {
                 this.$parent.$broadcast('slide-menu-open');
                 e.stopPropagation();   // 阻止冒泡
+
+                // just for test
+                fetch('/api/apis', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: '中文',
+                        apiId: id
+                    })
+                }).then(res => {
+                    console.log(res);
+                });
             }
         }
     }

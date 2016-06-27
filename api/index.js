@@ -9,7 +9,7 @@
 
 
 require('./index.scss');
-
+Vue.use(require('vuex'));
 let router = vueCommon.createRouter();
 router.map({
     '/api': {

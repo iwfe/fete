@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 12:06:09
+* @Last modified time: 2016-06-27 15:06:55
 */
 
 var wrap = require('co-monk');
@@ -33,12 +33,13 @@ let messageRouter = (router) => {
         );
     });
     router.put('/messages', sutil.login, function* (next) {
-        if (!this.parse.toUsers) {
+        let _parse = this.parse;
+        if (!_parse.toUsers) {
             sutil.failed(this, 1003);
         }
-        sutil.success(this,
-            yield msgDao.findAndModify({_id: this.parse.msgId}, { $set: {status: 1} })
-        );
+        let query = !_parse.msgId ? {} : {_id: _parse.msgId};
+        let updateRes = yield msgDao.findAndModify(query, { $set: {status: 1} })
+        sutil.success(this, updateRes);
     });
 
 };

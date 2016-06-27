@@ -1,5 +1,6 @@
 /* 消息列表 */
 <template>
+    <section id="main">
     <div class="msg-list">
         <table class="ui selectable celled table">
             <thead>
@@ -8,7 +9,7 @@
                     <th>用户名</th>
                     <th>操作</th>
                     <th>描述</th>
-                    <th>状态</th>
+                    <th>状态<button class="ui basic button all-read"><i class="icon user"></i> 全部已读 </button></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,7 @@
             </tbody>
         </table>
     </div>
+    </section>
 </template>
 
 <script type="text/babel">
@@ -51,10 +53,6 @@
                 if(status == 1) return;
                 fetch('/api/messages', {
                     method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify({msgId: msgId})
                 }).then(res => {
                     this.msgList[i].status = 1;
@@ -82,6 +80,9 @@
             border: solid 1px #1ABC9C;
             background: #1ABC9C;
             cursor: default;
+        }
+        .all-read {
+            padding-left:5px;
         }
     }
 </style>

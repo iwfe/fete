@@ -25,8 +25,9 @@ router.get('/:id', sutil.login, function*(next) {
     yield sutil.render(this, {});
 });
 
-router.get('/list', sutil.login, function*(next) {
+router.get('/data', sutil.login, function*(next) {
     const user = this.locals._user;
+    console.log(`user: ${user}`)
     const teamIds = user.teams;
     let teams = [];
     if (teamIds && teamIds.length) {
@@ -38,7 +39,7 @@ router.get('/list', sutil.login, function*(next) {
     sutil.success(this, teams);
 });
 
-router.post('/add', sutil.login, function*(next) {
+router.post('/data', sutil.login, function*(next) {
     const user = this.locals._user;
     const teamIds = user.teams;
     let teams = [];

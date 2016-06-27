@@ -2,15 +2,16 @@
  * @Author: jade
  * @Date:   2016-06-26 21:49:54
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-27 18:55:04
+ * @Last Modified time: 2016-06-27 23:19:46
  */
 
 'use strict';
 
 // export const REQUEST = 'REQUEST';
-export const RECEIVE = 'RECEIVE';
+export const GET = 'GET';
 export const ADD = 'ADD';
 export const UPDATE = 'UPDATE';
+export const DELETE = 'DELETE';
 
 // export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
@@ -45,31 +46,74 @@ export const UPDATE = 'UPDATE';
 export function getTeams() {
     return dispatch => {
         // dispatch(request())
-        return fetch('/team')
+        return fetch('/team/data')
             .then(json => dispatch({
-                    type: RECEIVE,
-                    teams: json.data.map(child => child.data)
-                });
-            }
+                type: GET,
+                teams: json.data.map(child => child.data)
+            }))
     }
+}
 
-    //是否需要获取文章
-    // function shouldFetchPosts(state, reddit) {
-    //     const posts = state.postsByReddit[reddit]
-    //     if (!posts) {
-    //         return true
-    //     }
-    //     if (posts.isFetching) {
-    //         return false
-    //     }
-    //     return posts.didInvalidate
-    // }
+export function addTeam(team) {
+    return dispatch => {
+        // dispatch(request())
+        return fetch('/team/data', {
+                method: 'post',
+                body: team
+            })
+            .then(json => dispatch({
+                type: ADD,
+                team: json.data
+            }))
+    }
+}
 
-    //如果需要则开始获取文章
-    // export function fetchPostsIfNeeded(reddit) {
-    //     return (dispatch, getState) => {
-    //         if (shouldFetchPosts(getState(), reddit)) {
-    //             return dispatch(fetchPosts(reddit))
-    //         }
-    //     }
-    // }
+export function updateTeam(team) {
+    return dispatch => {
+        // dispatch(request())
+        return fetch('/team/data', {
+                method: 'put',
+                body: team
+            })
+            .then(json => dispatch({
+                type: UPDATE,
+                team: team
+            }))
+    }
+}
+
+export function deleteTeam(team) {
+    return dispatch => {
+        // dispatch(request())
+        return fetch('/team/data', {
+                method: 'delete',
+                body: team
+            })
+            .then(json => dispatch({
+                type: DELETE,
+                team: team
+            }))
+    }
+}
+
+
+//是否需要获取文章
+// function shouldFetchPosts(state, reddit) {
+//     const posts = state.postsByReddit[reddit]
+//     if (!posts) {
+//         return true
+//     }
+//     if (posts.isFetching) {
+//         return false
+//     }
+//     return posts.didInvalidate
+// }
+
+//如果需要则开始获取文章
+// export function fetchPostsIfNeeded(reddit) {
+//     return (dispatch, getState) => {
+//         if (shouldFetchPosts(getState(), reddit)) {
+//             return dispatch(fetchPosts(reddit))
+//         }
+//     }
+// }

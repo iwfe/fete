@@ -1,8 +1,8 @@
 /*
  * @Author: jade
  * @Date:   2016-06-15 17:07:02
- * @Last Modified by:   wjs
- * @Last Modified time: 2016-06-27 14:35:17
+ * @Last Modified by:   jade
+ * @Last Modified time: 2016-06-27 19:33:23
  */
 
 'use strict';
@@ -17,7 +17,7 @@ let self = function fetch(url, options = {}) {
     let opt = Object.assign({
         method: 'GET',
         headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     }, options);

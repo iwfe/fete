@@ -2,16 +2,16 @@
  * @Author: jade
  * @Date:   2016-06-26 21:50:10
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-27 18:50:42
+ * @Last Modified time: 2016-06-27 22:54:42
  */
 
 'use strict';
 import { combineReducers } from 'redux'
 import {
-    // SELECT_REDDIT,
-    // INVALIDATE_REDDIT,
-    // REQUEST_POSTS,
-    RECEIVE
+    GET,
+    ADD,
+    UPDATE,
+    DELETE
 } from './action'
 
 //选择新闻后，将state.selectedReddit设为所选选项
@@ -24,23 +24,26 @@ import {
 //     }
 // }
 
-function getTeams(state = {
+function processTeam(state = {
     teams: []
 }, action) {
     switch (action.type) {
-        // case INVALIDATE_REDDIT:
-        //     return Object.assign({}, state, {
-        //         didInvalidate: true
-        //     })
-        // case REQUEST_POSTS:
-        //     return Object.assign({}, state, {
-        //         isFetching: true,
-        //         didInvalidate: false
-        //     })
-        case RECEIVE:
+        case GET:
             return Object.assign({}, state, {
                 teams: action.teams
             })
+        case ADD:
+            return {
+                teams: [...state.teams, action.team]
+            }
+        case UPDATE:
+            return {
+                teams: _.map(state.teams, item => item.id == action.team ? action.team : item)
+            }
+        case DELETE:
+            return {
+                teams: _.filter(state.teams, item => item.id != action.team.id)
+            }
         default:
             return state
     }
@@ -60,7 +63,7 @@ function getTeams(state = {
 // }
 //将两个reducer合并成一个reducer,也就将全局的state加上postsByReddit,selectedReddit两个属性，每个属性都有自己的state
 const rootReducer = combineReducers({
-    getTeams
+    processTeam
     // selectedReddit
 })
 

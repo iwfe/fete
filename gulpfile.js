@@ -289,6 +289,7 @@ gulp.task('vue', function (callback) {
                 'semantic-ui/dist/components/menu.css',
                 'semantic-ui/dist/components/table.css',
                 'semantic-ui/dist/components/button.css',
+                'semantic-ui/dist/components/icon.css',
                 './layout/layout.scss'
             ]
         },

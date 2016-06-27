@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-24 15:06:75
+* @Last modified time: 2016-06-24 18:06:65
 */
 
 var wrap = require('co-monk');
@@ -11,7 +11,7 @@ var db = require('../common/db');
 import sutil from '../common/sutil';
 
 let messageRouter = (router) => {
-    
+
     router.get('/message', sutil.login, function*(next) {
         yield sutil.render(this, {
             commonTag: 'vue',
@@ -27,7 +27,20 @@ let messageRouter = (router) => {
         if (!this.parse.toUsers) {
             sutil.failed(this, 1003);
         }
-        sutil.success(this, yield msgDao.find({toUsers: this.parse.toUsers}));
+        sutil.success(this,
+            yield msgDao.find({toUsers: this.parse.toUsers},
+                                {sort: {createTime:-1, status:1}})
+        );
+    });
+    router.put('/messages', sutil.login, function* (next) {
+        console.log('=========put')
+        if (!this.parse.toUsers) {
+            sutil.failed(this, 1003);
+        }
+        console.log('======11' + ' ' + this.parse.msgId)
+        sutil.success(this,
+            yield msgDao.findAndModify({_id: this.parse.msgId}, { $set: {status: 1} })
+        );
     });
 
 };

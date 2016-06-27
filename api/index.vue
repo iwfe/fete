@@ -19,20 +19,10 @@
         },
         props: {},
         ready() {
-            this.getList();
+            
         },
         methods: {
-            getList () {
-                fetch('/api/apis', {
-                    body: {prdId: '111'}
-                }).then(res => {
-                    this.apiList = res.data;
-                });
-            },
-            showDetail (id, e) {
-                this.$broadcast('slide-menu-open');
-                e.stopPropagation();   // 阻止冒泡
-            }
+
         }
     }
 </script>

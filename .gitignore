@@ -30,6 +30,8 @@ node_modules
 .npm
 
 .idea
+.vscode
+.tmp
 
 # Optional REPL history
 .node_repl_history
@@ -37,3 +39,7 @@ node_modules
 dist
 
 config.js
+
+semantic
+
+semantic.json

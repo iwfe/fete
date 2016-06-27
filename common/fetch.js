@@ -1,8 +1,8 @@
 /*
  * @Author: jade
  * @Date:   2016-06-15 17:07:02
- * @Last Modified by:   jade
- * @Last Modified time: 2016-06-15 19:54:27
+ * @Last Modified by:   wjs
+ * @Last Modified time: 2016-06-27 13:55:49
  */
 
 'use strict';
@@ -33,6 +33,11 @@ let self = function fetch(url, options = {}) {
         }
         url += query.join('&');
         delete opt.body;
+    }
+    // post put 的时候，需要处理一下 body
+    if (typeof opt.body === 'object') {
+        opt.body = JSON.stringify(opt.body);
+        opt.headers['content-type'] = 'application/json';
     }
 
     const res = self.fetch(url, opt)

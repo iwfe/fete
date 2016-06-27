@@ -1,5 +1,5 @@
 import Koa from 'koa';
-// import bodyParser from 'koa-bodyparser';
+import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 import views from 'koa-views';
 import mount from 'koa-mount';
@@ -9,7 +9,7 @@ import config from './config';
 import sutil from './common/sutil';
 import _ from 'underscore';
 // import parse from 'co-body';
-var parse = require('co-body')
+// var parse = require('co-body')
     // import finalHandler from './lib/finalHandler';
     // import router from './router';
 
@@ -24,7 +24,7 @@ app.use(views(`${__dirname}/view`, {
 app.use(logger());
 
 app.use(mount('/static', serve('dist')));
-// app.use(bodyParser());
+app.use(bodyParser());
 
 app.proxy = true;
 
@@ -42,8 +42,8 @@ app.keys = ['fete'];
 //     }
 //     // store: redisStore(config.redis)
 // }));
-// 
-// 
+//
+//
 
 app.use(function*(next) {
     this.locals = {}
@@ -59,10 +59,11 @@ app.use(function*(next) {
     this.locals._now = new Date().getTime();
     let p = this.query;
     try {
-        p = _.extend(p, yield parse(this), this.params);
+        p = _.extend(p, this.request.body, this.params);
     } catch (e) {
 
     }
+
     this.parse = p;
     var user = _.extend({}, yield * sutil.getLoginUser(this));
     delete user.password;

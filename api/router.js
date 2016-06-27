@@ -2,19 +2,21 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-22 13:06:65
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-24 15:06:05
  */
 
 
+import _ from 'underscore';
+import Mock from 'mockjs';
 import Router from 'koa-router';
 const router = new Router({
     prefix: '/api'
 });
 
-var wrap = require('co-monk');
+// var wrap = require('co-monk');
 // var parse = require('co-body');
-// import convert from 'koa-convert';  
+// import convert from 'koa-convert';
 
 var wrap = require('co-monk');
 var db = require('../common/db');
@@ -26,7 +28,14 @@ import sutil from '../common/sutil';
 router.get('/', sutil.login, function*(next) {
     yield sutil.render(this, {
         commonTag: 'vue',
-        html: '<router-view></router-view>',
+        html: '',
+        staticTag: 'api',
+        noHeader: true
+    });
+}).get('/message', sutil.login, function*(next) {
+    yield sutil.render(this, {
+        commonTag: 'vue',
+        html: '',
         staticTag: 'api',
         noHeader: true
     });
@@ -37,17 +46,27 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.prdId) {
         sutil.failed(this, 1003);
     }
-    sutil.success(this, yield apiDao.find({prdId: this.parse.prdId}));
+    let data = yield apiDao.find(
+        {prdId: this.parse.prdId},
+        {
+            fields: {title: 1, url: 1, method: 1},
+            sort: {createAt: -1}
+        }
+    );
+    sutil.success(this, data);
 });
 router.post('/apis', sutil.login, function*(next) {
-    let insertResult = yield apiDao.insert(
-        _.extend(this.parse.apiData, {
-                createAt: new Date,
-                operatorId: this.local._user._id,
-                operatorName: this.local._user.username
-            }
-        )
-    );
+    console.log(this.parse);    // just for test
+    console.log(this.locals);    // just for test
+    let insertResult = 'a';     // just for test
+    // let insertResult = yield apiDao.insert(
+    //     _.extend(this.parse.apiData, {
+    //             createAt: new Date,
+    //             operatorId: this.locals._user._id,
+    //             operatorName: this.locals._user.username
+    //         }
+    //     )
+    // );
     if (insertResult) {
         sutil.success(this, insertResult);
     } else {
@@ -69,5 +88,34 @@ router.delete('/apis', sutil.login, function*(next) {
     }
 });
 
+// api for mock
+router.all('/mock/:productId/:prdId?/mock/*', function*(next) {
+    this.parse = _.extend(this.parse, this.params);
+
+    let tmpUrlArr = this.request.path.split('/mock');
+    let realUrl = tmpUrlArr[tmpUrlArr.length - 1];
+
+    let filter = {
+        productId: this.parse.productId,
+        url: realUrl
+    }
+    if (this.parse.prdId) {
+        filter.prdId = this.parse.prdId;
+    }
+
+    let apiItems = yield apiDao.find(filter);
+    if (apiItems && apiItems.length > 0) {
+        let data = Mock.mock(JSON.parse(apiItems[0].outputMock));
+        // 这里就不要用 sutil 的 success 方法了
+        this.body = data;
+        return false;
+    } else {
+        sutil.failed(this, 150003);
+    }
+});
+
+// message router
+var messageRouter = require('./router_message.js');
+messageRouter(router);
 
 export default router;

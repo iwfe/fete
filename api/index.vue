@@ -1,35 +1,65 @@
 <template>
-    <div>
-        <div v-for="item in apiList">
-            {{item.title}} -- {{item.url}} -- {{item.method}}
-        </div>
-    </div>
+    <header id="header">
+        <top-nav></top-nav>
+    </header>
+    <router-view transition="fadeInDown"></router-view>
+    <slide-menu v-if="$route.name === 'list'"></slide-menu>
 </template>
 
 <script type="text/babel">
+    import TopNav from './top_nav.vue';
+    import SlideMenu from './components/slide_menu.vue';
+    import store from './vuex/store.js'
     export default {
-        components: {},
+        store,
+        components: {
+            TopNav,
+            SlideMenu
+        },
         data () {
             return {
-                apiList: []
             }
         },
         props: {},
-        ready() {
-            this.getList();
-        },
-        methods: {
-            getList () {
-                fetch('/api/apis', {
-                    body: {prdId: '111'}
-                }).then(res => {
-                    this.apiList = res.data;
-                });
-            }
-        }
+        ready() {},
+        methods: {}
     }
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
+    @-webkit-keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            -webkit-transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+        }
+    }
+    @keyframes fadeInDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
+    .fadeInDown-transition {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-name: fadeInDown;
+        animation-name: fadeInDown;
+    }
+    .fadeInDown-enter {
+        display: block;
+    }
+    .fadeInDown-leave {
+        display: none;
+    }
 </style>

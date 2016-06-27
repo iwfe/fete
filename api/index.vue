@@ -9,8 +9,9 @@
 <script type="text/babel">
     import TopNav from './top_nav.vue';
     import SlideMenu from './components/slide_menu.vue';
-
+    import store from './vuex/store.js'
     export default {
+        store,
         components: {
             TopNav,
             SlideMenu

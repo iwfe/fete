@@ -3,18 +3,21 @@
         <top-nav></top-nav>
     </header>
     <router-view transition="fadeInDown"></router-view>
-    <slide-menu v-if="$route.name === 'list'"></slide-menu>
+    <slide-menu v-if="$route.name === 'list'"><api-setting></api-setting></slide-menu>
 </template>
 
 <script type="text/babel">
     import store from './vuex/store.js'
     import TopNav from './top_nav.vue';
     import SlideMenu from './components/slide_menu.vue';
+    import ApiSetting from './api_setting.vue';
+    import store from './vuex/store.js'
     export default {
         store,
         components: {
             TopNav,
-            SlideMenu
+            SlideMenu,
+            ApiSetting
         },
         data () {
             return {
@@ -62,4 +65,5 @@
     .fadeInDown-leave {
         display: none;
     }
+
 </style>

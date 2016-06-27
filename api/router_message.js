@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 12:06:09
+* @Last modified time: 2016-06-27 17:06:85
 */
 
 var wrap = require('co-monk');
@@ -33,12 +33,16 @@ let messageRouter = (router) => {
         );
     });
     router.put('/messages', sutil.login, function* (next) {
-        if (!this.parse.toUsers) {
+        let _parse = this.parse;
+        if (!_parse.toUsers) {
             sutil.failed(this, 1003);
         }
-        sutil.success(this,
-            yield msgDao.findAndModify({_id: this.parse.msgId}, { $set: {status: 1} })
-        );
+        let msgId = _parse.msgId;
+        let query = !msgId ? {} : {_id: msgId};
+        let multi = !msgId ? true : false; //批量删除
+        console.log(11 + ' ' + JSON.stringify(query) + ' ' + multi)
+        let updateRes = yield msgDao.update(query, { $set: {status: 1}}, {multi: multi})
+        sutil.success(this, updateRes);
     });
 
 };

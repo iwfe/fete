@@ -1,9 +1,9 @@
 /**
-* @Author: lancui
-* @Date:   2016-06-24 14:06:00
-* @Email:  lancui@superjia.com
-* @Last modified by:   lancui
-* @Last modified time: 2016-06-24 16:06:49
+* @Author: geyuanjun
+* @Date:   2016-06-24 17:09:44
+* @Email:  geyuanjun.sh@superjia.com
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-27 17:21:33
 */
 
 
@@ -288,6 +288,18 @@ gulp.task('vue', function (callback) {
                 'semantic-ui/dist/components/dropdown.js',
                 'semantic-ui/dist/components/menu.css',
                 'semantic-ui/dist/components/table.css',
+                'semantic-ui/dist/components/button.min.css',
+                'semantic-ui/dist/components/container.min.css',
+                'semantic-ui/dist/components/divider.min.css',
+                'semantic-ui/dist/components/header.min.css',
+                'semantic-ui/dist/components/icon.min.css',
+                'semantic-ui/dist/components/form.min.css',
+                'semantic-ui/dist/components/form.min.css',
+                'semantic-ui/dist/components/form.min.css',
+                'semantic-ui/dist/components/grid.min.css',
+                'semantic-ui/dist/components/input.min.css',
+                'semantic-ui/dist/components/label.min.css',
+                'semantic-ui/dist/components/list.min.css',
                 './layout/layout.scss'
             ]
         },

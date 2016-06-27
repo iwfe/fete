@@ -40,13 +40,15 @@
     .slide-menu {
         display: none;
         position: fixed;
-        top: 0;
-        left: 50%;
-        width: 50%;
-        height: 100%;
+        top: 50px;
+        right: 0;
+        width: 66%;
+        height: 90%;
         background-color: #fff;
+        border-radius:4px;
         -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         -moz-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
+        overflow:auto;
     }
 </style>

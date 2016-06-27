@@ -9,7 +9,7 @@
                     <th>用户名</th>
                     <th>操作</th>
                     <th>描述</th>
-                    <th>状态<button class="ui basic button all-read"><i class="icon user"></i> 全部已读 </button></th>
+                    <th>状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +22,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="ui modal small">
+          <div class="header">Header</div>
+        </div>
     </div>
     </section>
 </template>
@@ -57,6 +60,20 @@
                 }).then(res => {
                     this.msgList[i].status = 1;
                 });
+            },
+            updateStatusBatch() {
+                // 全部已读
+                // $('.small.modal').modal('show');
+                if(confirm("确定要全部已读吗？")) {
+                    fetch('/api/messages', {
+                        method: 'PUT',
+                        body: JSON.stringify({msgId: null})
+                    }).then(res => {
+                        this.msgList.forEach((item) => {
+                            item.status = 1;
+                        })
+                    });
+                }
             }
         }
     }
@@ -82,7 +99,9 @@
             cursor: default;
         }
         .all-read {
-            padding-left:5px;
+            margin-left: 10px;
+            font-size: 12px;
+            padding: 5px 10px;
         }
     }
 </style>

@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 14:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 15:06:95
+* @Last modified time: 2016-06-27 16:06:15
 */
 
 
@@ -288,8 +288,10 @@ gulp.task('vue', function (callback) {
                 'semantic-ui/dist/components/dropdown.js',
                 'semantic-ui/dist/components/menu.css',
                 'semantic-ui/dist/components/table.css',
-                'semantic-ui/dist/components/button.css',
                 'semantic-ui/dist/components/icon.css',
+                'semantic-ui/dist/components/button.css',
+                'semantic-ui/dist/components/modal.css',
+                'semantic-ui/dist/components/modal.js',
                 './layout/layout.scss'
             ]
         },

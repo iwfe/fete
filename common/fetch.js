@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-15 17:07:02
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-06-27 13:55:49
+ * @Last Modified time: 2016-06-27 14:35:17
  */
 
 'use strict';
@@ -18,7 +18,7 @@ let self = function fetch(url, options = {}) {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
-                // 'Content-Type': 'application/json'
+            'Content-Type': 'application/json'
         }
     }, options);
     if (opt.method.toLowerCase() === 'get' && opt.body) {
@@ -37,7 +37,6 @@ let self = function fetch(url, options = {}) {
     // post put 的时候，需要处理一下 body
     if (typeof opt.body === 'object') {
         opt.body = JSON.stringify(opt.body);
-        opt.headers['content-type'] = 'application/json';
     }
 
     const res = self.fetch(url, opt)

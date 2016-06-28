@@ -3,15 +3,17 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 17:06:98
+* @Last modified time: 2016-06-28 18:06:26
 */
 
 var wrap = require('co-monk');
 var db = require('../common/db');
 import sutil from '../common/sutil';
 
-let messageRouter = (router) => {
+// 监听消息个数
+require('../socket/server.js');
 
+let messageRouter = (router) => {
     router.get('/message', sutil.login, function*(next) {
         yield sutil.render(this, {
             commonTag: 'vue',

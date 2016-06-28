@@ -13,7 +13,7 @@
             <a class="item" v-link="{name: 'list', activeClass: 'active'}">API</a>
 
             <div class="right menu">
-                <a class="item" v-link="{name: 'message'}">消息</a>
+                <a class="item msg-span" v-link="{name: 'message'}">消息 (<span class="msg-count"></span>)</a>
                 <div class="ui pointing dropdown link item">
                     {{username}}
                     <i class="dropdown icon"></i>
@@ -68,6 +68,9 @@
                 color: $blue !important;
                 border-bottom: 2px solid $blue;
             }
+        }
+        .msg-span{
+          width: 100px;
         }
     }
     .item.active {

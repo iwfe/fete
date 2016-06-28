@@ -9,9 +9,7 @@
                     <th>用户名</th>
                     <th>操作</th>
                     <th>描述</th>
-                    <th>状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
-                        <button class="ui basic button all-read" @click="add()">add msg</button>
-                    </th>
+                    <th>状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -32,8 +30,6 @@
 </template>
 
 <script type="text/babel">
-  // require('./socket/server.js')
-  // require('./socket/client.js')
 
   Vue.filter('msgStatus', (value) => {
     return value === 1 ? '已读' : '未读';
@@ -52,7 +48,7 @@
         fetch('/api/messages', {
           method: 'GET',
           body: { toUsers: pageConfig.me._id }
-        }).then(res => {
+        }).then((res) => {
           this.msgList = res.data;
         });
       },
@@ -61,7 +57,7 @@
         fetch('/api/messages', {
           method: 'PUT',
           body: JSON.stringify({ msgId: msgId })
-        }).then(res => {
+        }).then((res) => {
           this.msgList[i].status = 1;
         });
       },
@@ -75,15 +71,9 @@
           }).then(res => {
             this.msgList.forEach((item) => {
               item.status = 1;
-            })
+            });
           });
         }
-      },
-      add() {
-        socket.on('news', (data) => {
-          alert(data);
-          socket.emit('news', 'newsss');
-        });
       }
     }
   }

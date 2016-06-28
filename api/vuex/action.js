@@ -1,11 +1,13 @@
 //添加
-export const add = ({ dispatch }) => {
-    dispatch('ADD')
+export const add = ({ dispatch },list) => {
+    dispatch('ADD',list)
 }
 
 //删除
 export const del = ({ dispatch }) => {
-    dispatch('DEL')
+    if(confirm('确定要删除吗')){
+        dispatch('DEL')
+    }
 }
 
 //切换

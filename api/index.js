@@ -6,10 +6,7 @@
 * @Last modified time: 2016-06-24 15:06:36
 */
 
-
-
 require('./index.scss');
-Vue.use(require('vuex'));
 let router = vueCommon.createRouter();
 router.map({
     '/api': {
@@ -18,7 +15,7 @@ router.map({
         subRoutes: {
             '': {
                 name: 'list',
-                component: require('./list.vue')
+                component: require('./main.vue')
             },
             '/message': {
                 name: 'message',
@@ -29,5 +26,5 @@ router.map({
 });
 
 document.getElementById('fete').innerHTML = '<router-view></router-view>';
-let app = Vue.extend({});
+let app = Vue.extend();
 router.start(app, "#fete");

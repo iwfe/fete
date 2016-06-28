@@ -386,3 +386,12 @@ gulp.task('vue', function(callback) {
     console.log(stats.toString());
   });
 });
+
+gulp.task('server', function() {
+  require('gulp-nodemon')({
+    script: './server.js',
+    ignore: ['dist/*', '*.vue']
+  }).on('restart', function() {
+    console.log('server restarted!')
+  });
+});

@@ -8,6 +8,7 @@
 'use strict';
 const team = {
     _id: '',
+    id: '', //自己生成的团队id
     name: '', //团队名称
     description: '', //团队描述
     createTime: '', //创建时间

@@ -64,21 +64,18 @@ class App extends Component {
     }
 
     render() {
-        console.log('render')
-        console.log(this.props)
         const { teams, actions, addShow, updateShow } = this.props;
-        console.log(addShow)
         return (
             <div className="mod-team">
                 <Row gutter={16}>
                     {
                         teams.map(item=>{
                             <Col key={'team-' + item._id} className="gutter-row" span={6}>
-                                <Team team={item} updateShow={updateShow}></Team>
+                                <Team team={item} updateShow={updateShow && updateShow.team.id === item.id}></Team>
                             </Col>
                         })
                     }
-                    <AddTeam visible={addShow} />
+                    <AddTeam visible={addShow} type="add" />
                     <Col className="team-add gutter-row" span={6} onClick={actions.addShow}>
                         <Card title="创建团队"><Icon type="plus" /></Card>
                     </Col>

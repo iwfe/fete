@@ -76,6 +76,13 @@ export function addTeam(team) {
     }
 }
 
+export function updateShow(team) {
+    return {
+        type: ADD_SHOW,
+        team: team
+    }
+}
+
 export function updateTeam(team) {
     return dispatch => {
         // dispatch(request())

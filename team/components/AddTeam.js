@@ -28,7 +28,6 @@ export default class AddTeam extends Component {
 
     render() {
         const {team, type, visible, confirmLoading} = this.props;
-        console.log(`add:${visible}`)
         return (
             <Modal
                    title={type == 'add' ? '新建团队' : '更新团队'}

@@ -8,13 +8,11 @@
 'use strict';
 import React, {Component, PropTypes} from 'react';
 import Card from 'antd/lib/card';
+import AddTeam from './AddTeam';
 
 export default class Team extends Component {
     constructor(props, context) {
-        super(props, context)
-        this.state = {
-            editing: false
-        }
+        super(props, context);
     }
 
     handleTeam(type = 'add', team = {}) {
@@ -26,10 +24,12 @@ export default class Team extends Component {
     }
 
     render() {
-        const state = this.state;
-        const item = state.item;
+        const {team, updateShow} = this.props;
         return (
-            <Card title={item.name}>{item.description}</Card>
+            <div>
+                <Card title={team.name}>{team.description}</Card>
+                <AddTeam visible={updateShow} team={team} type="update" />
+            </div>
         )
     }
 }

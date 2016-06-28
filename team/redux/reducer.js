@@ -59,7 +59,7 @@ function updateShow(state = false, action) {
     switch (action.type) {
         case
         UPDATE_SHOW:
-            return true;
+            return action.team;
         default:
             return state
     }

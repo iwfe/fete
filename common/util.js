@@ -4,8 +4,22 @@
  */
 import _ from 'underscore';
 
+const RANDOMARRAY = [
+    ..._.map(_.range(0, 26), item => String.fromCharCode(item + 'a'.charCodeAt(0))),
+    ..._.map(_.range(0, 10), item => String.fromCharCode(item + '0'.charCodeAt(0))),
+    ..._.map(_.range(0, 26), item => String.fromCharCode(item + 'A'.charCodeAt(0)))
+];
 
 var util = {
+    genId(len) {
+        let result = '';
+        const arrLen = RANDOMARRAY.length;
+        while(len--) {
+            result += RANDOMARRAY[_.random(0,arrLen)];
+        }
+        return result;
+    },
+
     isEmail(v) {
         return /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/.test(v);
     },

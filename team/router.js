@@ -27,7 +27,6 @@ router.get('/:id', sutil.login, function*(next) {
 
 router.get('/data', sutil.login, function*(next) {
     const user = this.locals._user;
-    console.log(`user: ${user}`)
     const teamIds = user.teams;
     let teams = [];
     if (teamIds && teamIds.length) {

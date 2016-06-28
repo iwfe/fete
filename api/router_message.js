@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 17:06:85
+* @Last modified time: 2016-06-27 17:06:98
 */
 
 var wrap = require('co-monk');
@@ -28,8 +28,7 @@ let messageRouter = (router) => {
             sutil.failed(this, 1003);
         }
         sutil.success(this,
-            yield msgDao.find({toUsers: this.parse.toUsers},
-                                {sort: {createTime:-1, status:1}})
+            yield msgDao.find({toUsers: this.parse.toUsers}, {sort: {createTime:-1, status:1}})
         );
     });
     router.put('/messages', sutil.login, function* (next) {
@@ -39,8 +38,8 @@ let messageRouter = (router) => {
         }
         let msgId = _parse.msgId;
         let query = !msgId ? {} : {_id: msgId};
-        let multi = !msgId ? true : false; //批量删除
-        console.log(11 + ' ' + JSON.stringify(query) + ' ' + multi)
+        let multi = !msgId ? true : false; //批量修改
+
         let updateRes = yield msgDao.update(query, { $set: {status: 1}}, {multi: multi})
         sutil.success(this, updateRes);
     });

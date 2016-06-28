@@ -3,7 +3,7 @@
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-24 17:06:90
+* @Last modified time: 2016-06-27 18:06:31
 */
 
 
@@ -34,7 +34,8 @@ const api = {
             ]
 		}
 	],
-	status: 1,	// 1 新建， 2 修改  3 已废弃
+	mock:{}, //保存生成的mock格式
+	status: 1,	// 1 新建， 2 修改
 	updateDescList: [{ // 修改说明list
 		updateTime: '', // 更新时间
 		userName:'', // 用户名

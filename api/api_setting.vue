@@ -1,6 +1,6 @@
 <template>
 
-<div id="api-detail">
+<div id="api-detail" >
     <h3 class="ui header"><i class="icon settings"></i><div class="content">API设置</div></h3>
     <div class="ui two column middle very relaxed stackable grid">
         <div class="column">
@@ -68,24 +68,29 @@
     </div>
 </div>
 <form>
-<textarea id="code" class="input-param" placeholder="输入数据格式"></textarea>
+<textarea id="code" class="input-param" placeholder="输入数据格式" v-el:root></textarea>
+<edit-frame></edit-frame>
 </form>
 </template>
 
 <script text="text/babel">
+const CodeMirror = require('codemirror/lib/codemirror.js')
 require('codemirror/lib/codemirror.css')
-require('codemirror/addon/lint/lint.css')
-require('codemirror/mode/javascript/javascript.js')
-require('codemirror/mode/css/css.js')
-require('codemirror/addon/lint/lint.js')
-require('codemirror/addon/lint/json-lint.js')
+import editFrame from './editorFrame.vue'
 
+// require('codemirror/addon/lint/lint.css')
+// require('codemirror/mode/javascript/javascript.js')
+// require('codemirror/mode/css/css.js')
+// require('codemirror/addon/lint/lint.js')
+// require('codemirror/addon/lint/json-lint.js')
 export default {
-  components: {},
+  components: {
+    editFrame
+  },
   ready() {
     // const inputEditor = this.initEditor(document.getElementsByClassName('input-param')[0]);
     // const outputEditor = this.initEditor(document.getElementsByClassName('output-param')[0]);
-    const editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+    const editor = CodeMirror.fromTextArea(this.$els.root, {
       lineNumbers: true,
       mode: 'application/json',
       gutters: ['CodeMirror-lint-markers'],

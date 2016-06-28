@@ -42,7 +42,7 @@
         position: fixed;
         top: 50px;
         right: 0;
-        width: 66%;
+        width: 70%;
         height: 90%;
         background-color: #fff;
         border-radius:4px;

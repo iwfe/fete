@@ -71,7 +71,20 @@
         components:{},
         data(){
             return {
-
+                userId:'',
+                userName:'',
+                title:'',
+                url:'',
+                method:'',
+                input:'',
+                output:{},
+                status:1,
+                updateDescList: [],
+            	prdId: '',
+            	productId: '',
+            	teamId: '',
+            	updateTime:'',
+            	createTime:''
             }
         }
     }
@@ -98,9 +111,6 @@
         justify-content: space-between;
         margin:20px auto 0;
         width:50%;
-        .button{
-            // flex:1;
-        }
     }
 }
 </style>

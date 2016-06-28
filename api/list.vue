@@ -27,53 +27,53 @@
 </template>
 
 <script type="text/babel">
-import {tog,add} from './vuex/action'
-export default {
+  import { tog, add } from './vuex/action'
+  export default {
     vuex: {
-        getters: {
-            list: state => state.list,
-            list_active: state => state.list_active
-        },
-        actions: {
-            tog,
-            add
-        }
+      getters: {
+        list: state => state.list,
+        list_active: state => state.list_active
+      },
+      actions: {
+        tog,
+        add
+      }
     },
     ready() {
-        this.getList();
+      this.getList();
     },
     methods: {
-        getList () {
-            fetch('/api/apis', {
-                body: {prdId: '111'}
-            }).then(res => {
-                res.data.forEach(v => {
-                    this.add(v);
-                });
-            });
-        },
-        showDetail (item, e) {
-            this.$dispatch('open');
-            if(item._id){
-                fetch('/api/apis', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: '中文',
-                        apiId: item._id
-                    })
-                }).then(res => {
-                    console.log(res);
-                });
-            }
-            this.tog(item);
-            e.stopPropagation();
+      getList() {
+        fetch('/api/apis', {
+          body: { prdId: '111' }
+        }).then(res => {
+          res.data.forEach(v => {
+            this.add(v);
+          });
+        });
+      },
+      showDetail(item, e) {
+        this.$dispatch('open');
+        if (item._id) {
+          fetch('/api/apis', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              name: '中文',
+              apiId: item._id
+            })
+          }).then(res => {
+            console.log(res);
+          });
         }
+        this.tog(item);
+        e.stopPropagation();
+      }
     }
-}
+  }
 </script>
 
 <style>

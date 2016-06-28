@@ -76,42 +76,40 @@ require('codemirror/mode/css/css.js')
 require('codemirror/addon/lint/lint.js')
 require('codemirror/addon/lint/json-lint.js')
 export default {
-    components: {},
-    data() {
-        return {
-            userId: '',
-            userName: '',
-            title: '',
-            url: '',
-            method: '',
-            input: '',
-            output: {},
-            status: 1,
-            updateDescList: [],
-            prdId: '',
-            productId: '',
-            teamId: '',
-            updateTime: '',
-            createTime: ''
-        }
-    },
-    ready(){
-      console.log(CodeMirror.fromTextArea);
-
-    },
-    methods:{
-      initEditor: function(input) {
-        var editor_json = CodeMirror.fromTextArea(input, {
-          lineNumbers: true,
-          mode: "application/json",
-          gutters: ["CodeMirror-lint-markers"],
-          lint: true
-        });
-        return editor_json;
-      },
+  components: {},
+  data() {
+    return {
+      userId: '',
+      userName: '',
+      title: '',
+      url: '',
+      method: '',
+      input: '',
+      output: {},
+      status: 1,
+      updateDescList: [],
+      prdId: '',
+      productId: '',
+      teamId: '',
+      updateTime: '',
+      createTime: ''
     }
+  },
+  ready(){
+    console.log(CodeMirror.fromTextArea);
+  },
+  methods:{
+    initEditor: function(input) {
+      var editor_json = CodeMirror.fromTextArea(input, {
+        lineNumbers: true,
+        mode: "application/json",
+        gutters: ["CodeMirror-lint-markers"],
+        lint: true
+      });
+      return editor_json;
+    },
+  }
 }
-
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 

@@ -1,31 +1,33 @@
 <template>
-    <header id="header">
-        <top-nav></top-nav>
-    </header>
-    <router-view transition="fadeInDown"></router-view>
-    <slide-menu v-if="$route.name === 'list'"><api-setting></api-setting></slide-menu>
+  <header id="header">
+    <top-nav></top-nav>
+  </header>
+  <router-view transition="fadeInDown"></router-view>
+  <slide-menu v-if="$route.name === 'list'">
+    <api-setting></api-setting>
+  </slide-menu>
 </template>
 
 <script type="text/babel">
-    import store from './vuex/store.js'
-    import TopNav from './top_nav.vue';
-    import SlideMenu from './components/slide_menu.vue';
-    import ApiSetting from './api_setting.vue';
-    export default {
-        store,
-        components: {
-            TopNav,
-            SlideMenu,
-            ApiSetting
-        },
-        data () {
-            return {
-            }
-        },
-        props: {},
-        ready() {},
-        methods: {}
-    }
+  import store from './vuex/store.js'
+  import TopNav from './top_nav.vue';
+  import SlideMenu from './components/slide_menu.vue';
+  import ApiSetting from './api_setting.vue';
+  export default {
+    store,
+    components: {
+      TopNav,
+      SlideMenu,
+      ApiSetting
+    },
+    data () {
+      return {
+      }
+    },
+    props: {},
+    ready() {},
+    methods: {}
+  }
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">

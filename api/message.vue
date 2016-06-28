@@ -32,61 +32,61 @@
 </template>
 
 <script type="text/babel">
-    // require('./socket/server.js')
-    // require('./socket/client.js')
+  // require('./socket/server.js')
+  // require('./socket/client.js')
 
-    Vue.filter('msgStatus', (value) => {
-        return value == 1 ? '已读' : '未读';
-    })
-    export default{
-        data() {
-            return {
-                msgList: []
-            }
-        },
-        ready() {
-            this.getMsgList();
-        },
-        methods: {
-            getMsgList() {
-                fetch('/api/messages', {
-                    method: 'GET',
-                    body: {toUsers: pageConfig.me._id}
-                }).then(res => {
-                    this.msgList = res.data;
-                });
-            },
-            updateStatus(msgId, i, status) {
-                if(status == 1) return;
-                fetch('/api/messages', {
-                    method: 'PUT',
-                    body: JSON.stringify({msgId: msgId})
-                }).then(res => {
-                    this.msgList[i].status = 1;
-                });
-            },
-            updateStatusBatch() {
-                // 全部已读
-                // $('.small.modal').modal('show');
-                if(confirm("确定要全部已读吗？")) {
-                    fetch('/api/messages', {
-                        method: 'PUT',
-                        body: JSON.stringify({msgId: null})
-                    }).then(res => {
-                        this.msgList.forEach((item) => {
-                            item.status = 1;
-                        })
-                    });
-                }
-            },
-            add() {
-                socket.on('news', function (data) {
-                  alert(data);
-                  socket.emit('news', 'newsss');
-                });
-            }
+  Vue.filter('msgStatus', (value) => {
+    return value == 1 ? '已读' : '未读';
+  })
+  export default {
+    data() {
+      return {
+        msgList: []
+      }
+    },
+    ready() {
+      this.getMsgList();
+    },
+    methods: {
+      getMsgList() {
+        fetch('/api/messages', {
+          method: 'GET',
+          body: { toUsers: pageConfig.me._id }
+        }).then(res => {
+          this.msgList = res.data;
+        });
+      },
+      updateStatus(msgId, i, status) {
+        if (status == 1) return;
+        fetch('/api/messages', {
+          method: 'PUT',
+          body: JSON.stringify({ msgId: msgId })
+        }).then(res => {
+          this.msgList[i].status = 1;
+        });
+      },
+      updateStatusBatch() {
+        // 全部已读
+        // $('.small.modal').modal('show');
+        if (confirm("确定要全部已读吗？")) {
+          fetch('/api/messages', {
+            method: 'PUT',
+            body: JSON.stringify({ msgId: null })
+          }).then(res => {
+            this.msgList.forEach((item) => {
+              item.status = 1;
+            })
+          });
         }
+      },
+      add() {
+        socket.on('news', function(data) {
+          alert(data);
+          socket.emit('news', 'newsss');
+        });
+      }
     }
+  }
 </script>
 
 <style lang="sass">

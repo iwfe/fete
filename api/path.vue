@@ -9,20 +9,20 @@
 
 <script type="text/babel">
 export default {
-    components: {
+  components: {
 
-    },
-    data () {
-        return {
-
-        }
-    },
-    props: {},
-    ready() {
-    },
-    methods: {
+  },
+  data() {
+    return {
 
     }
+  },
+  props: {},
+  ready() {
+  },
+  methods: {
+
+  }
 }
 </script>
 

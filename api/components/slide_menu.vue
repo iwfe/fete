@@ -5,35 +5,35 @@
 </template>
 
 <script type="text/babel">
-    export default {
-        data () {
-            return {
-                open: false
-            }
-        },
-        ready () {
-            $('html').click(() => {
-                this.$emit('slide-menu-close');
-            });
-            $('.slide-menu').click((e) => {
-                e.stopPropagation();
-            });
-        },
-        events: {
-            'slide-menu-open': function () {
-                if (!this.open) {
-                    $('.slide-menu').transition('slide left');
-                    this.open = true;
-                }
-            },
-            'slide-menu-close': function () {
-                if (this.open) {
-                    $('.slide-menu').transition('slide left');
-                    this.open = false;
-                }
-            }
+  export default {
+    data() {
+      return {
+        open: false
+      }
+    },
+    ready() {
+      $('html').click(() => {
+        this.$emit('slide-menu-close');
+      });
+      $('.slide-menu').click((e) => {
+        e.stopPropagation();
+      });
+    },
+    events: {
+      'slide-menu-open': function () {
+        if (!this.open) {
+          $('.slide-menu').transition('slide left');
+          this.open = true;
         }
+      },
+      'slide-menu-close': function () {
+        if (this.open) {
+          $('.slide-menu').transition('slide left');
+          this.open = false;
+        }
+      }
     }
+  }
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">

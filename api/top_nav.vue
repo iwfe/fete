@@ -28,23 +28,23 @@
 </template>
 
 <script type="text/babel">
-    import menus from '../layout/menu';
+  import menus from '../layout/menu';
 
-    export default Vue.extend({
-        name: 'top-nav',
-        replace: false,
-        attached () {
-            $('.ui.dropdown').dropdown({transition: 'drop', on: 'hover'});
-        },
-        data () {
-            return {
-                userId: pageConfig.me._id,
-                username: pageConfig.me.username,
-                menus: menus
-            }
-        },
-        methods: {}
-    })
+  export default Vue.extend({
+    name: 'top-nav',
+    replace: false,
+    attached() {
+      $('.ui.dropdown').dropdown({ transition: 'drop', on: 'hover' });
+    },
+    data() {
+      return {
+        userId: pageConfig.me._id,
+        username: pageConfig.me.username,
+        menus: menus
+      }
+    },
+    methods: {}
+  })
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">

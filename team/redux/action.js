@@ -2,15 +2,17 @@
  * @Author: jade
  * @Date:   2016-06-26 21:49:54
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-27 23:19:46
+ * @Last Modified time: 2016-06-28 13:14:44
  */
 
 'use strict';
 
 // export const REQUEST = 'REQUEST';
 export const GET = 'GET';
+export const ADD_SHOW = 'ADD_SHOW';
 export const ADD = 'ADD';
 export const UPDATE = 'UPDATE';
+export const UPDATE_SHOW = 'UPDATE_SHOW';
 export const DELETE = 'DELETE';
 
 // export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
@@ -51,6 +53,12 @@ export function getTeams() {
                 type: GET,
                 teams: json.data.map(child => child.data)
             }))
+    }
+}
+
+export function addShow() {
+    return {
+        type: ADD_SHOW
     }
 }
 

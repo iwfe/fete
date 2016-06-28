@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-12 00:03:50
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-16 11:58:14
+ * @Last Modified time: 2016-06-28 13:12:35
  */
 
 'use strict';
@@ -34,3 +34,4 @@ const Team = React.createClass({
         )
     }
 });
+export default Team;

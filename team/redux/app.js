@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-26 21:57:58
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-27 23:27:39
+ * @Last Modified time: 2016-06-28 13:20:53
  */
 
 'use strict';
@@ -10,8 +10,8 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-import * as action from './action'
-import { getTeams, addTeam, updateTeam, deleteTeam } from './action';
+import * as actions from './action'
+// import { getTeams, addTeam, updateTeam, deleteTeam } from './action';
 // import {
 //     Router,
 //     Route,
@@ -24,7 +24,7 @@ import Icon from 'antd/lib/icon';
 import Card from 'antd/lib/card';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
-// import Team from './team';
+import Team from '../components/Team';
 import './app.scss';
 
 class App extends Component {
@@ -37,8 +37,8 @@ class App extends Component {
     //初始化渲染后触发
     componentDidMount() {
         console.log('执行componentDidMount');
-        const { dispatch } = this.props
-        dispatch(getTeams())
+        const { actions } = this.props
+        actions.getTeams();
     }
 
     //每次接受新的props触发
@@ -63,14 +63,14 @@ class App extends Component {
     }
 
     render() {
-        const { teams } = this.props
+        const { teams, addShow, updateShow } = this.props;
         return (
             <div className="mod-team">
                 <Row gutter={16}>
                     {
                         teams.map(item=>{
                             <Col key={'team-' + item._id} className="gutter-row" span={6}>
-                                <Team team={item}></Team>
+                                <Team team={item} updateShow={updateShow}></Team>
                             </Col>
                         })
                     }
@@ -85,22 +85,25 @@ class App extends Component {
 
 App.propTypes = {
     teams: PropTypes.array.isRequired,
-    dispatch: PropTypes.func.isRequired
+    addShow: PropTypes.bool,
+    updateShow: PropTypes.bool
 }
 
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     actions: bindActionCreators(TodoActions, dispatch)
-//   }
-// }
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
 
 // connect(mapStateToProps, mapDispatchToProps)(Counter)
 
 export default connect(()=>{
     return {
-        teams:[]
+        teams:[],
+        addShow: false,
+        updateShow: false
     }
-})(App);
+}, mapDispatchToProps)(App);
 
 /**
  * 

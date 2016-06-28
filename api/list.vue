@@ -11,11 +11,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr
-                @click="tog(item)"
+            <tr track by
+                @click="showDetail(item, $event)"
                 v-for="item in list"
                 :class="{'active': list_active === item}">
-                <td><input type="checkbox" /></td>
+                <td>{{item._id}}</td>
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td>{{item.method}}</td>
@@ -62,23 +62,25 @@ export default {
                 });
             });
         },
-        showDetail (id, e) {
-            this.$parent.$broadcast('slide-menu-open');
+        showDetail (item, e) {
+            this.$dispatch('slide-menu-open');
+            if(item._id){
+                fetch('/api/apis', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: '中文',
+                        apiId: item._id
+                    })
+                }).then(res => {
+                    console.log(res);
+                });
+            }
+            this.tog(item);
             e.stopPropagation();
-            e.parentDefault();
-            fetch('/api/apis', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: '中文',
-                    apiId: id
-                })
-            }).then(res => {
-                console.log(res);
-            });
         }
     }
 }

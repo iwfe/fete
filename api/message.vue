@@ -36,7 +36,7 @@
   // require('./socket/client.js')
 
   Vue.filter('msgStatus', (value) => {
-    return value == 1 ? '已读' : '未读';
+    return value === 1 ? '已读' : '未读';
   })
   export default {
     data() {
@@ -57,7 +57,7 @@
         });
       },
       updateStatus(msgId, i, status) {
-        if (status == 1) return;
+        if (status === 1) return;
         fetch('/api/messages', {
           method: 'PUT',
           body: JSON.stringify({ msgId: msgId })
@@ -68,7 +68,7 @@
       updateStatusBatch() {
         // 全部已读
         // $('.small.modal').modal('show');
-        if (confirm("确定要全部已读吗？")) {
+        if (confirm('确定要全部已读吗？')) {
           fetch('/api/messages', {
             method: 'PUT',
             body: JSON.stringify({ msgId: null })
@@ -80,7 +80,7 @@
         }
       },
       add() {
-        socket.on('news', function(data) {
+        socket.on('news', (data) => {
           alert(data);
           socket.emit('news', 'newsss');
         });

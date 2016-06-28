@@ -20,7 +20,7 @@
       SlideMenu,
       ApiSetting
     },
-    data () {
+    data() {
       return {
       }
     },

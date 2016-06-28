@@ -54,21 +54,6 @@
       },
       showDetail(item, e) {
         this.$dispatch('open');
-        if (item._id) {
-          fetch('/api/apis', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              name: '中文',
-              apiId: item._id
-            })
-          }).then(res => {
-            console.log(res);
-          });
-        }
         this.tog(item);
         e.stopPropagation();
       }

@@ -69,12 +69,12 @@
 </template>
 
 <script text="text/babel">
-let CodeMirror = require('codemirror/lib/codemirror.js');
-require('codemirror/lib/codemirror.css')
-require('codemirror/mode/javascript/javascript.js')
-require('codemirror/mode/css/css.js')
-require('codemirror/addon/lint/lint.js')
-require('codemirror/addon/lint/json-lint.js')
+// let CodeMirror = require('codemirror/lib/codemirror.js');
+// require('codemirror/lib/codemirror.css')
+// require('codemirror/mode/javascript/javascript.js')
+// require('codemirror/mode/css/css.js')
+// require('codemirror/addon/lint/lint.js')
+// require('codemirror/addon/lint/json-lint.js')
 export default {
   components: {},
   data() {
@@ -95,18 +95,18 @@ export default {
       createTime: ''
     }
   },
-  ready(){
-    console.log(CodeMirror.fromTextArea);
+  ready() {
+    // console.log(CodeMirror.fromTextArea);
   },
-  methods:{
-    initEditor: function(input) {
-      var editor_json = CodeMirror.fromTextArea(input, {
-        lineNumbers: true,
-        mode: "application/json",
-        gutters: ["CodeMirror-lint-markers"],
-        lint: true
-      });
-      return editor_json;
+  methods: {
+    initEditor: function (input) {
+      // var editor_json = CodeMirror.fromTextArea(input, {
+      //   lineNumbers: true,
+      //   mode: "application/json",
+      //   gutters: ["CodeMirror-lint-markers"],
+      //   lint: true
+      // });
+      // return editor_json;
     },
   }
 }

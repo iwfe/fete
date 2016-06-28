@@ -24,6 +24,8 @@
     "_": true,
     "Vue": true,
     "vueCommon": true,
-    "pageConfig": true
+    "pageConfig": true,
+    "CodeMirror": true,
+    "socket": true
   }
 }

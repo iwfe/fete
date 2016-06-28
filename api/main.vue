@@ -16,11 +16,11 @@ export default {
     Path,
     Bar
   },
-  ready(){
+  ready() {
 
   },
-  events:{
-    open(){
+  events: {
+    open() {
       this.$parent.$broadcast('slide-menu-open');
     }
   }

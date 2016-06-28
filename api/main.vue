@@ -15,6 +15,14 @@ export default {
         List,
         Path,
         Bar
+    },
+    ready(){
+
+    },
+    events:{
+        open(){
+            this.$parent.$broadcast('slide-menu-open');
+        }
     }
 }
 </script>

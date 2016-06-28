@@ -27,16 +27,6 @@
 </template>
 
 <script type="text/babel">
-/*
-<tr v-for="item in apiList" @click="showDetail(item._id, $event)">
-    <td><input type="checkbox" /></td>
-    <td>{{item.title}}</td>
-    <td>{{item.url}}</td>
-    <td>{{item.method}}</td>
-    <td>查看</td>
-</tr>
- */
-
 import {tog,add} from './vuex/action'
 export default {
     vuex: {
@@ -63,7 +53,7 @@ export default {
             });
         },
         showDetail (item, e) {
-            this.$dispatch('slide-menu-open');
+            this.$dispatch('open');
             if(item._id){
                 fetch('/api/apis', {
                     method: 'POST',

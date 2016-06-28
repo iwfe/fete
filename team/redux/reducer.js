@@ -6,11 +6,13 @@
  */
 
 'use strict';
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 import {
     GET,
     ADD,
+    ADD_SHOW,
     UPDATE,
+    UPDATE_SHOW,
     DELETE
 } from './action'
 
@@ -24,26 +26,40 @@ import {
 //     }
 // }
 
-function processTeam(state = {
-    teams: []
-}, action) {
+function teams(state = [], action) {
     switch (action.type) {
         case GET:
-            return Object.assign({}, state, {
-                teams: action.teams
-            })
+            return action.teams
         case ADD:
-            return {
-                teams: [...state.teams, action.team]
-            }
+            return state.push(action.team)
         case UPDATE:
             return {
-                teams: _.map(state.teams, item => item.id == action.team ? action.team : item)
+                teams: _.map(state, item => item.id == action.team ? action.team : item)
             }
         case DELETE:
             return {
-                teams: _.filter(state.teams, item => item.id != action.team.id)
+                teams: _.filter(state, item => item.id != action.team.id)
             }
+        default:
+            return state
+    }
+}
+
+function addShow(state = false, action) {
+    switch (action.type) {
+        case
+        ADD_SHOW:
+            return true;
+        default:
+            return state
+    }
+}
+
+function updateShow(state = false, action) {
+    switch (action.type) {
+        case
+        UPDATE_SHOW:
+            return true;
         default:
             return state
     }
@@ -63,7 +79,9 @@ function processTeam(state = {
 // }
 //将两个reducer合并成一个reducer,也就将全局的state加上postsByReddit,selectedReddit两个属性，每个属性都有自己的state
 const rootReducer = combineReducers({
-    processTeam
+    teams,
+    addShow,
+    updateShow
     // selectedReddit
 })
 

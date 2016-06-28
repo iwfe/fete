@@ -25,6 +25,7 @@ import Card from 'antd/lib/card';
 import Col from 'antd/lib/col';
 import Row from 'antd/lib/row';
 import Team from '../components/Team';
+import AddTeam from '../components/AddTeam';
 import './app.scss';
 
 class App extends Component {
@@ -38,7 +39,7 @@ class App extends Component {
     componentDidMount() {
         console.log('执行componentDidMount');
         const { actions } = this.props
-        actions.getTeams();
+        // actions.getTeams();
     }
 
     //每次接受新的props触发
@@ -63,7 +64,10 @@ class App extends Component {
     }
 
     render() {
-        const { teams, addShow, updateShow } = this.props;
+        console.log('render')
+        console.log(this.props)
+        const { teams, actions, addShow, updateShow } = this.props;
+        console.log(addShow)
         return (
             <div className="mod-team">
                 <Row gutter={16}>
@@ -74,7 +78,8 @@ class App extends Component {
                             </Col>
                         })
                     }
-                    <Col className="team-add gutter-row" span={6} onClick={this.handleTeam}>
+                    <AddTeam visible={addShow} />
+                    <Col className="team-add gutter-row" span={6} onClick={actions.addShow}>
                         <Card title="创建团队"><Icon type="plus" /></Card>
                     </Col>
                 </Row>
@@ -95,13 +100,11 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-// connect(mapStateToProps, mapDispatchToProps)(Counter)
-
-export default connect(()=>{
+export default connect(state=>{
     return {
-        teams:[],
-        addShow: false,
-        updateShow: false
+        teams:state.teams,
+        addShow: state.addShow,
+        updateShow: state.updateShow
     }
 }, mapDispatchToProps)(App);
 

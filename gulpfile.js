@@ -2,9 +2,10 @@
  * @Author: geyuanjun
  * @Date:   2016-06-24 17:09:44
  * @Email:  geyuanjun.sh@superjia.com
- * @Last modified by:   geyuanjun
- * @Last modified time: 2016-06-27 17:21:33
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-28 18:09:59
  */
+
 
 
 
@@ -329,7 +330,9 @@ gulp.task('vue', function(callback) {
         fetch: path.resolve('./common/fetch'),
         Vue: 'vue',
         VueRouter: 'vue-router',
-        vueCommon: 'vueCommon'
+        vueCommon: 'vueCommon',
+        jsonlint:'jsonlint',
+        CodeMirror:'codemirror'
       }),
       new webpack.optimize.DedupePlugin(),
       new ExtractTextPlugin("[name].css"),

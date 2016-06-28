@@ -42,6 +42,7 @@
     "jade": "~1.11.0",
     "jquery": "~2.1.4",
     "jsx-loader": "~0.13.2",
+    "jsonlint": "^1.6.2",
     "koa": "*",
     "koa-bodyparser": "*",
     "koa-convert": "^1.2.0",

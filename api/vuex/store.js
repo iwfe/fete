@@ -17,7 +17,7 @@ const mutations = {
             }
         }
         state.list.unshift(list);
-        // state.list_active = list;
+        state.list_active = list;
     },
     DEL(state) { //删除
         if(state.list_active){

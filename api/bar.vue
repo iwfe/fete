@@ -13,8 +13,12 @@ export default {
             add,
             del
         }
+    },
+    ready(){
+
     }
 }
+
 </script>
 
 <style>
@@ -26,12 +30,17 @@ export default {
     min-height: 350px;
 }
 #_bar div{
+    letter-spacing: 6px;
     height: 40px;
+    cursor: pointer;
     line-height: 40px;
-    padding: 0 24px;
+    padding: 0 16px 0 20px;
     font-weight: 900;
 }
-#_bar .active{
+#_bar div:hover{
+    color: #2DB7F5;
+}
+#_bar div.active{
     border-radius: 5px;
     color: #fff;
     background: #2DB7F5;

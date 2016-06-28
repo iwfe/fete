@@ -7,7 +7,7 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <th style="width:10%">共{{list.length}}个接口</th>
+                <th style="width:10%;color:#999">共{{list.length}}个</th>
             </tr>
         </thead>
         <tbody>

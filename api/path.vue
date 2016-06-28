@@ -3,8 +3,7 @@
         <span>满懿企业号 ></span>
         <span>产品百科 ></span>
         <span> prd1.2</span>
-        <a class="btn">复制</a>
-        <div class="url">http://www.baidu.com/</div>
+        <a class="btn">http://www.baidu.com/<span class="color">点击复制</span></a>
     </div>
 </template>
 
@@ -31,21 +30,21 @@ export default {
 #_path{
     line-height: 28px;height: 40px;
     border-bottom: 1px dashed #ddd;
+    color: #999;
 }
 #_path .btn{
-    color: #2DB7F5;
+    border-radius: 5px;
     float:right;
     padding: 0 16px;
-    border:1px dashed #2DB7F5;
 }
-#_path .btn:hover{
+#_path .color{
+    cursor: pointer;
+    color: #2DB7F5;
+}
+#_path .btn:active{
     color: red;
     cursor: pointer;
     border-color: red;
-}
-#_path .url{
-    float:right;
-    margin-right:12px;
 }
 #_path span{
     color: #999;

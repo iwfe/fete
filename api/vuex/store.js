@@ -17,15 +17,14 @@ const state = {
 
 const mutations = {
   ADD(State, list) { // 添加
-    if (!list) {
+    if (!list._id) {
       list = {
-        url: '',
-        title: '',
-        method: ''
+        url: '-',
+        title: '-',
+        method: '-'
       }
     }
     State.list.unshift(list);
-    State.list_active = list;
   },
   DEL(State) { // 删除
     if (State.list_active) {

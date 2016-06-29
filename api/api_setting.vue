@@ -107,7 +107,7 @@ export default {
   ready() {
 
   },
-  events:{
+  events: {
     getDetail: function () {
 
     }

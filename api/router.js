@@ -73,9 +73,7 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 1003)
     }
 
-    if (isExistApi) {
-      tmpId = util.genId(6)
-    }
+    // 生成6位 id
     let [tmpId, existApi] = ['', null]
     do {
       tmpId = util.genId(6)

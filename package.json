@@ -26,7 +26,7 @@
     "co-fs": "*",
     "co-monk": "*",
     "co-views": "*",
-    "codemirror":"^5.16.0",
+    "codemirror": "^5.16.0",
     "css-loader": "^0.16.0",
     "emit": "0.0.2",
     "exports-loader": "^0.6.2",
@@ -42,6 +42,7 @@
     "jade": "~1.11.0",
     "jquery": "~2.1.4",
     "jsx-loader": "~0.13.2",
+    "jsonlint": "^1.6.2",
     "koa": "*",
     "koa-bodyparser": "*",
     "koa-convert": "^1.2.0",
@@ -81,7 +82,8 @@
     "vuex": "^0.8.0",
     "webpack": "~1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "whatwg-fetch": "*"
+    "whatwg-fetch": "*",
+    "socket.io": "*"
   },
   "devDependencies": {
     "eslint": "^2.13.1",
@@ -91,6 +93,7 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
     "gulp": "^3.8.11",
+    "gulp-nodemon": "^2.1.0",
     "gulp-util": "^3.0.4",
     "vue-hot-reload-api": "^2.0.1",
     "vue-html-loader": "^1.2.2",

@@ -1,6 +1,6 @@
 <template>
 
-<div id="api-detail">
+<div id="api-detail" >
     <h3 class="ui header"><i class="icon settings"></i><div class="content">API设置</div></h3>
     <div class="ui two column middle very relaxed stackable grid">
         <div class="column">
@@ -59,61 +59,66 @@
             <textarea class="output-param" placeholder="返回数据格式"></textarea>
         </div>
     </div>
+
+
     <div class="operation-button">
         <button class="positive ui button">确定</button>
         <button class="negative ui button">删除</button>
         <button class="ui button">取消</button>
     </div>
 </div>
-
+<form>
+<textarea id="code" class="input-param" placeholder="输入数据格式" v-el:root></textarea>
+<edit-frame></edit-frame>
+</form>
 </template>
 
 <script text="text/babel">
-// let CodeMirror = require('codemirror/lib/codemirror.js');
-// require('codemirror/lib/codemirror.css')
+const CodeMirror = require('codemirror/lib/codemirror.js')
+require('codemirror/lib/codemirror.css')
+import editFrame from './editorFrame.vue'
+
+// require('codemirror/addon/lint/lint.css')
 // require('codemirror/mode/javascript/javascript.js')
 // require('codemirror/mode/css/css.js')
 // require('codemirror/addon/lint/lint.js')
 // require('codemirror/addon/lint/json-lint.js')
 export default {
-  components: {},
-  data() {
-    return {
-      userId: '',
-      userName: '',
-      title: '',
-      url: '',
-      method: '',
-      input: '',
-      output: {},
-      status: 1,
-      updateDescList: [],
-      prdId: '',
-      productId: '',
-      teamId: '',
-      updateTime: '',
-      createTime: ''
-    }
+  components: {
+    editFrame
   },
   ready() {
-    // console.log(CodeMirror.fromTextArea);
+    // const inputEditor = this.initEditor(document.getElementsByClassName('input-param')[0]);
+    // const outputEditor = this.initEditor(document.getElementsByClassName('output-param')[0]);
+    const editor = CodeMirror.fromTextArea(this.$els.root, {
+      lineNumbers: true,
+      mode: 'application/json',
+      gutters: ['CodeMirror-lint-markers'],
+      lint: true
+    });
   },
   methods: {
     initEditor: function (input) {
-      // var editor_json = CodeMirror.fromTextArea(input, {
-      //   lineNumbers: true,
-      //   mode: "application/json",
-      //   gutters: ["CodeMirror-lint-markers"],
-      //   lint: true
-      // });
-      // return editor_json;
+      const editorJson = CodeMirror.fromTextArea(input, {
+        lineNumbers: true,
+        mode: 'application/json',
+        gutters: ['CodeMirror-lint-markers'],
+        lint: true
+      });
+      return editorJson;
+    },
+    isJson: function (str) {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
   }
 }
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
-
-// api-detail
 #api-detail {
     width: 90%;
     margin: 10px auto;

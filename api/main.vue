@@ -3,10 +3,10 @@
     <path></path>
     <bar></bar>
     <list></list>
-    <slide-menu v-if="$route.name === 'list'">
-      <api-setting></api-setting>
-    </slide-menu>
   </section>
+  <slide-menu v-if="$route.name === 'list'">
+    <api-setting></api-setting>
+  </slide-menu>
 </template>
 
 <script type="text/babel">

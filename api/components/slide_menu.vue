@@ -40,12 +40,11 @@
     .slide-menu {
         display: none;
         position: fixed;
-        top: 50px;
+        top: 48px;
         right: 0;
         width: 70%;
-        height: 90%;
+        height: calc(100% - 48px);
         background-color: #fff;
-        border-radius:4px;
         -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         -moz-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);

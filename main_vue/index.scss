@@ -24,3 +24,12 @@
   text-decoration: inherit;
   text-transform: none;
 }
+
+html,
+body,
+#fete {
+  height: 100%;
+}
+#fete > section {
+  height: calc(100% - 48px);
+}

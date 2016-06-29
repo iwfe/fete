@@ -6,8 +6,6 @@
 </template>
 
 <script type="text/babel">
-  require('./index.scss');
-
   import TopNav from './top_nav.vue';
   export default {
     components: {
@@ -24,6 +22,8 @@
 </script>
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
+    @import './index.scss';
+
     @-webkit-keyframes fadeInDown {
         0% {
             opacity: 0;

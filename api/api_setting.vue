@@ -107,7 +107,6 @@ export default {
   },
   methods: {
     sendData() {
-      console.log(this.list_active.id);
       const apiData = {
         title: this.title,
         method: this.method,
@@ -121,17 +120,25 @@ export default {
         productId: '222',
         teamId: '333'
       }
-      // fetch('/api/apis', {
-      //   body: { apiData },
-      //   method: 'POST'
-      // }).then(res => {
-      //   if (res.code === 200) {
-      //     this.$dispatch('slide-menu-close');
-      //   }
-      // })
+      fetch('/api/apis', {
+        body: { apiData },
+        method: 'POST'
+      }).then(res => {
+        if (res.code === 200) {
+          this.$dispatch('slide-menu-close');
+        }
+      })
     },
     closeSlide() {
       this.$dispatch('slide-menu-close');
+    },
+    getdata() {
+      fetch('/api/apis', {
+        body: { prdId: this.list_active.id },
+        method: 'Get'
+      }).then(res => {
+        console.log(res.data);
+      })
     }
 
   }

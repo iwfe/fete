@@ -74,9 +74,9 @@
 </template>
 
 <script text="text/babel">
-const CodeMirror = require('codemirror/lib/codemirror.js')
-require('codemirror/lib/codemirror.css')
-import editFrame from './editorFrame.vue'
+// const CodeMirror = require('codemirror/lib/codemirror.js')
+// require('codemirror/lib/codemirror.css')
+import editFrame from './editor_frame.vue'
 
 // require('codemirror/addon/lint/lint.css')
 // require('codemirror/mode/javascript/javascript.js')
@@ -90,12 +90,12 @@ export default {
   ready() {
     // const inputEditor = this.initEditor(document.getElementsByClassName('input-param')[0]);
     // const outputEditor = this.initEditor(document.getElementsByClassName('output-param')[0]);
-    const editor = CodeMirror.fromTextArea(this.$els.root, {
-      lineNumbers: true,
-      mode: 'application/json',
-      gutters: ['CodeMirror-lint-markers'],
-      lint: true
-    });
+    // const editor = CodeMirror.fromTextArea(this.$els.root, {
+    //   lineNumbers: true,
+    //   mode: 'application/json',
+    //   gutters: ['CodeMirror-lint-markers'],
+    //   lint: true
+    // });
   },
   methods: {
     initEditor: function (input) {

@@ -2,8 +2,8 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-24 15:06:05
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-29 15:38:40
  */
 
 
@@ -75,8 +75,8 @@ router.get('/apis', sutil.login, function*(next) {
       _.extend(this.parse.apiData, {
         createTime: new Date,
         updateTime: new Date,
-        operatorId: this.locals._user._id,
-        operatorName: this.locals._user.username
+        userId: this.locals._user._id,
+        userName: this.locals._user.username
       })
     );
     if (insertResult) {

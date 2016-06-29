@@ -3,14 +3,16 @@
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-29 15:30:16
+* @Last modified time: 2016-06-29 16:03:5
 */
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
   list: [],
-  list_active: {}
+  list_active: {},
+  userId: '123',
+  userName: 'geyuanjun'
 }
 
 const mutations = {

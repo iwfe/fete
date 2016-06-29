@@ -3,7 +3,7 @@
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-27 18:06:31
+* @Last modified time: 2016-06-29 11:06:57
 */
 
 
@@ -24,8 +24,8 @@ const api = {
 			dataType: 'Integer', // 属性类型 （Integer,Float, String, Boolean, Array，Object）
 			comment: '状态', // 说明
 			mock: '', // mock规则
-            children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
-                {
+      children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
+        {
 					key: 'type',
 					dataType: 'Integer',
 					comment: '',
@@ -49,14 +49,15 @@ const api = {
 }
 
 const message = {
-    userId:'',  //操作人Id
+	_id:'',
+  userId:'',  //操作人Id
 	userName:'',   // 操作人姓名
 	operation: '', // 操作
 	desc:'',       // 描述
 	createTime: '', // 创建时间
-    apiId:'',   // apiId
-    status: '', //1已读，0未读
-    toUsers: [] // 提醒的用户Id
+  apiId:'',   // apiId
+  status: '', //1已读，0未读
+  toUsers: [] // 提醒的用户Id
 }
 // db.message.insert({userId:'575d123b8ec94fadd78437e9', userName:'jade', operation:'add', desc:'新增消息接口', createTime:'2016-06-23', apiId:'576b401056e121e6c9ef082b', status: 0, toUsers: ['575e7bcbddd400c4adf4fcd0','576b4f9856e121e6c9ef0830']})
 // db.message.insert({userId:'575d123b8ec94fadd78437e9', userName:'jade', operation:'update', desc:'修改消息接口33', createTime:'2016-06-24', apiId:'576b401056e121e6c9ef082b', status: 1, toUsers: ['575e7bcbddd400c4adf4fcd0','576b4f9856e121e6c9ef0830']})

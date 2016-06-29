@@ -1,4 +1,14 @@
 /**
+* @Author: lancui
+* @Date:   2016-06-22 14:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-29 11:06:89
+*/
+
+
+
+/**
  * Created by zyy on 15/7/7.
  * zhangyuyu@superjia.com
  */
@@ -78,5 +88,7 @@ router.get('/logout', function*(next) {
     this.cookies.set('feteauth', null);
     this.redirect('/login');
 });
+
+
 
 export default router;;

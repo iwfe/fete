@@ -6,6 +6,7 @@ module.exports = {
     env: 'dev',
     passwordKey: 'fete',
     authKey: 'fete',
+    host: 'http://localhost:3810',
     mongodbConnection: '192.168.1.46/fete',
     // redis: {
     //     host: "localhost",

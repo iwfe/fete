@@ -2,8 +2,8 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-29 15:38:40
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-29 16:06:43
  */
 
 
@@ -28,17 +28,11 @@ var productDao = wrap(db.get('product'));
 var prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil'
+import util from '../common/util.js'
 import config from '../config.js'
 
 // api 管理平台
 router.get('/', sutil.login, function*(next) {
-  yield sutil.render(this, {
-    commonTag: 'vue',
-    html: '',
-    staticTag: 'api',
-    noHeader: true
-  });
-}).get('/message', sutil.login, function*(next) {
   yield sutil.render(this, {
     commonTag: 'vue',
     html: '',
@@ -152,8 +146,5 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
   return false;
 });
 
-// message router
-var messageRouter = require('./router_message.js');
-messageRouter(router);
 
 export default router;

@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-26 21:50:10
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-27 22:54:42
+ * @Last Modified time: 2016-06-29 11:59:05
  */
 
 'use strict';
@@ -13,7 +13,8 @@ import {
     ADD_SHOW,
     UPDATE,
     UPDATE_SHOW,
-    DELETE
+    DELETE,
+    DELETE_SHOW,
 } from './action'
 
 //选择新闻后，将state.selectedReddit设为所选选项
@@ -31,15 +32,11 @@ function teams(state = [], action) {
         case GET:
             return action.teams
         case ADD:
-            return state.push(action.team)
+            return [...state, action.team]
         case UPDATE:
-            return {
-                teams: _.map(state, item => item.id == action.team ? action.team : item)
-            }
+            return _.map(state, item => item.id == action.team.id ? action.team : item)
         case DELETE:
-            return {
-                teams: _.filter(state, item => item.id != action.team.id)
-            }
+            return _.filter(state, item => item.id != action.team.id)
         default:
             return state
     }
@@ -47,19 +44,32 @@ function teams(state = [], action) {
 
 function addShow(state = false, action) {
     switch (action.type) {
-        case
-        ADD_SHOW:
-            return true;
+        case ADD_SHOW:
+            return action.addShow;
+        case ADD:
+            return false;
         default:
             return state
     }
 }
 
-function updateShow(state = false, action) {
+function updateShow(state = {updateShow: false, team: {}}, action) {
     switch (action.type) {
-        case
-        UPDATE_SHOW:
-            return action.team;
+        case UPDATE_SHOW:
+            return Object.assign({}, action);
+        case UPDATE:
+            return {updateShow: false, team: action.team};
+        default:
+            return state
+    }
+}
+
+function deleteShow(state = {deleteShow: false, team: {}}, action) {
+    switch (action.type) {
+        case DELETE_SHOW:
+            return Object.assign({}, action);
+        case DELETE:
+            return {deleteShow: false, team: action.team};;
         default:
             return state
     }
@@ -81,7 +91,8 @@ function updateShow(state = false, action) {
 const rootReducer = combineReducers({
     teams,
     addShow,
-    updateShow
+    updateShow,
+    deleteShow,
     // selectedReddit
 })
 

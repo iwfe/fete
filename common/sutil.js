@@ -16,6 +16,8 @@ import {
     Header
 } from '../layout/layout';
 
+import util from './util';
+
 var userDao = wrap(db.get('user'));
 var loginUserStore = new Map();
 
@@ -123,7 +125,7 @@ var sutil = {
 
         if (!team) {
             return yield sutil.result(this, {
-                code: 12001,
+                code: 11001,
                 redirect: '/team'
             });
         }
@@ -199,6 +201,18 @@ var sutil = {
     * setRouterParams (next) {
         this.parse = _.extend(this.parse, this.params);
         yield next;
+    },
+
+    * genId(dao, len=6) {
+        let id = util.genId(len);
+        console.log(`s:${id}`);
+        while(yield dao.findOne({
+            id: id
+        })){
+            id = util.genId(len);
+            console.log(`s1:${id}`);
+        }
+        return id;
     }
 
     // sendMail: function(name, title){

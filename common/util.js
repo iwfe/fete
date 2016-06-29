@@ -11,7 +11,7 @@ const RANDOMARRAY = [
 ];
 
 var util = {
-    genId(len) {
+    genId(len=6) {
         let result = '';
         const arrLen = RANDOMARRAY.length;
         while(len--) {

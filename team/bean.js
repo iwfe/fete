@@ -11,6 +11,7 @@ const team = {
     id: '', //自己生成的团队id
     name: '', //团队名称
     description: '', //团队描述
+    createUser: '', //创建人
     createTime: '', //创建时间
     updateTime: '' //更新时间
 }

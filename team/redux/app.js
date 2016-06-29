@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-26 21:57:58
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-28 13:20:53
+ * @Last Modified time: 2016-06-29 11:58:51
  */
 
 'use strict';
@@ -39,12 +39,12 @@ class App extends Component {
     componentDidMount() {
         console.log('执行componentDidMount');
         const { actions } = this.props
-        // actions.getTeams();
+        actions.getTeams();
     }
 
     //每次接受新的props触发
     componentWillReceiveProps(nextProps) {
-        console.log('执行componentWillReceiveProps', nextProps);
+        // console.log('执行componentWillReceiveProps', nextProps);
         // if (nextProps.selectedReddit !== this.props.selectedReddit) {
         //     const { dispatch, selectedReddit } = nextProps
         //     dispatch(fetchPostsIfNeeded(selectedReddit))
@@ -63,20 +63,45 @@ class App extends Component {
         // dispatch(fetchPostsIfNeeded(selectedReddit))
     }
 
+    addOk(team) {
+        const {actions} = this.props;
+        actions.addTeam(team);
+    }
+
+    addCancel() {
+        const {actions} = this.props;
+        actions.addShow(false);
+    }
+
     render() {
-        const { teams, actions, addShow, updateShow } = this.props;
+        const self =  this;
+        const { teams, actions, addShow, updateShow, deleteShow } = this.props;
         return (
             <div className="mod-team">
                 <Row gutter={16}>
                     {
-                        teams.map(item=>{
-                            <Col key={'team-' + item._id} className="gutter-row" span={6}>
-                                <Team team={item} updateShow={updateShow && updateShow.team.id === item.id}></Team>
+                        teams.map(item=>
+                            <Col
+                                key={'team-' + item.id}
+                                className="gutter-row"
+                                span={6}
+                            >
+                                <Team
+                                    team={item}
+                                    updateShow={(updateShow && updateShow.team.id === item.id) ? updateShow.updateShow : false}
+                                    deleteShow={(deleteShow && deleteShow.team.id === item.id) ? deleteShow.deleteShow : false}
+                                    actions={actions}
+                                ></Team>
                             </Col>
-                        })
+                        )
                     }
-                    <AddTeam visible={addShow} type="add" />
-                    <Col className="team-add gutter-row" span={6} onClick={actions.addShow}>
+                    <AddTeam
+                        visible={addShow}
+                        type="add"
+                        okCallback={this.addOk.bind(self)}
+                        cancelCallback={this.addCancel.bind(self)}
+                    />
+                    <Col className="team-add gutter-row" span={6} onClick={() => actions.addShow(true)}>
                         <Card title="创建团队"><Icon type="plus" /></Card>
                     </Col>
                 </Row>
@@ -88,7 +113,7 @@ class App extends Component {
 App.propTypes = {
     teams: PropTypes.array.isRequired,
     addShow: PropTypes.bool,
-    updateShow: PropTypes.bool
+    updateShow: PropTypes.object
 }
 
 function mapDispatchToProps(dispatch) {
@@ -101,7 +126,9 @@ export default connect(state=>{
     return {
         teams:state.teams,
         addShow: state.addShow,
-        updateShow: state.updateShow
+        confirmLoading: state.confirmLoading,
+        updateShow: state.updateShow,
+        deleteShow: state.deleteShow,
     }
 }, mapDispatchToProps)(App);
 

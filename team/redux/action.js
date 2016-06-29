@@ -2,7 +2,7 @@
  * @Author: jade
  * @Date:   2016-06-26 21:49:54
  * @Last Modified by:   jade
- * @Last Modified time: 2016-06-28 13:14:44
+ * @Last Modified time: 2016-06-29 11:55:07
  */
 
 'use strict';
@@ -14,6 +14,7 @@ export const ADD = 'ADD';
 export const UPDATE = 'UPDATE';
 export const UPDATE_SHOW = 'UPDATE_SHOW';
 export const DELETE = 'DELETE';
+export const DELETE_SHOW = 'DELETE_SHOW';
 
 // export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
@@ -51,20 +52,20 @@ export function getTeams() {
         return fetch('/team/data')
             .then(json => dispatch({
                 type: GET,
-                teams: json.data.map(child => child.data)
+                teams: json.data
             }))
     }
 }
 
-export function addShow() {
+export function addShow(addShow) {
     return {
-        type: ADD_SHOW
+        type: ADD_SHOW,
+        addShow: addShow
     }
 }
 
 export function addTeam(team) {
     return dispatch => {
-        // dispatch(request())
         return fetch('/team/data', {
                 method: 'post',
                 body: team
@@ -76,9 +77,10 @@ export function addTeam(team) {
     }
 }
 
-export function updateShow(team) {
+export function updateShow(updateShow,team) {
     return {
-        type: ADD_SHOW,
+        type: UPDATE_SHOW,
+        updateShow: updateShow,
         team: team
     }
 }
@@ -92,7 +94,7 @@ export function updateTeam(team) {
             })
             .then(json => dispatch({
                 type: UPDATE,
-                team: team
+                team: json.data
             }))
     }
 }
@@ -102,12 +104,22 @@ export function deleteTeam(team) {
         // dispatch(request())
         return fetch('/team/data', {
                 method: 'delete',
-                body: team
+                body: {
+                    id: team.id
+                }
             })
             .then(json => dispatch({
                 type: DELETE,
                 team: team
             }))
+    }
+}
+
+export function deleteShow(deleteShow,team) {
+    return {
+        type: DELETE_SHOW,
+        deleteShow: deleteShow,
+        team: team
     }
 }
 

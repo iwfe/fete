@@ -7,7 +7,7 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <th style="width:10%;color:#999">共{{list.length}}个</th>
+                <th style="width:10%;color:#999">共{{list?list.length:0}}个</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +40,7 @@
       }
     },
     ready() {
+      console.log(this.list);
       this.getList();
     },
     methods: {
@@ -48,6 +49,7 @@
           body: { prdId: '111' }
         }).then(res => {
           res.data.forEach(v => {
+            console.log(v);
             this.add(v);
           });
         });

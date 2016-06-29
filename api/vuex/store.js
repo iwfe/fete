@@ -1,3 +1,10 @@
+/**
+* @Author: geyuanjun
+* @Date:   2016-06-29 11:33:13
+* @Email:  geyuanjun.sh@superjia.com
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-29 11:40:39
+*/
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
@@ -14,6 +21,9 @@ const mutations = {
         title: '',
         method: ''
       }
+    }
+    if (!state.list) {
+      state.list = [];
     }
     state.list.unshift(list);
     state.list_active = list;

@@ -15,7 +15,7 @@
                 @click="showDetail(item, $event)"
                 v-for="item in list"
                 :class="{'active': list_active === item}">
-                <td>{{item._id}}</td>
+                <td>{{item.id}}</td>
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td>{{item.method}}</td>

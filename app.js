@@ -1,3 +1,13 @@
+/**
+* @Author: lancui
+* @Date:   2016-06-27 13:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-29 15:06:16
+*/
+
+
+
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
@@ -91,9 +101,11 @@ app.use(function*(next) {
 import main from './main/router';
 import team from './team/router';
 import apiModule from './api/router';
+import msgModule from './message/router';
 app.use(main.routes());
 app.use(team.routes());
 app.use(apiModule.routes());
+app.use(msgModule.routes());
 
 app.on('error', function(err) {
     console.log('sent error %s to the cloud', err.message);

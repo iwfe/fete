@@ -1,0 +1,9 @@
+node_modules
+dist
+.tmp
+common
+layout
+main
+team
+user
+view

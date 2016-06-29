@@ -9,7 +9,7 @@
                     <th>用户名</th>
                     <th>操作</th>
                     <th>描述</th>
-                    <th>状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button></th>
+                    <th style="width: 14%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -31,52 +31,52 @@
 
 <script type="text/babel">
 
-    Vue.filter('msgStatus', (value) => {
-        return value == 1 ? '已读' : '未读';
-    })
-    export default{
-        data() {
-            return {
-                msgList: []
-            }
-        },
-        ready() {
-            this.getMsgList();
-        },
-        methods: {
-            getMsgList() {
-                fetch('/api/messages', {
-                    method: 'GET',
-                    body: {toUsers: pageConfig.me._id}
-                }).then(res => {
-                    this.msgList = res.data;
-                });
-            },
-            updateStatus(msgId, i, status) {
-                if(status == 1) return;
-                fetch('/api/messages', {
-                    method: 'PUT',
-                    body: JSON.stringify({msgId: msgId})
-                }).then(res => {
-                    this.msgList[i].status = 1;
-                });
-            },
-            updateStatusBatch() {
-                // 全部已读
-                // $('.small.modal').modal('show');
-                if(confirm("确定要全部已读吗？")) {
-                    fetch('/api/messages', {
-                        method: 'PUT',
-                        body: JSON.stringify({msgId: null})
-                    }).then(res => {
-                        this.msgList.forEach((item) => {
-                            item.status = 1;
-                        })
-                    });
-                }
-            }
+  Vue.filter('msgStatus', (value) => {
+    return value === 1 ? '已读' : '未读';
+  })
+  export default {
+    data() {
+      return {
+        msgList: []
+      }
+    },
+    ready() {
+      this.getMsgList();
+    },
+    methods: {
+      getMsgList() {
+        fetch('/message/messages', {
+          method: 'GET',
+          body: { toUsers: pageConfig.me._id }
+        }).then((res) => {
+          this.msgList = res.data;
+        });
+      },
+      updateStatus(msgId, i, status) {
+        if (status === 1) return;
+        fetch('/message/messages', {
+          method: 'PUT',
+          body: JSON.stringify({ msgId: msgId })
+        }).then((res) => {
+          this.msgList[i].status = 1;
+        });
+      },
+      updateStatusBatch() {
+        // 全部已读
+        // $('.small.modal').modal('show');
+        if (confirm('确定要全部已读吗？')) {
+          fetch('/message/messages', {
+            method: 'PUT',
+            body: JSON.stringify({ msgId: null })
+          }).then(res => {
+            this.msgList.forEach((item) => {
+              item.status = 1;
+            });
+          });
         }
+      }
     }
+  }
 </script>
 
 <style lang="sass">

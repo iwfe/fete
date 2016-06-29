@@ -45,14 +45,18 @@ router.get('/', sutil.login, function*(next) {
 
 // api 列表页，获取 团队，产品，prd 下拉列表的数据
 router.get('/dropdown', sutil.login, function*(next) {
-  let teams = yield teamDao.find({}, { fields: { name: 1 } });
-  // _.each(teams, function (item) {
-  //     item.products = yield productDao.find({}, {fields: {name: 1}});
-  //     _.each(item.products, pItem => {
-  //         pItem.prds = yield prdDao.find({}, {fields: {name: 1}});
-  //     });
-  // })
-  sutil.success(this, teams);
+  let teams = yield teamDao.find({}, { fields: { _id: 0, id: 1, name: 1 } })
+  let products = yield productDao.find({}, { fields: { _id: 0, id: 1, name: 1, teamId: 1 } })
+  let prds = yield prdDao.find({}, { fields: { _id: 0, id: 1, name: 1, productId: 1 } })
+
+  _.each(teams, function (item) {
+      item.products = _.where(products, {teamId: item.id})
+      _.each(item.products, pItem => {
+          pItem.prds = _.where(prds, {productId: pItem.id})
+      })
+  })
+
+  sutil.success(this, teams)
 });
 
 // CURD for api

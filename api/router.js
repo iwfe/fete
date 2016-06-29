@@ -2,17 +2,17 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-24 15:06:05
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-29 15:38:40
  */
 
 
-import _ from 'underscore';
-import Mock from 'mockjs';
-import Router from 'koa-router';
+import _ from 'underscore'
+import Mock from 'mockjs'
+import Router from 'koa-router'
 const router = new Router({
   prefix: '/api'
-});
+})
 
 // var wrap = require('co-monk');
 // var parse = require('co-body');
@@ -27,7 +27,8 @@ var teamDao = wrap(db.get('team'));
 var productDao = wrap(db.get('product'));
 var prdDao = wrap(db.get('prd'));
 
-import sutil from '../common/sutil';
+import sutil from '../common/sutil'
+import config from '../config.js'
 
 // api 管理平台
 router.get('/', sutil.login, function*(next) {
@@ -74,8 +75,8 @@ router.get('/apis', sutil.login, function*(next) {
       _.extend(this.parse.apiData, {
         createTime: new Date,
         updateTime: new Date,
-        operatorId: this.locals._user._id,
-        operatorName: this.locals._user.username
+        userId: this.locals._user._id,
+        userName: this.locals._user.username
       })
     );
     if (insertResult) {
@@ -111,38 +112,42 @@ router.get('/apis', sutil.login, function*(next) {
   });
 
 // api for mock
-router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, function*(next) {
-  let tmpUrlArr = this.request.path.split('/mock');
-  let realUrl = tmpUrlArr[tmpUrlArr.length - 1];
+router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
+  let tmpUrlArr = this.request.path.split('/mock')
+  let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
     productId: this.parse.productId,
     url: realUrl
   }
   if (this.parse.prdId) {
-    filter.prdId = this.parse.prdId;
+    filter.prdId = this.parse.prdId
   }
 
-  let apiItems = yield apiDao.find(filter);
+  let apiItems = yield apiDao.find({})
   if (apiItems && apiItems.length > 0) {
-    let data = Mock.mock(JSON.parse(apiItems[0].outputMock));
-    // 这里就不要用 sutil 的 success 方法了
-    this.body = data;
-    return false;
+    let data = Mock.mock(JSON.parse(apiItems[0].outputMock))
+    this.body = data // 这里就不要用 sutil 的 success 方法了
+    return false
   } else {
-    sutil.failed(this, 150003);
+    sutil.failed(this, 150003)
   }
-});
+})
 
 // mock_check.js file
 // must with productId as query, like: /api/mock_check.js?productId=123
 router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
   if (!this.parse.productId) {
-    this.type = '.js'
+    this.type = 'js'
     this.body = `console.log('no productId');`;
   } else {
-    this.type = '.js'
-    this.body = fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
+    let jsContent = `
+                    var feteApiProductId = '${this.parse.productId}';
+                    var feteApiHost = '${config.host}'
+                    `;
+    jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
+    this.type = 'js'
+    this.body = jsContent;
   }
   return false;
 });

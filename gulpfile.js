@@ -188,6 +188,7 @@ gulp.task('img', function() {
 gulp.task('sham', function() {
   gulp.src('./global/lib/es5-shim-sham.js').pipe(gulp.dest('./dist'));
   gulp.src('./node_modules/mockjs/dist/mock-min.js').pipe(gulp.dest('./dist'));
+  gulp.src('./node_modules/mockjs/dist/mock-min.js.map').pipe(gulp.dest('./dist'));
 })
 
 gulp.task('zip', function() {

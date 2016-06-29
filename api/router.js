@@ -28,6 +28,7 @@ var productDao = wrap(db.get('product'));
 var prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil'
+import util from '../common/util.js'
 import config from '../config.js'
 
 // api 管理平台

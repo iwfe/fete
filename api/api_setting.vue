@@ -78,8 +78,7 @@ export default {
       list: state => state.list,
       list_active: state => state.list_active,
       userName: state => state.userName,
-      userId: state => state.userId,
-      status: state => state.status
+      userId: state => state.userId
     },
     actions: {
       tog,
@@ -100,11 +99,14 @@ export default {
   },
   events: {
     getDetail() {
-
+      if (this.list_active && this.list_active.id) {
+        console.log(this.list_active.id);
+      }
     }
   },
   methods: {
     sendData() {
+      console.log(this.list_active.id);
       const apiData = {
         title: this.title,
         method: this.method,
@@ -118,14 +120,14 @@ export default {
         productId: '222',
         teamId: '333'
       }
-      fetch('/api/apis', {
-        body: { apiData },
-        method: 'POST'
-      }).then(res => {
-        if (res.code === 200) {
-          this.$dispatch('slide-menu-close');
-        }
-      })
+      // fetch('/api/apis', {
+      //   body: { apiData },
+      //   method: 'POST'
+      // }).then(res => {
+      //   if (res.code === 200) {
+      //     this.$dispatch('slide-menu-close');
+      //   }
+      // })
     },
     closeSlide() {
       this.$dispatch('slide-menu-close');

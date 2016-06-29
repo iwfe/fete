@@ -1,12 +1,14 @@
 <template>
-  <section id="container">
-    <path></path>
-    <bar></bar>
-    <list></list>
+  <section>
+    <section id="container">
+      <path></path>
+      <bar></bar>
+      <list></list>
+    </section>
+    <slide-menu v-if="$route.name === 'list'">
+      <api-setting></api-setting>
+    </slide-menu>
   </section>
-  <slide-menu v-if="$route.name === 'list'">
-    <api-setting></api-setting>
-  </slide-menu>
 </template>
 
 <script type="text/babel">
@@ -37,3 +39,11 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+ html,body,#fete{
+   height:100%;
+ }
+#fete .fadeInDown-transition{
+  height:calc(100% - 66px);
+}
+</style>

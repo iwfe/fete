@@ -88,12 +88,6 @@ export default {
     }
   },
   components: {},
-  watch: {
-    status() {
-      console.log(this.status)
-      this.$dispatch('slide-menu-open');
-    }
-  },
   data() {
     return {
       title: '',
@@ -104,11 +98,8 @@ export default {
       output: ''
     }
   },
-  ready() {
-
-  },
   events: {
-    getDetail: function () {
+    getDetail() {
 
     }
   },
@@ -132,7 +123,6 @@ export default {
         method: 'POST'
       }).then(res => {
         if (res.code === 200) {
-          alert('success');
           this.$dispatch('slide-menu-close');
         }
       })
@@ -146,10 +136,10 @@ export default {
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 #api-detail {
     width: 96%;
-    height:90%;
+    height:94%;
     margin: 10px auto 0;
     .container.body{
-      height:85%;
+      height:calc(100% - 100px);
       overflow-x:hidden;
       overflow-y:auto;
       padding:10px;

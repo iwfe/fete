@@ -66,7 +66,7 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 1003);
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { title: 1, url: 1, method: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1 },
       sort: { createAt: -1 }
     });
     sutil.success(this, data);

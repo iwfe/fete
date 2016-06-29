@@ -3,7 +3,7 @@
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-29 00:06:39
+* @Last modified time: 2016-06-29 11:06:57
 */
 
 
@@ -24,8 +24,8 @@ const api = {
 			dataType: 'Integer', // 属性类型 （Integer,Float, String, Boolean, Array，Object）
 			comment: '状态', // 说明
 			mock: '', // mock规则
-            children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
-                {
+      children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
+        {
 					key: 'type',
 					dataType: 'Integer',
 					comment: '',

@@ -45,7 +45,7 @@
     },
     methods: {
       getMsgList() {
-        fetch('/api/messages', {
+        fetch('/message/messages', {
           method: 'GET',
           body: { toUsers: pageConfig.me._id }
         }).then((res) => {
@@ -54,7 +54,7 @@
       },
       updateStatus(msgId, i, status) {
         if (status === 1) return;
-        fetch('/api/messages', {
+        fetch('/message/messages', {
           method: 'PUT',
           body: JSON.stringify({ msgId: msgId })
         }).then((res) => {
@@ -65,7 +65,7 @@
         // 全部已读
         // $('.small.modal').modal('show');
         if (confirm('确定要全部已读吗？')) {
-          fetch('/api/messages', {
+          fetch('/message/messages', {
             method: 'PUT',
             body: JSON.stringify({ msgId: null })
           }).then(res => {

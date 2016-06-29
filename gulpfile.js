@@ -2,8 +2,8 @@
  * @Author: geyuanjun
  * @Date:   2016-06-24 17:09:44
  * @Email:  geyuanjun.sh@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-28 18:09:59
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-29 16:06:88
  */
 
 
@@ -276,6 +276,7 @@ gulp.task('vue', function(callback) {
     watch: isWatch,
     entry: {
       api: './api/index.js',
+      message: './message/index.js',
       vue_common: [
         'vue',
         'vue-router',
@@ -296,8 +297,6 @@ gulp.task('vue', function(callback) {
         'semantic-ui/dist/components/divider.min.css',
         'semantic-ui/dist/components/header.min.css',
         'semantic-ui/dist/components/icon.min.css',
-        'semantic-ui/dist/components/form.min.css',
-        'semantic-ui/dist/components/form.min.css',
         'semantic-ui/dist/components/form.min.css',
         'semantic-ui/dist/components/grid.min.css',
         'semantic-ui/dist/components/input.min.css',

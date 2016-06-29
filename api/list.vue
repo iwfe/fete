@@ -28,6 +28,7 @@
 
 <script type="text/babel">
   import { tog, add } from './vuex/action'
+
   export default {
     vuex: {
       getters: {
@@ -74,19 +75,15 @@
     width: 100%;
 }
 .table tr:nth-of-type(odd){background:#f5f5f5;}
-.table th{
-    color: #2DB7F5;
-    background: #fff;
-}
 .table td,.table th{
-    line-height: 40px;
-    padding: 0 12px;
+    line-height: 36px;
+    padding: 0 6px;
 }
 .table tr.active{
     background: #2DB7F5;
     color: #fff;
 }
 .line{
-    border-bottom: 1px dotted #ddd;
+  border-bottom: 1px dotted #ddd;
 }
 </style>

@@ -10,10 +10,11 @@
                     <a class="item" href="{{subItem.link}}" v-for="subItem in item.subMenus">{{subItem.text}}</a>
                 </div>
             </div>
-            <a class="item" v-link="{name: 'list', activeClass: 'active'}">API</a>
+            <!-- <a class="item" v-link="{name: 'list', activeClass: 'active'}">API</a> -->
+            <a class="item" href="/api">API</a>
 
             <div class="right menu">
-                <a class="item msg-span" v-link="{name: 'message'}">消息 (<span class="msg-count">0</span>)</a>
+                <a class="item msg-span"  href="/message">消息 (<span class="msg-count">0</span>)</a>
                 <div class="ui pointing dropdown link item">
                     {{username}}
                     <i class="dropdown icon"></i>
@@ -32,7 +33,7 @@
 
   export default Vue.extend({
     name: 'top-nav',
-    replace: false,
+    replace: true,
     attached() {
       $('.ui.dropdown').dropdown({ transition: 'drop', on: 'hover' });
     },

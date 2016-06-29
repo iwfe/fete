@@ -32,6 +32,7 @@ export default {
   events: {
     open() {
       this.$parent.$broadcast('slide-menu-open');
+      this.$broadcast('getDetail');
     }
   }
 }

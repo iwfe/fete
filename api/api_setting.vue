@@ -107,6 +107,11 @@ export default {
   ready() {
 
   },
+  events:{
+    getDetail: function () {
+
+    }
+  },
   methods: {
     sendData() {
       const apiData = {

@@ -4,7 +4,16 @@
 * @Last Modified by:   wjs
 * @Last Modified time: 2016-06-27 15:39:30
 */
-#main{font-size:14px;color:#666;border-radius:5px;box-shadow:2px 2px 2px #ccc;}
+#container{
+  width:97%;
+  margin: 18px auto 0;
+  padding: 10px 0;
+  background:#fff;
+  font-size:14px;
+  color:#666;
+  border-radius:5px;
+  box-shadow:2px 2px 2px #ccc;
+}
 @font-face {
   font-family: 'Icons';
   src: url("../node_modules/semantic-ui/dist/themes/default/assets/fonts/icons.eot");

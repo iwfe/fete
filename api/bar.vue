@@ -24,26 +24,24 @@
 #_bar{
     float: left;
     height: 100%;
-    padding-right: 12px;
-    padding-top: 12px;
+    padding: 12px;
     min-height: 350px;
 }
 #_bar div{
-    letter-spacing: 6px;
-    height: 40px;
+    height: 36px;
+    line-height: 36px;
     cursor: pointer;
-    line-height: 40px;
-    padding: 0 16px 0 20px;
     font-weight: 900;
+    padding: 0 12px;
+    margin-bottom: 10px;
 }
 #_bar div:hover{
     color: #2DB7F5;
 }
 #_bar div.active{
-    border-radius: 5px;
+    border-radius: 6%;
     color: #fff;
     background: #2DB7F5;
     cursor: pointer;
-    font-size: 16px;
 }
 </style>

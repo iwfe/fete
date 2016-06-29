@@ -1,5 +1,5 @@
 <template>
-  <section id="main">
+  <section id="container">
     <path></path>
     <bar></bar>
     <list></list>

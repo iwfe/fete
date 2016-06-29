@@ -11,10 +11,10 @@ const menus = [{
     text: '首页',
     link: '/'
 }, {
-    key: 'msg',
-    text: '消息',
-    link: '/api/message',
-    isVueLink: true
+    key: 'team',
+    text: '团队',
+    link: '/team',
+    isVueLink: false
 }, {
     key: 'api',
     text: 'API',

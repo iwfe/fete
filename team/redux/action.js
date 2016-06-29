@@ -67,9 +67,9 @@ export function addShow(addShow) {
 export function addTeam(team) {
     return dispatch => {
         return fetch('/team/data', {
-                method: 'post',
-                body: team
-            })
+            method: 'post',
+            body: team
+        })
             .then(json => dispatch({
                 type: ADD,
                 team: json.data
@@ -77,7 +77,7 @@ export function addTeam(team) {
     }
 }
 
-export function updateShow(updateShow,team) {
+export function updateShow(updateShow, team) {
     return {
         type: UPDATE_SHOW,
         updateShow: updateShow,
@@ -89,9 +89,9 @@ export function updateTeam(team) {
     return dispatch => {
         // dispatch(request())
         return fetch('/team/data', {
-                method: 'put',
-                body: team
-            })
+            method: 'put',
+            body: team
+        })
             .then(json => dispatch({
                 type: UPDATE,
                 team: json.data
@@ -103,11 +103,11 @@ export function deleteTeam(team) {
     return dispatch => {
         // dispatch(request())
         return fetch('/team/data', {
-                method: 'delete',
-                body: {
-                    id: team.id
-                }
-            })
+            method: 'delete',
+            body: {
+                id: team.id
+            }
+        })
             .then(json => dispatch({
                 type: DELETE,
                 team: team
@@ -115,7 +115,7 @@ export function deleteTeam(team) {
     }
 }
 
-export function deleteShow(deleteShow,team) {
+export function deleteShow(deleteShow, team) {
     return {
         type: DELETE_SHOW,
         deleteShow: deleteShow,

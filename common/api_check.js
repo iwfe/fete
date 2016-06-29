@@ -2,19 +2,33 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-06-29 12:21:28
+ * @Last Modified time: 2016-06-29 14:12:15
  */
 
 
+
+// load mock.js in front end
+var mockScript = document.createElement('script')
+mockScript.src = feteApiHost + '/static/mock-min.js'
+document.body.appendChild(mockScript)
+
+
+// check input
 function ApiCheckInput(input) {
   // TODO: chenck input format
   return false
 }
 
+// check output
 function ApiCheckOutput(output) {
   // TODO: chenck out format
-  return false
+  return Mock.valid({
+    'list|1-10': [{
+      'id|+1': 1
+    }]
+  }, output)
 }
+
 
 // jquery ajax global interceptor
 window.ApiCheckForJqueryAjax = function($) {
@@ -25,19 +39,27 @@ window.ApiCheckForJqueryAjax = function($) {
   })
 
   // check input
-  $(document).ajaxSend((event, jqxhr, settings) => {
-    // ApiCheckInput(jqxhr.data)
+  $(document).ajaxSend(function(event, jqxhr, settings) {
     console.log('-------- from api_check.js jquery ajax before send')
-    console.log(jqxhr)
-    console.log(settings)
+      // console.log(settings)
+    console.log(settings.url)
+    console.log(settings.type)
+    console.log(settings.data) // post 才有 ，get 直接挂 url 上了
+      // ApiCheckInput(settings.data)
+    settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
   })
 
+
   // check output
-  $(document).ajaxSend((event, jqxhr, settings) => {
-    // ApiCheckOutput(jqxhr)
+  $(document).ajaxSuccess(function(event, jqxhr, settings) {
     console.log('-------- from api_check.js jquery ajax after success')
-    console.log(jqxhr)
-    console.log(settings)
+      // console.log(jqxhr)
+    console.log(settings.url)
+    console.log(settings.type)
+    console.log(jqxhr.responseJSON) // 还有一个 responseText
+    console.log('----- check output result:')
+    var checkResult = ApiCheckOutput(jqxhr.responseJSON)
+    console.log(checkResult)
   })
 
 }
@@ -54,7 +76,7 @@ window.ApiCheckVueResource = function(Vue) {
       console.log(req.url)
       console.log(req.method)
       console.log(req.data)
-      req.url = `http://localhost:3810/api/fete_api/${feteApiProductId}/mock/test/aaa`;
+      req.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + req.url;
       return req
     },
 
@@ -65,6 +87,9 @@ window.ApiCheckVueResource = function(Vue) {
       console.log(res.request.url)
       console.log(res.request.method)
       console.log(res.data)
+      console.log('----- check output result:')
+      var checkResult = ApiCheckOutput(res.data)
+      console.log(checkResult)
       return res
     }
 

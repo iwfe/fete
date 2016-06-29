@@ -7,12 +7,12 @@
  */
 
 
-import _ from 'underscore';
-import Mock from 'mockjs';
-import Router from 'koa-router';
+import _ from 'underscore'
+import Mock from 'mockjs'
+import Router from 'koa-router'
 const router = new Router({
   prefix: '/api'
-});
+})
 
 // var wrap = require('co-monk');
 // var parse = require('co-body');
@@ -27,7 +27,8 @@ var teamDao = wrap(db.get('team'));
 var productDao = wrap(db.get('product'));
 var prdDao = wrap(db.get('prd'));
 
-import sutil from '../common/sutil';
+import sutil from '../common/sutil'
+import config from '../config.js'
 
 // api 管理平台
 router.get('/', sutil.login, function*(next) {
@@ -126,8 +127,7 @@ router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let apiItems = yield apiDao.find({})
   if (apiItems && apiItems.length > 0) {
     let data = Mock.mock(JSON.parse(apiItems[0].outputMock))
-    // 这里就不要用 sutil 的 success 方法了
-    this.body = data
+    this.body = data // 这里就不要用 sutil 的 success 方法了
     return false
   } else {
     sutil.failed(this, 150003)
@@ -141,7 +141,10 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.type = 'js'
     this.body = `console.log('no productId');`;
   } else {
-    let jsContent = `var feteApiProductId = ${this.parse.productId};\n`;
+    let jsContent = `
+                    var feteApiProductId = '${this.parse.productId}';
+                    var feteApiHost = '${config.host}'
+                    `;
     jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
     this.type = 'js'
     this.body = jsContent;

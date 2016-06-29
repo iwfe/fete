@@ -204,7 +204,7 @@ var sutil = {
     * allowCORS (next) {
       this.set('Access-Control-Allow-Origin', '*')
       this.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-      this.set('Access-Control-Allow-Headers', 'Content-Type')
+      this.set('Access-Control-Allow-Headers', 'X-Requested-With')
       yield next
     }
 

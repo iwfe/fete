@@ -40,7 +40,6 @@
       }
     },
     ready() {
-      console.log(this.list);
       this.getList();
     },
     methods: {
@@ -49,7 +48,6 @@
           body: { prdId: '111' }
         }).then(res => {
           res.data.forEach(v => {
-            console.log(v);
             this.add(v);
           });
         });

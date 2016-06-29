@@ -4,6 +4,8 @@
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
 * @Last modified time: 2016-06-29 16:06:43
+ * @Last modified by:   geyuanjun
+ * @Last modified time: 2016-06-29 15:38:40
  */
 
 
@@ -54,6 +56,7 @@ router.get('/dropdown', sutil.login, function*(next) {
 });
 
 // CURD for api
+// api 列表
 router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003);
@@ -64,9 +67,24 @@ router.get('/apis', sutil.login, function*(next) {
     });
     sutil.success(this, data);
   })
+  // 新建一个 api
   .post('/apis', sutil.login, function*(next) {
+    if (!this.parse.apiData) {
+      sutil.failed(this, 1003)
+    }
+
+    if (isExistApi) {
+      tmpId = util.genId(6)
+    }
+    let [tmpId, existApi] = ['', null]
+    do {
+      tmpId = util.genId(6)
+      existApi = yield apiDao.findOne({id: tmpId});
+    } while (existApi)
+
     let insertResult = yield apiDao.insert(
       _.extend(this.parse.apiData, {
+        id: tmpId,
         createTime: new Date,
         updateTime: new Date,
         userId: this.locals._user._id,
@@ -79,7 +97,16 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 150001);
     }
   })
-  .put('/apis', sutil.login, function*(next) {
+  // 获取某个api详细信息
+  .get('/apis/:id', sutil.login, function*(next) {
+    if (!this.parse.apiId) {
+      sutil.failed(this, 1003);
+    }
+    let data = yield apiDao.find({ id: this.parse.apiId });
+    sutil.success(this, data);
+  })
+  // 更新某个 api, 需要提供完整 api 对象
+  .put('/apis/:id', sutil.login, function*(next) {
     let updateResult = yield apiDao.update({ id: this.parse.apiData.id }, {
       $set: _.extend(this.parse.apiData, {
         updateTime: new Date,
@@ -93,8 +120,27 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 150001);
     }
   })
-  .delete('/apis', sutil.login, function*(next) {
-    if (!this.parse.apiId) {
+  // 更新某个 api, 仅提供更新的字段
+  .patch('/apis/:id', sutil.login, function*(next) {
+    if (!this.parse.id) {
+      sutil.failed(this, 1003);
+    }
+    let updateResult = yield apiDao.update({ id: this.parse.id }, {
+      $set: _.extend(this.parse.updateFields, {
+        updateTime: new Date,
+        operatorId: this.locals._user._id,
+        operatorName: this.locals._user.username
+      })
+    });
+    if (updateResult) {
+      sutil.success(this, updateResult);
+    } else {
+      sutil.failed(this, 150001);
+    }
+  })
+  // 删除某个 api
+  .delete('/apis/:id', sutil.login, function*(next) {
+    if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
     let deleteResult = yield apiDao.remove({ _id: this.parse.apiId });
@@ -103,7 +149,8 @@ router.get('/apis', sutil.login, function*(next) {
     } else {
       sutil.failed(this, 150002);
     }
-  });
+  })
+
 
 // api for mock
 router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {

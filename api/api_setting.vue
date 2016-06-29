@@ -13,10 +13,10 @@
                   <div class="field">
                       <label>method<i class="red">*</i></label>
                       <select class="ui fluid dropdown" v-model="method">
-                          <option value="get">get</option>
-                          <option value="post">post</option>
-                          <option value="put">put</option>
-                          <option value="delete">delete</option>
+                          <option value="GET">get</option>
+                          <option value="POST">post</option>
+                          <option value="PUT">put</option>
+                          <option value="DELETE">delete</option>
                       </select>
                   </div>
                   <div class="field">
@@ -64,7 +64,7 @@
     <div class="operation-button">
         <button class="positive ui button" @click="sendData">确定</button>
         <button class="negative ui button">删除</button>
-        <button class="ui button">取消</button>
+        <button class="ui button" @click="closeSlide">取消</button>
     </div>
 </div>
 </template>
@@ -78,7 +78,8 @@ export default {
       list: state => state.list,
       list_active: state => state.list_active,
       userName: state => state.userName,
-      userId: state => state.userId
+      userId: state => state.userId,
+      status: state => state.status
     },
     actions: {
       tog,
@@ -87,15 +88,20 @@ export default {
     }
   },
   components: {},
+  watch: {
+    status() {
+      console.log(this.status)
+      this.$dispatch('slide-menu-open');
+    }
+  },
   data() {
     return {
       title: '',
-      method: '',
+      method: 'GET',
       input: '',
       url: '',
       updateDesc: '',
-      output: '',
-      status: 1
+      output: ''
     }
   },
   ready() {
@@ -111,7 +117,10 @@ export default {
         output: [this.output],
         status: this.status,
         updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
-        createTime: new Date()
+        createTime: new Date(),
+        prdId: '111',
+        productId: '222',
+        teamId: '333'
       }
       fetch('/api/apis', {
         body: { apiData },
@@ -119,8 +128,12 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           alert('success');
+          this.$dispatch('slide-menu-close');
         }
       })
+    },
+    closeSlide() {
+      this.$dispatch('slide-menu-close');
     }
   }
 }

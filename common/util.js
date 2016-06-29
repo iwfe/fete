@@ -74,5 +74,61 @@ var util = {
     //         html: name + ' 添加了一篇文章 <a href="http://fe.superjia.com"> '+title+' </a>'
     //     });
     // }
+
+  Json2MockTree(data, key, result) {
+    if (!result) {
+      result = []
+    }
+
+    if (Array.isArray(data)) {
+      // data is array
+      let tmpForPush = {
+        key: key,
+        type: 'Array',
+        mock: '',
+        comment: ''
+      }
+      let children = []
+      if (typeof data[0] === 'object') {
+        util.Json2MockTree(data[0], null, children)
+        tmpForPush.children = children
+      }
+      result.push(tmpForPush)
+      return result
+    } else if (typeof data === 'object') {
+      // data is object
+      let children = []
+      for (let k in data) {
+        if (key) {
+          util.Json2MockTree(data[k], k, children)
+        } else {
+          util.Json2MockTree(data[k], k, result)
+        }
+      }
+      if (key) {
+        result.push({
+          key: key,
+          type: typeof data,
+          mock: '',
+          comment: '',
+          children: children
+        })
+      }
+      return result
+    } else {
+      // not object or array
+      if (!key) {
+        console.log('error: data is not in a json format!')
+      } else {
+        result.push({
+          key: key,
+          type: typeof data,
+          mock: '',
+          comment: ''
+        })
+      }
+      return result
+    }
+  }
 }
 export default util;

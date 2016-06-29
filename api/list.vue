@@ -7,7 +7,7 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <th style="width:10%;color:#999">共{{list.length}}个</th>
+                <th style="width:10%;color:#999">共{{list?list.length:0}}个</th>
             </tr>
         </thead>
         <tbody>
@@ -64,24 +64,23 @@
 
 <style>
 #_list{
-    padding-top: 12px;
-    overflow: hidden;
-    border-left: 1px dashed #ddd;
-    min-height: 350px;
+  padding-top: 12px;
+  overflow: hidden;
+  border-left: 1px dashed #ddd;
+  min-height: 350px;
 }
 .table{
-    margin: 0 12px;
-    text-align: left;
-    width: 100%;
+  margin: 0 12px;
+  text-align: left;
 }
-.table tr:nth-of-type(odd){background:#f5f5f5;}
+.table tr:nth-of-type(even){background:#f5f5f5;border-radius: 5%;}
 .table td,.table th{
-    line-height: 36px;
-    padding: 0 6px;
+  line-height: 36px;
+  padding: 0 6px;
 }
 .table tr.active{
-    background: #2DB7F5;
-    color: #fff;
+  background: #2DB7F5;
+  color: #fff;
 }
 .line{
   border-bottom: 1px dotted #ddd;

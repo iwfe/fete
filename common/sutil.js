@@ -199,6 +199,13 @@ var sutil = {
     * setRouterParams (next) {
         this.parse = _.extend(this.parse, this.params);
         yield next;
+    },
+
+    * allowCORS (next) {
+      this.set('Access-Control-Allow-Origin', '*')
+      this.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+      this.set('Access-Control-Allow-Headers', 'X-Requested-With')
+      yield next
     }
 
     // sendMail: function(name, title){

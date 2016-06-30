@@ -57,6 +57,7 @@ AssertionError: app.use() requires a generator function
 解决方案：
 `npm install koa-views@4.1.0`
 
+4,遇到安装semantic-ui，直接ctr+c就可以了
 
 
 整体架构介绍：

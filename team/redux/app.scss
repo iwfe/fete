@@ -1,0 +1,33 @@
+/*
+* @Author: jade
+* @Date:   2016-06-15 22:44:29
+* @Last Modified by:   jade
+* @Last Modified time: 2016-06-27 23:27:53
+*/
+.mod-team {
+  .team-add {
+    cursor: pointer;
+    text-align: center;
+    .anticon-plus {
+      font-size: 100px;
+    }
+  }
+  .ant-card-body {
+    height: 150px;
+  }
+  .gutter-row {
+    margin-bottom: 16px;
+  }
+}
+.team {
+  .description {
+    height: 70px;
+  }
+  .operators {
+    display: none;
+    float: right;
+  }
+  &:hover .operators {
+    display: block;
+  }
+}

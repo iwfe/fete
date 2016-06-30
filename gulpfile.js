@@ -2,8 +2,8 @@
  * @Author: geyuanjun
  * @Date:   2016-06-24 17:09:44
  * @Email:  geyuanjun.sh@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-28 18:09:59
+* @Last modified by:   lancui
+* @Last modified time: 2016-06-29 16:06:88
  */
 
 
@@ -126,6 +126,7 @@ gulp.task('webpack', function(callback) {
     plugins: [
       new webpack.ProvidePlugin({
         fetch: path.resolve('./common/fetch'),
+        _: 'underscore'
         // React: 'react',
         // ReactDom: 'react-dom'
       }),
@@ -187,6 +188,8 @@ gulp.task('img', function() {
 
 gulp.task('sham', function() {
   gulp.src('./global/lib/es5-shim-sham.js').pipe(gulp.dest('./dist'));
+  gulp.src('./node_modules/mockjs/dist/mock-min.js').pipe(gulp.dest('./dist'));
+  gulp.src('./node_modules/mockjs/dist/mock-min.js.map').pipe(gulp.dest('./dist'));
 })
 
 gulp.task('zip', function() {
@@ -276,12 +279,15 @@ gulp.task('vue', function(callback) {
     watch: isWatch,
     entry: {
       api: './api/index.js',
+      message: './message/index.js',
       vue_common: [
         'vue',
         'vue-router',
         'underscore',
         'vueCommon',
         'jquery',
+        'toastr/toastr.less',
+        'toastr',
         'semantic-ui/dist/components/reset.css',
         'semantic-ui/dist/components/transition.css',
         'semantic-ui/dist/components/transition.js',
@@ -296,8 +302,6 @@ gulp.task('vue', function(callback) {
         'semantic-ui/dist/components/divider.min.css',
         'semantic-ui/dist/components/header.min.css',
         'semantic-ui/dist/components/icon.min.css',
-        'semantic-ui/dist/components/form.min.css',
-        'semantic-ui/dist/components/form.min.css',
         'semantic-ui/dist/components/form.min.css',
         'semantic-ui/dist/components/grid.min.css',
         'semantic-ui/dist/components/input.min.css',
@@ -327,6 +331,7 @@ gulp.task('vue', function(callback) {
         _: 'underscore',
         $: 'jquery',
         jQuery: 'jquery',
+        toastr: 'toastr',
         fetch: path.resolve('./common/fetch'),
         Vue: 'vue',
         VueRouter: 'vue-router',

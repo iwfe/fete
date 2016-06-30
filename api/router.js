@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 11:18:33
+* @Last modified time: 2016-06-30 16:08:6
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 11:18:33
+* @Last modified time: 2016-06-30 16:08:6
  */
 
 
@@ -97,7 +97,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
-    let data = yield apiDao.find({ id: this.parse.id });
+    let data = yield apiDao.findOne({ id: this.parse.id });
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象

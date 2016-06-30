@@ -39,11 +39,11 @@
                       <label>接口修改日志</label>
                       <div class="api-log">
                           <div class="ui list very relaxed">
-                              <div class="item">
+                              <div class="item" v-for="list in updateDescList">
                                   <i class="file icon"></i>
                                   <div class="content">
-                                      <div class="header">张三</div>
-                                      <div class="description">2016-06-18 新增了API</div>
+                                      <div class="header">{{list.userName}}</div>
+                                      <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
                                   </div>
                               </div>
                           </div>
@@ -94,6 +94,7 @@ export default {
   data() {
     return {
       updateDesc: '',
+      updateDescList: [],
       apiData: {
         title: '',
         method: '',
@@ -103,12 +104,10 @@ export default {
       }
     }
   },
-  events: {
-    getDetail() {
-      console.log(this.list_active);
+  watch: {
+    'list_active.id'() {
       if (this.list_active && this.list_active.id) {
-        alert(1);
-        console.log(this.list_active.id);
+        this.getdata()
       }
     }
   },
@@ -176,11 +175,14 @@ export default {
       this.$dispatch('slide-menu-close');
     },
     getdata() {
-      fetch('/api/apis', {
-        body: { prdId: this.list_active.id },
-        method: 'Get'
+      fetch(`/api/apis/${this.list_active.id}`, {
+        method: 'GET'
       }).then(res => {
-        console.log(res.data);
+        _.extend(this.apiData, res.data);
+        this.updateDescList = res.data.updateDescList;
+        this.updateDescList.forEach(v => {
+          v.updateTime = v.updateTime.substring(0, 10);
+        })
       })
     },
     delList() {

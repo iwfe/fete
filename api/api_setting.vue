@@ -124,6 +124,9 @@ export default {
         method: 'POST'
       }).then(res => {
         if (res.code === 200) {
+          if (this.list_active) {
+            this.list_active = apiData
+          }
           this.$dispatch('slide-menu-close');
         }
       })

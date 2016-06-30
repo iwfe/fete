@@ -19,6 +19,9 @@ export default {
   },
   props: {},
   ready() {
+    fetch('/api/dropdown').then(res => {
+      console.log(res)
+    });
   },
   methods: {
 
@@ -40,12 +43,14 @@ export default {
 }
 #_path .btn a{
   cursor: pointer;
-  padding: 10px 12px;
+  padding: 10px 18px;
   margin-left: 12px;
   border-radius: 5px;
   font-size: 14px;
-  border:1px dotted #ddd;
+  color: #2DB7F5;
+  border:1px dotted #2DB7F5;
 }
+
 #_path .color{
   cursor: pointer;
   color: #2DB7F5;

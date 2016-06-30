@@ -32,7 +32,7 @@
     line-height: 36px;
     cursor: pointer;
     font-weight: 900;
-    padding: 0 12px;
+    padding: 0 18px;
     margin-bottom: 10px;
 }
 #_bar div:hover{

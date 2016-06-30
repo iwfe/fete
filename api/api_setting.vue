@@ -107,7 +107,8 @@ export default {
   },
   watch: {
     'list_active.id'() {
-      if (this.list_active.id) {
+      console.log(this.list_active.id);
+      if (this.list_active.id && this.list_active.id !== 1) {
         this.getdata()
       }
     }
@@ -152,11 +153,11 @@ export default {
           } else {
             toastr.error('新增API失败，请重试！');
           }
-        }, (res) => {
-          toastr.warn('网络异常，请重试！');
-        }).finally(() => {
           this.sendLoad = false;
-        })
+        }, () => {
+          this.sendLoad = false;
+          toastr.warning('网络异常，请重试！');
+        });
       } else {
         // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
         apiData.updateTime = new Date();
@@ -167,7 +168,7 @@ export default {
         }).then(res => {
           if (res.code === 200) {
             toastr.success('修改API成功！');
-
+            this.resetData();
             // 弹出层提示出现之后再关闭组件
             window.setTimeout(this.closeSlide, 300);
           } else {
@@ -178,7 +179,22 @@ export default {
       }
     },
     closeSlide() {
+      // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
+      _.extend(this.list_active, { id: 1 })
       this.$dispatch('slide-menu-close');
+    },
+    resetData() {
+      _.extend(this, {
+        updateDesc: '',
+        updateDescList: [],
+        apiData: {
+          title: '',
+          method: 'GET',
+          input: '',
+          url: '',
+          output: ['']
+        }
+      });
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {

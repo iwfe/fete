@@ -39,11 +39,11 @@
                       <label>接口修改日志</label>
                       <div class="api-log">
                           <div class="ui list very relaxed">
-                              <div class="item">
+                              <div class="item" v-for="list in updateDescList">
                                   <i class="file icon"></i>
                                   <div class="content">
-                                      <div class="header">张三</div>
-                                      <div class="description">2016-06-18 新增了API</div>
+                                      <div class="header">{{list.userName}}</div>
+                                      <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
                                   </div>
                               </div>
                           </div>
@@ -55,14 +55,14 @@
       <div class="ui form backData">
           <div class="field">
               <label>返回数据格式<i class="red">*</i></label>
-              <textarea class="output-param" placeholder="返回数据格式" v-model="output"></textarea>
+              <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea>
           </div>
       </div>
   </div>
 
     <div class="operation-button">
-        <button class="positive ui loading button" @click="sendData">确定</button>
-        <button class="negative ui button" @click="delList">删除</button>
+        <button class="positive ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
+        <button class="negative ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
         <button class="ui button" @click="closeSlide">取消</button>
     </div>
     <!-- <editor-frame></editor-frame> -->
@@ -71,7 +71,7 @@
 
 <script text="text/babel">
 
-import { tog, add, del } from './vuex/action'
+import { add, del } from './vuex/action'
 
 export default {
   vuex: {
@@ -85,7 +85,6 @@ export default {
       teamId: state => state.teamId
     },
     actions: {
-      tog,
       add,
       del
     }
@@ -94,81 +93,87 @@ export default {
   data() {
     return {
       updateDesc: '',
+      updateDescList: [],
+      sendLoad: false,
+      delLoad: false,
       apiData: {
         title: '',
-        method: '',
+        method: 'GET',
         input: '',
         url: '',
         output: ['']
       }
     }
   },
-  events: {
-    getDetail() {
-      console.log(this.list_active);
-      if (this.list_active && this.list_active.id) {
-        alert(1);
-        console.log(this.list_active.id);
+  watch: {
+    'list_active.id'() {
+      if (this.list_active.id) {
+        this.getdata()
       }
     }
   },
   methods: {
+    /**
+     * 发送数据
+     * @desc 修改以及新建API都是用同一种方法
+     * @return {[type]} [description]
+     */
     sendData() {
+      this.sendLoad = true;
       // 判断是新增还是修改接口
       let status = 1;
       if (this.list_active.id) {
         status = 2;
       }
+      // 定义最基本的数据结构
       const apiData = this.apiData;
       _.extend(apiData, {
         status: status,
-        updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
-        createTime: new Date(),
         prdId: this.prdId,
         productId: this.productId,
         teamId: this.teamId
       });
       // 如果是新增接口
       if (status === 1) {
+        _.extend(apiData, {
+          updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
+          createTime: new Date(),
+        });
         fetch('/api/apis', {
           body: { apiData },
           method: 'POST'
-        }).then(res => {
+        }).then((res) => {
           if (res.code === 200) {
             if (this.list_active) {
-              this.list_active.title = apiData.title;
-              this.list_active.url = apiData.url;
-              this.list_active.method = apiData.method;
+              _.extend(this.list_active, res.data);
             }
             toastr.success('新增API成功！');
-            toastr.options = {
-              closeButton: true
-            };
             window.setTimeout(this.closeSlide, 300);
           } else {
             toastr.error('新增API失败，请重试！');
-            toastr.options = {
-              closeButton: true
-            };
           }
+        }, (res) => {
+          toastr.warn('网络异常，请重试！');
+        }).finally(() => {
+          this.sendLoad = false;
         })
       } else {
+        // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
+        apiData.updateTime = new Date();
+        apiData.updateDescList.push({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
         fetch(`/api/apis/${this.list_active.id}`, {
           body: { apiData },
           method: 'PUT'
         }).then(res => {
           if (res.code === 200) {
             toastr.success('修改API成功！');
-            toastr.options = {
-              closeButton: true
-            };
+
+            // 弹出层提示出现之后再关闭组件
             window.setTimeout(this.closeSlide, 300);
           } else {
             toastr.error('API修改失败，请重试！');
-            toastr.options = {
-              closeButton: true
-            };
           }
+          this.sendLoad = false;
         })
       }
     },
@@ -176,29 +181,28 @@ export default {
       this.$dispatch('slide-menu-close');
     },
     getdata() {
-      fetch('/api/apis', {
-        body: { prdId: this.list_active.id },
-        method: 'Get'
+      fetch(`/api/apis/${this.list_active.id}`, {
+        method: 'GET'
       }).then(res => {
-        console.log(res.data);
+        _.extend(this.apiData, res.data);
+        this.updateDescList = res.data.updateDescList;
+        this.updateDescList.forEach(v => {
+          v.updateTime = v.updateTime.substr(0, 10);
+        })
       })
     },
     delList() {
+      this.delLoad = true;
       fetch(`/api/apis/${this.list_active.id}`, {
         method: 'DELETE'
       }).then(res => {
         if (res.code === 200) {
           toastr.success('成功删除API！');
-          toastr.options = {
-            closeButton: true
-          };
           this.del();
         } else {
           toastr.error('删除API失败，请重试！');
-          toastr.options = {
-            closeButton: true
-          };
         }
+        this.delLoad = false;
       });
       window.setTimeout(this.closeSlide, 300);
     }

@@ -143,6 +143,57 @@ var util = {
         }
         return result
       }
+    },
+
+    mockTree2MockTemplate(data, result) {
+      if (!result) {
+        result = {}
+      }
+
+      if (Array.isArray(data)) {
+        // data is array
+        for (let i = data.length - 1; i >= 0; i--) {
+          mockTree2MockTemplate(data[i], result)
+        }
+        return result
+      } else if (typeof data === 'object' && data.key && data.dataType && data.mock) {
+        let mockArr = data.mock.split(':')
+
+        // if has children
+        if (data.children) {
+          let tmpChildren = null
+          if (data.dataType === 'object') {
+            // object
+            tmpChildren = {}
+            for (var i = data.children.length - 1; i >= 0; i--) {
+              mockTree2MockTemplate(data.children[i], tmpChildren)
+            }
+          } else {
+            // array
+            tmpChildren = [{}]
+            for (var i = data.children.length - 1; i >= 0; i--) {
+              mockTree2MockTemplate(data.children[i], tmpChildren[0])
+            }
+          }
+          result[`${data.key}${mockArr[0]}`] = tmpChildren
+        } else {
+          // has no children
+          let value = mockArr[1]
+          if (data.dataType === 'boolean') {
+            value = (mockArr[1] === 'true')
+          } else if (data.dataType === 'number') {
+            value = parseFloat(mockArr[1])
+          } else if (!mockArr[0] && value[0] === '/') {
+            // regexp
+            value = new RegExp(mockArr[1])
+          }
+          result[`${data.key}${mockArr[0]}`] = value
+        }
+
+        return result
+      } else {
+        console.log('mock tree data format error !')
+      }
     }
 }
 export default util;

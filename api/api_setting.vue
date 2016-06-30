@@ -7,11 +7,11 @@
               <div class="ui form">
                   <div class="field">
                       <label>标题<i class="red">*</i></label>
-                      <input type="text" placeholder="一句话描述" v-model="title">
+                      <input type="text" placeholder="一句话描述" v-model="apiData.title">
                   </div>
                   <div class="field">
                       <label>method<i class="red">*</i></label>
-                      <select class="ui fluid dropdown" v-model="method">
+                      <select class="ui fluid dropdown" v-model="apiData.method">
                           <option value="GET">get</option>
                           <option value="POST">post</option>
                           <option value="PUT">put</option>
@@ -20,15 +20,15 @@
                   </div>
                   <div class="field">
                       <label>输入数据格式<i class="red">*</i></label>
-                      <textarea class="input-param" placeholder="输入数据格式" v-model="input"></textarea>
+                      <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
                   </div>
               </div>
           </div>
           <div class="column">
               <div class="ui form">
                   <div class="field">
-                      <label>接口地址<i class="red">*</i></label>
-                      <input type="text" placeholder="接口URL地址" v-model="url">
+                      <label>接口地址（首字符请输入/）<i class="red">*</i></label>
+                      <input type="text" placeholder="接口URL地址" v-model="apiData.url">
                   </div>
 
                   <div class="field">
@@ -61,7 +61,7 @@
   </div>
 
     <div class="operation-button">
-        <button class="positive ui button" @click="sendData">确定</button>
+        <button class="positive ui loading button" @click="sendData">确定</button>
         <button class="negative ui button" @click="delList">删除</button>
         <button class="ui button" @click="closeSlide">取消</button>
     </div>
@@ -79,7 +79,10 @@ export default {
       list: state => state.list,
       list_active: state => state.list_active,
       userName: state => state.userName,
-      userId: state => state.userId
+      userId: state => state.userId,
+      prdId: state => state.prdId,
+      productId: state => state.productId,
+      teamId: state => state.teamId
     },
     actions: {
       tog,
@@ -90,49 +93,84 @@ export default {
   components: {},
   data() {
     return {
-      title: '',
-      method: 'GET',
-      input: '',
-      url: '',
       updateDesc: '',
-      output: ''
+      apiData: {
+        title: '',
+        method: '',
+        input: '',
+        url: '',
+        output: ['']
+      }
     }
   },
   events: {
     getDetail() {
+      console.log(this.list_active);
       if (this.list_active && this.list_active.id) {
+        alert(1);
         console.log(this.list_active.id);
       }
     }
   },
   methods: {
     sendData() {
-      const apiData = {
-        title: this.title,
-        method: this.method,
-        input: this.input,
-        url: this.url,
-        output: [this.output],
-        status: this.status,
+      // 判断是新增还是修改接口
+      let status = 1;
+      if (this.list_active.id) {
+        status = 2;
+      }
+      const apiData = this.apiData;
+      _.extend(apiData, {
+        status: status,
         updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
         createTime: new Date(),
-        prdId: '111',
-        productId: '222',
-        teamId: '333'
-      }
-      fetch('/api/apis', {
-        body: { apiData },
-        method: 'POST'
-      }).then(res => {
-        if (res.code === 200) {
-          if (this.list_active) {
-            this.list_active.title = apiData.title;
-            this.list_active.url = apiData.url;
-            this.list_active.method = apiData.method;
+        prdId: this.prdId,
+        productId: this.productId,
+        teamId: this.teamId
+      });
+      // 如果是新增接口
+      if (status === 1) {
+        fetch('/api/apis', {
+          body: { apiData },
+          method: 'POST'
+        }).then(res => {
+          if (res.code === 200) {
+            if (this.list_active) {
+              this.list_active.title = apiData.title;
+              this.list_active.url = apiData.url;
+              this.list_active.method = apiData.method;
+            }
+            toastr.success('新增API成功！');
+            toastr.options = {
+              closeButton: true
+            };
+            window.setTimeout(this.closeSlide, 300);
+          } else {
+            toastr.error('新增API失败，请重试！');
+            toastr.options = {
+              closeButton: true
+            };
           }
-          this.$dispatch('slide-menu-close');
-        }
-      })
+        })
+      } else {
+        fetch(`/api/apis/${this.list_active.id}`, {
+          body: { apiData },
+          method: 'PUT'
+        }).then(res => {
+          if (res.code === 200) {
+            toastr.success('修改API成功！');
+            toastr.options = {
+              closeButton: true
+            };
+            window.setTimeout(this.closeSlide, 300);
+          } else {
+            toastr.error('API修改失败，请重试！');
+            toastr.options = {
+              closeButton: true
+            };
+          }
+        })
+      }
     },
     closeSlide() {
       this.$dispatch('slide-menu-close');
@@ -146,17 +184,23 @@ export default {
       })
     },
     delList() {
-      this.del();
       fetch(`/api/apis/${this.list_active.id}`, {
         method: 'DELETE'
       }).then(res => {
         if (res.code === 200) {
-          console.log(1);
+          toastr.success('成功删除API！');
+          toastr.options = {
+            closeButton: true
+          };
+          this.del();
         } else {
-          console.log(2);
+          toastr.error('删除API失败，请重试！');
+          toastr.options = {
+            closeButton: true
+          };
         }
-      })
-      this.$dispatch('slide-menu-close');
+      });
+      window.setTimeout(this.closeSlide, 300);
     }
   }
 }

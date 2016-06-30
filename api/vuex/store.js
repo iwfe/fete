@@ -3,7 +3,7 @@
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 10:27:9
+* @Last modified time: 2016-06-30 15:55:9
 */
 import Vuex from 'vuex'
 Vue.use(Vuex)
@@ -12,7 +12,10 @@ const state = {
   list: [],
   list_active: {},
   userId: '123',
-  userName: 'geyuanjun'
+  userName: 'geyuanjun',
+  prdId: '1',
+  teamId: '2',
+  productId: '3'
 }
 
 const mutations = {
@@ -37,7 +40,7 @@ const mutations = {
     if (State.list_active === list) {
       State.list_active = {};
     } else {
-      State.list_active = list
+      State.list_active = list;
     }
   }
 }

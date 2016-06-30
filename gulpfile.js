@@ -78,6 +78,7 @@ gulp.task('webpack', function(callback) {
     login: ['./main/login.js', './main/login.scss'],
     user: './user',
     team: './team',
+    project: './project',
     react_common: [
       'react',
       'react-dom',

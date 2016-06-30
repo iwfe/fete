@@ -99,10 +99,12 @@ app.use(function*(next) {
 
 import main from './main/router';
 import team from './team/router';
+import project from './project/router';
 import apiModule from './api/router';
 import msgModule from './message/router';
 app.use(main.routes());
 app.use(team.routes());
+app.use(project.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 

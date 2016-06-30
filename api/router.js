@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 11:18:33
+* @Last modified time: 2016-06-30 19:06:35
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 11:18:33
+* @Last modified time: 2016-06-30 19:06:35
  */
 
 
@@ -80,8 +80,8 @@ router.get('/apis', sutil.login, function*(next) {
     let insertResult = yield apiDao.insert(
       _.extend(this.parse.apiData, {
         id: yield sutil.genId(apiDao, 8),
-        createTime: new Date,
-        updateTime: new Date,
+        createTime: new Date(),
+        updateTime: new Date(),
         userId: this.locals._user._id,
         userName: this.locals._user.username
       })
@@ -97,7 +97,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
-    let data = yield apiDao.find({ id: this.parse.id });
+    let data = yield apiDao.findOne({ id: this.parse.id });
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象
@@ -105,9 +105,10 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
+    delete(this.parse.apiData._id)
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.apiData, {
-        updateTime: new Date,
+        updateTime: new Date(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })
@@ -125,7 +126,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.updateFields, {
-        updateTime: new Date,
+        updateTime: new Date(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })
@@ -156,16 +157,27 @@ router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
-    productId: this.parse.productId,
-    url: realUrl
+    url: realUrl,
+    method: this.method.toUpperCase(),
+    productId: this.parse.productId
   }
   if (this.parse.prdId) {
     filter.prdId = this.parse.prdId
   }
 
-  let apiItems = yield apiDao.find({})
-  if (apiItems && apiItems.length > 0) {
-    let data = Mock.mock(JSON.parse(apiItems[0].outputMock))
+  let apiItem = yield apiDao.findOne(filter)
+  if (apiItem) {
+    let data = Mock.mock(mockTree2MockTemplate(apiItem.output))
+    // let data = Mock.mock({
+    //     "data|1-10":[
+    //         {
+    //             "isActive|1":true,
+    //             "name|3-5":/\w/,
+    //             "id|+1":1
+    //         }
+    //     ],
+    //     "status|":1
+    // });
     this.body = data // 这里就不要用 sutil 的 success 方法了
     return false
   } else {

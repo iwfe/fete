@@ -3,7 +3,7 @@
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 15:55:9
+* @Last modified time: 2016-06-30 18:09:26
 */
 import Vuex from 'vuex'
 Vue.use(Vuex)
@@ -22,6 +22,7 @@ const mutations = {
   ADD(State, list) { // 添加
     if (!list.url) {
       list = {
+        id: '',
         url: '-',
         title: '-',
         method: '-'

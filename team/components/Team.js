@@ -25,7 +25,7 @@ export default class Team extends Component {
         <Card title={team.name}>
           <p className="description">{team.description}</p>
           <div className="operators">
-            <a className="ant-btn ant-btn-dashed" href={"/project?teamId=" + team.id}>进入</a>
+            <a className="ant-btn ant-btn-dashed" href={"/project?teamId=" + team.id}>进入项目</a>
             &nbsp;
             <Button type="primary" htmlType="button" onClick={() => actions.updateShow(true, team)}>更新</Button>
             &nbsp;

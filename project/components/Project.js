@@ -25,7 +25,7 @@ export default class Project extends Component {
         <Card title={project.name}>
           <p className="description">{project.description}</p>
           <div className="operators">
-            <a className="ant-btn ant-btn-dashed" href={"/prd?projectId=" + project.id}>进入</a>
+            <a className="ant-btn ant-btn-dashed" href={"/prd?projectId=" + project.id}>进入PRD</a>
             &nbsp;
             <Button type="primary" htmlType="submit" onClick={() => actions.updateShow(true, project)}>更新</Button>
             &nbsp;

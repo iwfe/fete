@@ -43,7 +43,21 @@ class AddPrd extends Component {
       if (!!errors) {
         return false;
       } else {
-        okCallback && okCallback(Object.assign({}, form.getFieldsValue(['name', 'description']), {
+        okCallback && okCallback(Object.assign({},
+          form.getFieldsValue([
+            'name',
+            'description',
+            'pm',
+            'type',
+            'selfTest',
+            'jira',
+            'comment',
+            'devTime',
+            'apiTime',
+            'testTime',
+            'onlineTime'
+          ]),
+          {
           id: prd && prd.id
         }));
       }
@@ -139,8 +153,8 @@ class AddPrd extends Component {
             {...formItemLayout}
             label="是否自测： ">
             <RadioGroup {...selfTestProps}>
-              <Radio value={true}>是</Radio>
-              <Radio value={false}>否</Radio>
+              <Radio value="是">是</Radio>
+              <Radio value="否">否</Radio>
             </RadioGroup>
           </FormItem>
           <FormItem
@@ -171,6 +185,16 @@ class AddPrd extends Component {
             {...formItemLayout}
             label="上线时间： ">
             <DatePicker {...onlineTimeProps} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="备注： "
+            hasFeedback>
+            <Input
+              name="comment"
+              {...commentProps}
+              type="textarea"
+              placeholder="请输入PRD备注"/>
           </FormItem>
         </Form>
       </Modal>

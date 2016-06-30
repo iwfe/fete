@@ -21,10 +21,9 @@ router.get('/', sutil.teamLogin, function*(next) {
 
 router.get('/data', sutil.teamLogin, function*(next) {
     const user = this.locals._user;
-    const projectId = user.project;
 
     sutil.success(this, yield projectDao.find({
-      projectId: projectId
+      teamId: this.parse.teamId
     }));
 });
 

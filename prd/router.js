@@ -19,28 +19,25 @@ router.get('/', sutil.projectLogin, function*(next) {
 });
 
 router.get('/data', sutil.projectLogin, function*(next) {
-    const user = this.locals._user;
-    const prdId = user.prd;
-
     sutil.success(this, yield prdDao.find({
-      prdId: prdId
+      productId: this.parse.productId
     }));
 });
 
 router.post('/data', sutil.projectLogin, function*(next) {
     const parse = this.parse;
     const user = this.locals._user;
+    const {project} = user;
     const id = yield sutil.genId(prdDao);
 
-    const prd = yield prdDao.insert({
+    const prd = yield prdDao.insert(Object.assign({},{
         id: id,
-        name: parse.name,
+        teamId: project.teamId,
+        projectId: project.id,
         createUser: user.username,
-        prdId: parse.prdId,
-        description: parse.description,
         createTime: Date.now(),
         updateTime: Date.now()
-    });
+    }, parse));
     sutil.success(this, prd);
 });
 

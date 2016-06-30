@@ -129,6 +129,12 @@ var sutil = {
     let team = _.find(user.teams, function (item) {
       return item === teamId;
     });
+    if (!team) {
+      return yield sutil.result(this, {
+        code: 11001,
+        redirect: redirect
+      });
+    }
     team = yield teamDao.findOne({
       id: team
     });
@@ -164,10 +170,32 @@ var sutil = {
         redirect: redirect
       });
     }
+    const teamId = project.teamId;
 
-    this.parse.teamId = project.teamId;
+    let team = _.find(user.teams, function (item) {
+      return item === teamId;
+    });
+
+    if (!team) {
+      return yield sutil.result(this, {
+        code: 11001,
+        redirect: redirect
+      });
+    }
+
+    team = yield teamDao.findOne({
+      id: team
+    });
+
+    if (!team) {
+      return yield sutil.result(this, {
+        code: 11001,
+        redirect: redirect
+      });
+    }
     user.project = project;
-    yield sutil.projectLogin(next);
+    user.team = team;
+    yield next;
   },
 
   //prd login
@@ -192,9 +220,44 @@ var sutil = {
       });
     }
 
-    this.parse.projectId = prd.projectId;
-    user.prd = prd;
-    yield sutil.projectLogin(next);
+    const projectId = prd.projectId;
+
+    const project = yield projectDao.findOne({
+      id: projectId
+    });
+
+    if(!project) {
+      return yield sutil.result(this, {
+        code: 12002,
+        redirect: redirect
+      });
+    }
+    const teamId = project.teamId;
+
+    let team = _.find(user.teams, function (item) {
+      return item === teamId;
+    });
+
+    if (!team) {
+      return yield sutil.result(this, {
+        code: 11001,
+        redirect: redirect
+      });
+    }
+
+    team = yield teamDao.findOne({
+      id: team
+    });
+
+    if (!team) {
+      return yield sutil.result(this, {
+        code: 11001,
+        redirect: redirect
+      });
+    }
+    user.project = project;
+    user.team = team;
+    yield next;
   },
 
   //登录用户cookie管理

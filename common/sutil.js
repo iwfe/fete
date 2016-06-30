@@ -52,12 +52,16 @@ var sutil = {
     let staticTagMap = _.extend({}, data);
     delete staticTagMap.html;
     delete staticTagMap.header;
+    const user = Object.assign({},ctx.locals._user);
+    delete user._id;
+    delete user.teams;
+    ctx.locals._user = user;
     yield ctx.render(data.tpl || 'layout', _.extend({
       commonTag: 'react_',
       staticTag: staticTag,
       staticTagMap: staticTagMap,
       header: data.noHeader ? '' : this.reactRender(Header, {
-        user: ctx.locals._user,
+        user: user,
         menus: data.menus || [],
         current: staticTag
       })
@@ -110,9 +114,9 @@ var sutil = {
   //team login
   * teamLogin(next) {
     let user = this.locals._user;
-    const teamId = this.parse.teamId;
+    const {teamId} = this.parse;
     const redirect = '/team';
-    if (!user) {
+    if (!user.username) {
       return yield sutil.result(this, {
         code: 10001,
         redirect: '/login?next=' + this.url
@@ -120,7 +124,7 @@ var sutil = {
     }
 
     const team = _.find(user.teams, function (item) {
-      return item.id === teamId;
+      return item === teamId;
     });
 
     if (!team) {

@@ -20,11 +20,6 @@ router.get('/', sutil.login, function*(next) {
     yield sutil.render(this, {});
 });
 
-router.get('/:id', sutil.login, function*(next) {
-
-    yield sutil.render(this, {});
-});
-
 router.get('/data', sutil.login, function*(next) {
     const user = this.locals._user;
     const teamIds = user.teams;

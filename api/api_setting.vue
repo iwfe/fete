@@ -1,5 +1,4 @@
 <template>
-
 <div id="api-detail" >
   <h3 class="ui header"><i class="icon settings"></i><div class="content">新建API</div></h3>
   <div class="container body">
@@ -66,10 +65,12 @@
         <button class="negative ui button">删除</button>
         <button class="ui button" @click="closeSlide">取消</button>
     </div>
+    <editor-frame></editor-frame>
 </div>
 </template>
 
 <script text="text/babel">
+
 import { tog, add, del } from './vuex/action'
 
 export default {
@@ -142,6 +143,7 @@ export default {
         console.log(res.data);
       })
     }
+
   }
 }
 </script>

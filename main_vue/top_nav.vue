@@ -53,9 +53,12 @@
 
     .ui.secondary.pointing.menu,
     .right.menu {
-        border: none;
+        border: none !important;
         font-size: 12px;
 
+        .item {
+          height: 100%;
+        }
         > .item {
             width: 64px;
             padding-top: 0 !important;

@@ -1,0 +1,54 @@
+/*
+ * @Author: jade
+ * @Date:   2016-06-12 00:03:50
+ * @Last Modified by:   jade
+ * @Last Modified time: 2016-06-28 23:37:31
+ */
+
+'use strict';
+import React, {Component, PropTypes} from 'react';
+import classNames from 'classnames';
+import Card from 'antd/lib/card';
+import Button from 'antd/lib/button';
+import AddTeam from './AddTeam';
+import Modal from 'antd/lib/modal';
+
+export default class Team extends Component {
+    constructor(props, context) {
+        super(props, context);
+    }
+
+    render() {
+        const {team, updateShow, deleteShow, actions} = this.props;
+        return (
+            <div className="team">
+                <Card title={team.name}>
+                    <p className="description">{team.description}</p>
+                    <div className="operators">
+                        <Button type="primary" htmlType="submit" onClick={() => actions.updateShow(true, team)}>更新</Button>
+                        &nbsp;
+                        <Button type="danger" htmlType="submit" onClick={() => actions.deleteShow(true, team)}>删除</Button>
+                    </div>
+                </Card>
+                <AddTeam
+                    visible={updateShow}
+                    team={team}
+                    type="update"
+                    cancelCallback={()=>actions.updateShow(false, team)}
+                    okCallback={team=>actions.updateTeam(team)}
+                />
+                <Modal title="删除团队"
+                       visible={deleteShow}
+                       onCancel={() => actions.deleteShow(false, team)}
+                       onOk={() => actions.deleteTeam(team)}
+                >
+                    <p>您确定要删除该"{team.name}"团队吗?</p>
+                </Modal>
+            </div>
+        )
+    }
+}
+
+Team.propTypes = {
+    team: PropTypes.object.isRequired,
+}

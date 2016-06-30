@@ -126,6 +126,7 @@ gulp.task('webpack', function(callback) {
     plugins: [
       new webpack.ProvidePlugin({
         fetch: path.resolve('./common/fetch'),
+        _: 'underscore'
         // React: 'react',
         // ReactDom: 'react-dom'
       }),

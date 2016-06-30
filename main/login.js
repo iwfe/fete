@@ -11,7 +11,6 @@ import ReactDOM from 'react-dom';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Col from 'antd/lib/col';
 import Alert from 'antd/lib/Alert';
 
 const FormItem = Form.Item;
@@ -86,7 +85,7 @@ let Login = React.createClass ({
                     <FormItem
                         wrapperCol = {{span: 16, offset: 6}} style={{marginTop: 24}}
                     >
-                        <Button type="primary" htmlType="submit">登录</Button>    
+                        <Button type="primary" htmlType="submit">登录</Button>
                     </FormItem>
                 </Form>
             </div>

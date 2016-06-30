@@ -105,12 +105,14 @@ export default {
       }
     }
   },
-  watch: {
-    'list_active.id'() {
-      console.log(this.list_active.id);
-      if (this.list_active.id && this.list_active.id !== 1) {
-        this.getdata()
-      }
+  events: {
+    getDetail() {
+      setTimeout(() => {
+        console.log(this.list_active.id);
+        if (this.list_active.id && this.list_active.id !== 1) {
+          this.getdata()
+        }
+      }, 300)
     }
   },
   methods: {
@@ -180,7 +182,6 @@ export default {
     },
     closeSlide() {
       // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
-      _.extend(this.list_active, { id: 1 })
       this.$dispatch('slide-menu-close');
     },
     resetData() {

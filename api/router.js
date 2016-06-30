@@ -156,16 +156,27 @@ router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
-    productId: this.parse.productId,
-    url: realUrl
+    url: realUrl,
+    method: this.method.toUpperCase(),
+    productId: this.parse.productId
   }
   if (this.parse.prdId) {
     filter.prdId = this.parse.prdId
   }
 
-  let apiItems = yield apiDao.find({})
-  if (apiItems && apiItems.length > 0) {
-    let data = Mock.mock(JSON.parse(apiItems[0].outputMock))
+  let apiItem = yield apiDao.findOne(filter)
+  if (apiItem) {
+    let data = Mock.mock(mockTree2MockTemplate(apiItem.output))
+    // let data = Mock.mock({
+    //     "data|1-10":[
+    //         {
+    //             "isActive|1":true,
+    //             "name|3-5":/\w/,
+    //             "id|+1":1
+    //         }
+    //     ],
+    //     "status|":1
+    // });
     this.body = data // 这里就不要用 sutil 的 success 方法了
     return false
   } else {

@@ -6,7 +6,9 @@
 */
 .mod-project {
   .project-nav {
-    margin-bottom: 16px;
+    margin: 0 -16px 16px;
+    padding: 0 16px 16px;
+    border-bottom: 1px solid #e9e9e9;
   }
   .project-add {
     cursor: pointer;

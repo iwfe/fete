@@ -3,43 +3,57 @@
  * zhangyuyu@superjia.com
  */
 import React, {Component, PropTypes} from 'react';
-import Select from 'antd/lib/Select';
-const Option = Select.Option;
+import Menu from 'antd/lib/menu';
+import Icon from 'antd/lib/icon';
+import Dropdown from 'antd/lib/dropdown';
+import Breadcrumb from 'antd/lib/breadcrumb';
 
 export default class Nav extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      teams:[],
+      teams: [],
     }
   }
 
   //初始化渲染后触发
   componentDidMount() {
     const self = this;
-    const {teamId} = self.props;
     fetch('/team/data').then(res => self.setState({
-      teamEle:
-        <Select defaultValue={teamId}  onChange={this.handleChange}>
-          {res.data.map(team => <Option key={team.id} value={team.id}>{team.name}</Option>)}
-        </Select>
+      teams: res.data
     }))
   }
 
-  handleChange(value) {
-    window.location.href = `/project?teamId=${value}`;
-  }
-
   render() {
-    const {teamEle} = this.state;
+    const {team} = this.props;
+    const {teams} = this.state;
+    const menu =
+      <Menu>
+        {
+          teams.map(item =>
+            item.id === team.id ? null :
+              <Menu.Item key={item.id}>
+                <a href={'/project?teamId=' + item.id}>{item.name}</a>
+              </Menu.Item>
+          )
+        }
+      </Menu>
     return (
       <div className="project-nav">
-        团队: {teamEle}
+        <Breadcrumb>
+          <Breadcrumb.Item>当前位置</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Dropdown overlay={menu}>
+              <a className="ant-dropdown-link">
+                团队: {team.name}<Icon type="down"/>
+              </a>
+            </Dropdown>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>我的项目</Breadcrumb.Item>
+        </Breadcrumb>
       </div>
     )
   }
 }
 
-Nav.propTypes = {
-  teamId: PropTypes.string.isRequired,
-}
+Nav.propTypes = {}

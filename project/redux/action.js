@@ -16,7 +16,7 @@ export const UPDATE_SHOW = 'UPDATE_SHOW';
 export const DELETE = 'DELETE';
 export const DELETE_SHOW = 'DELETE_SHOW';
 
-const me = pageConfig.me;
+const team = pageConfig.me.team;
 
 //获取文章，先触发requestPosts开始获取action，完成后触发receivePosts获取成功的action
 export function getProjects() {
@@ -24,7 +24,7 @@ export function getProjects() {
     // dispatch(request())
     return fetch('/project/data', {
       body: {
-        teamId: me.team
+        teamId: team.id
       }
     })
       .then(json => dispatch({
@@ -45,7 +45,7 @@ export function addProject(project) {
   return dispatch => {
     return fetch('/project/data', {
       method: 'post',
-      body: Object.assign({teamId: me.team}, project)
+      body: Object.assign({teamId: team.id}, project)
     })
       .then(json => dispatch({
         type: ADD,
@@ -67,7 +67,7 @@ export function updateProject(project) {
     // dispatch(request())
     return fetch('/project/data', {
       method: 'put',
-      body: Object.assign({teamId: me.team}, project)
+      body: Object.assign({teamId: team.id}, project)
     })
       .then(json => dispatch({
         type: UPDATE,
@@ -83,7 +83,7 @@ export function deleteProject(project) {
       method: 'delete',
       body: {
         id: project.id,
-        teamId: me.team
+        teamId: team.id
       }
     })
       .then(json => dispatch({

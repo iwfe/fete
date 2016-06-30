@@ -19,6 +19,7 @@ import {
 import util from './util';
 
 var userDao = wrap(db.get('user'));
+var teamDao = wrap(db.get('team'));
 var loginUserStore = new Map();
 
 var sutil = {
@@ -123,10 +124,12 @@ var sutil = {
       });
     }
 
-    const team = _.find(user.teams, function (item) {
+    let team = _.find(user.teams, function (item) {
       return item === teamId;
     });
-
+    team = yield teamDao.findOne({
+      id: team
+    });
     if (!team) {
       return yield sutil.result(this, {
         code: 11001,

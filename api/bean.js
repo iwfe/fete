@@ -34,7 +34,7 @@ const api = {
             ]
 		}
 	],
-	mock:{}, //保存生成的mock格式
+	// outputMock:{}, //保存生成的mock格式  // 不要这个字段了
 	status: 1,	// 1 新建， 2 修改
 	updateDescList: [{ // 修改说明list
 		updateTime: '', // 更新时间

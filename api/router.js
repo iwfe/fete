@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 16:08:6
+* @Last modified time: 2016-06-30 18:31:3
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 16:08:6
+* @Last modified time: 2016-06-30 18:31:3
  */
 
 
@@ -80,8 +80,8 @@ router.get('/apis', sutil.login, function*(next) {
     let insertResult = yield apiDao.insert(
       _.extend(this.parse.apiData, {
         id: yield sutil.genId(apiDao, 8),
-        createTime: new Date,
-        updateTime: new Date,
+        createTime: new Date(),
+        updateTime: new Date(),
         userId: this.locals._user._id,
         userName: this.locals._user.username
       })
@@ -107,7 +107,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.apiData, {
-        updateTime: new Date,
+        updateTime: new Date(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })
@@ -125,7 +125,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.updateFields, {
-        updateTime: new Date,
+        updateTime: new Date(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })

@@ -77,16 +77,9 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 1003)
     }
 
-    // 生成6位 id
-    let [tmpId, existApi] = ['', null]
-    do {
-      tmpId = util.genId(6)
-      existApi = yield apiDao.findOne({id: tmpId});
-    } while (existApi)
-
     let insertResult = yield apiDao.insert(
       _.extend(this.parse.apiData, {
-        id: tmpId,
+        id: yield sutil.genId(apiDao, 8),
         createTime: new Date,
         updateTime: new Date,
         userId: this.locals._user._id,

@@ -19,6 +19,7 @@ export default class Project extends Component {
 
   render() {
     const {project, updateShow, deleteShow, actions} = this.props;
+    console.log(project)
     return (
       <div className="project">
         <Card title={project.name}>

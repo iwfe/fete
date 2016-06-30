@@ -79,6 +79,7 @@ gulp.task('webpack', function(callback) {
     user: './user',
     team: './team',
     project: './project',
+    prd: './prd',
     react_common: [
       'react',
       'react-dom',

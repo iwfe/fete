@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 18:31:3
+* @Last modified time: 2016-06-30 19:06:35
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 18:31:3
+* @Last modified time: 2016-06-30 19:06:35
  */
 
 
@@ -105,6 +105,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
+    delete(this.parse.apiData._id)
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.apiData, {
         updateTime: new Date(),

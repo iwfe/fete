@@ -75,6 +75,9 @@
   text-align: left;
 }
 .table tr:nth-of-type(even){background:#f5f5f5;border-radius: 5%;}
+.table tr:hover{
+  color: #000;
+}
 .table td,.table th{
   line-height: 36px;
   padding: 0 6px;

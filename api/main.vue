@@ -1,6 +1,6 @@
 <template>
   <section>
-    <section id="container">
+    <section id="main">
       <path></path>
       <bar></bar>
       <list></list>
@@ -40,6 +40,9 @@ export default {
 }
 </script>
 <style lang="sass">
+#main{
+  width: 97%;
+}
  html,body,#fete{
    height:100%;
  }

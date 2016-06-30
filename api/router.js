@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   lancui
-* @Last modified time: 2016-06-29 16:06:43
- * @Last modified by:   geyuanjun
- * @Last modified time: 2016-06-29 15:38:40
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-30 11:18:33
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-06-30 11:18:33
  */
 
 
@@ -93,16 +93,19 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 获取某个api详细信息
-  .get('/apis/:id', sutil.login, function*(next) {
-    if (!this.parse.apiId) {
+  .get('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
-    let data = yield apiDao.find({ id: this.parse.apiId });
+    let data = yield apiDao.find({ id: this.parse.id });
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象
-  .put('/apis/:id', sutil.login, function*(next) {
-    let updateResult = yield apiDao.update({ id: this.parse.apiData.id }, {
+  .put('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.id) {
+      sutil.failed(this, 1003);
+    }
+    let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.apiData, {
         updateTime: new Date,
         operatorId: this.locals._user._id,
@@ -116,7 +119,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 更新某个 api, 仅提供更新的字段
-  .patch('/apis/:id', sutil.login, function*(next) {
+  .patch('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -134,12 +137,12 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 删除某个 api
-  .delete('/apis/:id', sutil.login, function*(next) {
+  .delete('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
-    let deleteResult = yield apiDao.remove({ _id: this.parse.apiId });
-    if (insertResult) {
+    let deleteResult = yield apiDao.remove({ id: this.parse.id });
+    if (deleteResult) {
       sutil.success(this, deleteResult);
     } else {
       sutil.failed(this, 150002);

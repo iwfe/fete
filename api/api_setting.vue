@@ -62,10 +62,10 @@
 
     <div class="operation-button">
         <button class="positive ui button" @click="sendData">确定</button>
-        <button class="negative ui button">删除</button>
+        <button class="negative ui button" @click="delList">删除</button>
         <button class="ui button" @click="closeSlide">取消</button>
     </div>
-    <editor-frame></editor-frame>
+    <!-- <editor-frame></editor-frame> -->
 </div>
 </template>
 
@@ -126,7 +126,9 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           if (this.list_active) {
-            this.list_active = apiData
+            this.list_active.title = apiData.title;
+            this.list_active.url = apiData.url;
+            this.list_active.method = apiData.method;
           }
           this.$dispatch('slide-menu-close');
         }
@@ -142,8 +144,20 @@ export default {
       }).then(res => {
         console.log(res.data);
       })
+    },
+    delList() {
+      this.del();
+      fetch(`/api/apis/${this.list_active.id}`, {
+        method: 'DELETE'
+      }).then(res => {
+        if (res.code === 200) {
+          console.log(1);
+        } else {
+          console.log(2);
+        }
+      })
+      this.$dispatch('slide-menu-close');
     }
-
   }
 }
 </script>

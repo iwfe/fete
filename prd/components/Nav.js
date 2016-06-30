@@ -13,21 +13,30 @@ export default class Nav extends Component {
     super(props, context);
     this.state = {
       teams: [],
+      projects: [],
     }
   }
 
   //初始化渲染后触发
   componentDidMount() {
     const self = this;
+    const {team, project} = this.props;
     fetch('/team/data').then(res => self.setState({
       teams: res.data
+    }))
+    fetch('/project/data', {
+      body: {
+        teamId: team.id
+      }
+    }).then(res => self.setState({
+      projects: res.data
     }))
   }
 
   render() {
-    const {team} = this.props;
-    const {teams} = this.state;
-    const menu =
+    const {team, project} = this.props;
+    const {teams, projects} = this.state;
+    const teamMenu =
       <Menu>
         {
           teams.map(item =>
@@ -38,18 +47,36 @@ export default class Nav extends Component {
           )
         }
       </Menu>
+    const projectMenu =
+      <Menu>
+        {
+          projects.map(item =>
+            item.id === project.id ? null :
+              <Menu.Item key={item.id}>
+                <a href={'/prd?projectId=' + item.id}>{item.name}</a>
+              </Menu.Item>
+          )
+        }
+      </Menu>
     return (
-      <div className="project-nav">
+      <div className="prd-nav">
         <Breadcrumb>
           <Breadcrumb.Item>当前位置</Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Dropdown overlay={menu}>
-              <a className="ant-dropdown-link">
+            <Dropdown overlay={teamMenu}>
+              <a className="ant-dropdown-link" href={'/project?teamId=' + team.id}>
                 团队: {team.name}<Icon type="down"/>
               </a>
             </Dropdown>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>我的项目</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Dropdown overlay={projectMenu}>
+              <a className="ant-dropdown-link" href={'/prd?projectId=' + project.id}>
+                项目: {project.name}<Icon type="down"/>
+              </a>
+            </Dropdown>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>我的PRD</Breadcrumb.Item>
         </Breadcrumb>
       </div>
     )

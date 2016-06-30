@@ -3,69 +3,68 @@
  * zhangyuyu@superjia.com
  */
 import Router from 'koa-router';
-import _ from 'underscore';
 const router = new Router({
-    prefix: '/project'
+    prefix: '/prd'
 });
 const wrap = require('co-monk');
 const db = require('../common/db');
 const userDao = wrap(db.get('user'));
-const projectDao = wrap(db.get('project'));
+const prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil';
 
 // 项目
-router.get('/', sutil.teamLogin, function*(next) {
+router.get('/', sutil.projectLogin, function*(next) {
     yield sutil.render(this, {});
 });
 
-router.get('/data', sutil.teamLogin, function*(next) {
+router.get('/data', sutil.projectLogin, function*(next) {
     const user = this.locals._user;
-    const projectId = user.project;
+    const prdId = user.prd;
 
-    sutil.success(this, yield projectDao.find({
-      projectId: projectId
+    sutil.success(this, yield prdDao.find({
+      prdId: prdId
     }));
 });
 
-router.post('/data', sutil.teamLogin, function*(next) {
+router.post('/data', sutil.projectLogin, function*(next) {
     const parse = this.parse;
     const user = this.locals._user;
-    const id = yield sutil.genId(projectDao);
+    const id = yield sutil.genId(prdDao);
 
-    const project = yield projectDao.insert({
+    const prd = yield prdDao.insert({
         id: id,
         name: parse.name,
         createUser: user.username,
-        teamId: parse.teamId,
+        prdId: parse.prdId,
         description: parse.description,
         createTime: Date.now(),
         updateTime: Date.now()
     });
-    sutil.success(this, project);
+    sutil.success(this, prd);
 });
 
-router.put('/data', sutil.teamLogin, function*(next) {
+router.put('/data', sutil.projectLogin, function*(next) {
     const parse = this.parse;
     const id = parse.id;
     const user = this.locals._user;
 
-    let project = yield projectDao.findOne({
+    let prd = yield prdDao.findOne({
         id: id
     });
 
-    if (!project) {
+    if (!prd) {
         sutil.failed(this, 12002);
         return false;
     }
 
-    if (project.createUser !== user.username) {
+    if (prd.createUser !== user.username) {
         sutil.failed(this, 12001);
         return false;
     }
 
 
-    yield projectDao.update({
+    yield prdDao.update({
         id: parse.id
     }, {
         $set: Object.assign({
@@ -73,33 +72,33 @@ router.put('/data', sutil.teamLogin, function*(next) {
             },
             parse)
     });
-    sutil.success(this, Object.assign({}, project, parse));
+    sutil.success(this, Object.assign({}, prd, parse));
 });
 
-router.del('/data', sutil.teamLogin, function*(next) {
+router.del('/data', sutil.projectLogin, function*(next) {
     const parse = this.parse;
     const id = parse.id;
     const user = this.locals._user;
 
-    const project = yield projectDao.findOne({
+    const prd = yield prdDao.findOne({
         id: id
     });
 
-    if (!project) {
+    if (!prd) {
         sutil.failed(this, 12002);
         return false;
     }
 
-    if (project.createUser !== user.username) {
+    if (prd.createUser !== user.username) {
         sutil.failed(this, 12001);
         return false;
     }
 
-    yield projectDao.remove({
+    yield prdDao.remove({
         id: id
     });
 
-    sutil.success(this, project);
+    sutil.success(this, prd);
 });
 
 export default router;

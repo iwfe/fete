@@ -4,13 +4,13 @@
 * @Last Modified by:   jade
 * @Last Modified time: 2016-06-27 23:27:53
 */
-.mod-project {
-  .project-nav {
+.mod-prd {
+  .prd-nav {
     margin: 0 -16px 16px;
     padding: 0 16px 16px;
     border-bottom: 1px solid #e9e9e9;
   }
-  .project-add {
+  .prd-add {
     cursor: pointer;
     text-align: center;
     .anticon-plus {
@@ -24,7 +24,7 @@
     margin-bottom: 16px;
   }
 }
-.project {
+.prd {
   .description {
     height: 70px;
   }
@@ -35,4 +35,7 @@
   &:hover .operators {
     display: block;
   }
+}
+.ant-form-item {
+  margin-bottom: 10px;
 }

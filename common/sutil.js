@@ -19,6 +19,9 @@ import {
 import util from './util';
 
 var userDao = wrap(db.get('user'));
+var teamDao = wrap(db.get('team'));
+var projectDao = wrap(db.get('project'));
+var prdDao = wrap(db.get('prd'));
 var loginUserStore = new Map();
 
 var sutil = {
@@ -123,18 +126,75 @@ var sutil = {
       });
     }
 
-    const team = _.find(user.teams, function (item) {
+    let team = _.find(user.teams, function (item) {
       return item === teamId;
     });
-
+    team = yield teamDao.findOne({
+      id: team
+    });
     if (!team) {
       return yield sutil.result(this, {
         code: 11001,
-        redirect: '/team'
+        redirect: redirect
       });
     }
     user.team = team;
     yield next;
+  },
+
+  //project login
+  * projectLogin(next) {
+    let user = this.locals._user;
+    const {projectId} = this.parse;
+    const redirect = '/team';
+    if (!user.username) {
+      return yield sutil.result(this, {
+        code: 10001,
+        redirect: '/login?next=' + this.url
+      });
+    }
+
+    const project = yield projectDao.findOne({
+      id: projectId
+    });
+
+    if(!project) {
+      return yield sutil.result(this, {
+        code: 12002,
+        redirect: redirect
+      });
+    }
+
+    this.parse.teamId = project.teamId;
+    user.project = project;
+    yield sutil.projectLogin(next);
+  },
+
+  //prd login
+  * prdLogin(next) {
+    let user = this.locals._user;
+    const {prdId} = this.parse;
+    const redirect = '/team';
+    if (!user.username) {
+      return yield sutil.result(this, {
+        code: 10001,
+        redirect: '/login?next=' + this.url
+      });
+    }
+    const prd = yield prdDao.findOne({
+      id: prdId
+    })
+
+    if(!prd) {
+      return yield sutil.result(this, {
+        code: 13002,
+        redirect: redirect
+      });
+    }
+
+    this.parse.projectId = prd.projectId;
+    user.prd = prd;
+    yield sutil.projectLogin(next);
   },
 
   //登录用户cookie管理

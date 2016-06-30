@@ -54,6 +54,7 @@
         });
       },
       showDetail(item, e) {
+        toastr.info('you open an api !')
         this.$dispatch('open');
         this.tog(item);
         e.stopPropagation();

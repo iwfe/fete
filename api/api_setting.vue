@@ -231,7 +231,7 @@ export default {
 #api-detail {
     position: relative;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 0 0 20px;
 
     .ui.header {
       height: 50px;
@@ -265,6 +265,9 @@ export default {
         padding: 10px;
         text-align: center;
         border-top: 1px solid #eee;
+    }
+    .ui[class*="very relaxed"].list:not(.horizontal)>.item{
+      padding: 0;
     }
 }
 

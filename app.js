@@ -113,6 +113,7 @@ app.use(function*(next) {
         error
       });
     }
+  }
 });
 
 import main from './main/router';

@@ -13,9 +13,9 @@
 
 <script type="text/babel">
 import store from './vuex/store.js'
-import List from './list.vue'
-import Bar from './bar.vue'
-import Path from './path.vue'
+import List from './main_list.vue'
+import Bar from './main_bar.vue'
+import Path from './main_path.vue'
 import SlideMenu from './components/slide_menu.vue';
 import ApiSetting from './api_setting.vue';
 

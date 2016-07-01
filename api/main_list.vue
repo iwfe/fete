@@ -1,5 +1,5 @@
 <template>
-<div id="_list">
+<div id="main_list">
     <table class="table">
         <thead>
             <tr class="line">
@@ -18,7 +18,7 @@
                 <td>{{item.id}}</td>
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
-                <td>{{item.method}}</td>
+                <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>查看</td>
             </tr>
         </tbody>
@@ -53,10 +53,17 @@
           });
         });
       },
+      showJSON(e) {
+        this.lockScreen(e);
+      },
       showDetail(item, e) {
         toastr.info('you open an api !')
         this.$dispatch('open');
         this.tog(item);
+        e.stopPropagation();
+      },
+      lockScreen(e) {
+        e.preventDefault();
         e.stopPropagation();
       }
     }
@@ -64,7 +71,7 @@
 </script>
 
 <style>
-#_list{
+#main_list{
   padding-top: 12px;
   overflow: hidden;
   border-left: 1px dashed #ddd;

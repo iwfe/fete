@@ -41,11 +41,13 @@ export default class Nav extends Component {
     return (
       <div className="project-nav">
         <Breadcrumb>
-          <Breadcrumb.Item>当前位置</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a href="/team">全部团队</a>
+          </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Dropdown overlay={menu}>
               <a className="ant-dropdown-link">
-                团队: {team.name}<Icon type="down"/>
+                {team.name}<Icon type="down"/>
               </a>
             </Dropdown>
           </Breadcrumb.Item>

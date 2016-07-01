@@ -24,6 +24,8 @@ router.get('/data', sutil.teamLogin, function*(next) {
 
     sutil.success(this, yield projectDao.find({
       teamId: this.parse.teamId
+    }, {
+      sort: {createTime: -1}
     }));
 });
 

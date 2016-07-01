@@ -61,18 +61,20 @@ export default class Nav extends Component {
     return (
       <div className="prd-nav">
         <Breadcrumb>
-          <Breadcrumb.Item>当前位置</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <a href="/team">全部团队</a>
+          </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Dropdown overlay={teamMenu}>
               <a className="ant-dropdown-link" href={'/project?teamId=' + team.id}>
-                团队: {team.name}<Icon type="down"/>
+                {team.name}<Icon type="down"/>
               </a>
             </Dropdown>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Dropdown overlay={projectMenu}>
               <a className="ant-dropdown-link" href={'/prd?projectId=' + project.id}>
-                项目: {project.name}<Icon type="down"/>
+                {project.name}<Icon type="down"/>
               </a>
             </Dropdown>
           </Breadcrumb.Item>

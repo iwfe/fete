@@ -10,6 +10,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux';
 import * as actions from './Actions'
+import util from '../../common/util';
 import Modal from 'antd/lib/modal';
 import Button from 'antd/lib/button';
 import Table from 'antd/lib/table';
@@ -49,63 +50,104 @@ class App extends Component {
         title: '操作',
         dataIndex: '',
         key: 'opts', render: (text, prd) =>
-          <div>
-            <a href={"/api?prdId=" + prd.id}>api</a>&nbsp;
-            <a onClick={() => actions.updateShow(true, prd)}>更新</a>&nbsp;
-            <a style={{color: 'red'}} onClick={() => actions.deleteShow(true, prd)}>删除</a>
-          </div>
+        <div>
+          <a href={"/api?prdId=" + prd.id}>api</a>&nbsp;
+          <a onClick={() => actions.updateShow(true, prd)}>更新</a>&nbsp;
+          <a style={{color: 'red'}} onClick={() => actions.deleteShow(true, prd)}>删除</a>
+        </div>,
+        width: 90
       }, {
         title: '版本号',
         dataIndex: 'name',
         key: 'name',
+        width: 60,
       }, {
         title: '主要功能',
         dataIndex: 'description',
         key: 'description',
+        width: 250,
       }, {
         title: '项目类型',
         dataIndex: 'type',
         key: 'type',
+        width: 70,
       }, {
         title: '阶段',
-        dataIndex: 'type1',
-        key: 'type1',
+        dataIndex: 'phase',
+        key: 'phase',
+        width: 55,
       }, {
         title: '提测时间',
-        dataIndex: 'testTime',
-        key: 'testTime',
+        dataIndex: 'testTimeUI',
+        key: 'testTimeUI',
+        width: 80,
       }, {
         title: '上线时间',
-        dataIndex: 'onlineTime',
-        key: 'onlineTime',
+        dataIndex: 'onlineTimeUI',
+        key: 'onlineTimeUI',
+        width: 80,
       }, {
         title: '产品',
         dataIndex: 'pm',
         key: 'pm',
+        width: 100,
       }, {
         title: '自测',
         dataIndex: 'selfTest',
         key: 'selfTest',
+        width: 40,
       }, {
         title: 'JIRA地址',
         dataIndex: 'jira',
         key: 'jira',
+        width: 150,
+        render: (text, prd) =>
+          <a href={prd.jira} target="_blank">{prd.jira}</a>
       }, {
         title: '备注',
         dataIndex: 'comment',
         key: 'comment',
       }];
+    prds.map(item=> {
+      const {devTime, apiTime, testTime, onlineTime} = item;
+      item.testTimeUI = testTime && util.formateDate(testTime, '%F');
+      item.onlineTimeUI = onlineTime && util.formateDate(onlineTime, '%F');
+      const now = Date.now();
+      let phase = '未开始';
+      if (now >= onlineTime) {
+        phase = '已上线';
+      } else if (now >= testTime) {
+        phase = '测试';
+      } else if (now >= apiTime) {
+        phase = '联调';
+      } else if (now >= devTime) {
+        phase = '开发'
+      }
+      item.phase = phase;
+    })
+
     return (
       <div className="mod-prd">
         <Nav team={team} project={project}/>
-        <Button type="primary" onClick={() => actions.addShow(true)}>创建PRD</Button>
-        <Table dataSource={prds} columns={columns}/>
-        <AddPrd
-          visible={addShow}
-          type="add"
-          okCallback={this.addOk.bind(self)}
-          cancelCallback={this.addCancel.bind(self)}
-        />
+        <Button type="primary" style={{marginBottom: 16}} onClick={() => actions.addShow(true)}>创建PRD</Button>
+        <Table dataSource={prds} columns={columns} useFixedHeader={true} rowKey={prd => prd.id}/>
+        {
+          addShow ? <AddPrd
+            visible={addShow}
+            type='add'
+            okCallback={this.addOk.bind(self)}
+            cancelCallback={this.addCancel.bind(self)}
+          /> : null
+        }
+        {
+          updateShow.updateShow ? <AddPrd
+            visible={updateShow.updateShow}
+            type='update'
+            prd={updateShow.prd}
+            okCallback={prd=>actions.updatePrd(prd)}
+            cancelCallback={()=>actions.updateShow(false, updateShow.prd)}
+          /> : null
+        }
         <Modal title="删除PRD"
                visible={deleteShow.deleteShow}
                onCancel={() => actions.deleteShow(false, deleteShow.prd)}

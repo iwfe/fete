@@ -22,7 +22,7 @@ function prds(state = [], action) {
         case GET:
             return action.prds
         case ADD:
-            return [...state, action.prd]
+            return [action.prd, ...state]
         case UPDATE:
             return _.map(state, item => item.id == action.prd.id ? action.prd : item)
         case DELETE:

@@ -29,21 +29,13 @@ class AddPrd extends Component {
     }
   }
 
-  componentDidMount() {
-    const {prd, form} = this.props;
-    form.setFieldsValue({
-      name: prd && prd.name,
-      description: prd && prd.description
-    });
-  }
-
   handleOk() {
     const {form, okCallback, prd} = this.props;
     const result = form.validateFields((errors, values) => {
       if (!!errors) {
         return false;
       } else {
-        okCallback && okCallback(Object.assign({},
+        let obj = Object.assign({},
           form.getFieldsValue([
             'name',
             'description',
@@ -58,8 +50,13 @@ class AddPrd extends Component {
             'onlineTime'
           ]),
           {
-          id: prd && prd.id
-        }));
+            id: prd && prd.id
+          });
+        obj.devTime = new Date(obj.devTime).getTime();
+        obj.apiTime = new Date(obj.apiTime).getTime();
+        obj.testTime = new Date(obj.testTime).getTime();
+        obj.onlineTime = new Date(obj.onlineTime).getTime();
+        okCallback && okCallback(obj);
       }
     });
   }
@@ -81,26 +78,44 @@ class AddPrd extends Component {
       // value: prd && prd.name,
       rules: [
         {required: true, message: '请输入PRD名称'}
-      ]
+      ],
+      id: 'name',
+      initialValue: prd && prd.name
     });
 
-    const descriptionProps = getFieldProps('description', {});
-    const pmProps = getFieldProps('pm', {});
-    const typeProps = getFieldProps('type', {});
-    const selfTestProps = getFieldProps('selfTest', {});
-    const jiraProps = getFieldProps('jira', {});
-    const commentProps = getFieldProps('comment', {});
+    const descriptionProps = getFieldProps('description', {
+      initialValue: prd && prd.description
+    });
+    const pmProps = getFieldProps('pm', {
+      initialValue: prd && prd.pm
+    });
+    const typeProps = getFieldProps('type', {
+      initialValue: prd && prd.type
+    });
+    const selfTestProps = getFieldProps('selfTest', {
+      initialValue: prd && prd.selfTest
+    });
+    const jiraProps = getFieldProps('jira', {
+      initialValue: prd && prd.jira
+    });
+    const commentProps = getFieldProps('comment', {
+      initialValue: prd && prd.comment
+    });
     const devTimeProps = getFieldProps('devTime', {
       getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.devTime ? new Date(prd.devTime) : new Date()
     });
     const apiTimeProps = getFieldProps('apiTime', {
       getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.apiTime? new Date(prd.apiTime) : new Date()
     });
     const testTimeProps = getFieldProps('testTime', {
       getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.testTime ? new Date(prd.testTime) : new Date()
     });
     const onlineTimeProps = getFieldProps('onlineTime', {
       getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.onlineTime ? new Date(prd.onlineTime) : new Date()
     });
 
     return (
@@ -109,6 +124,7 @@ class AddPrd extends Component {
         visible={visible}
         onOk={this.handleOk.bind(self)}
         onCancel={this.handleCancel.bind(self)}
+        style={{ top: 30 }}
       >
         <Form horizontal className="form" method="post" form={form}>
           <FormItem
@@ -137,7 +153,7 @@ class AddPrd extends Component {
             <Input
               name="type"
               {...typeProps}
-              placeholder="PRD项目类型:小版本/常规需求/技术优化/功能BUG修复"
+              placeholder="小版本/常规需求/技术优化/功能BUG修复"
             />
           </FormItem>
           <FormItem
@@ -178,7 +194,7 @@ class AddPrd extends Component {
           </FormItem>
           <FormItem
             {...formItemLayout}
-            label="测试时间： ">
+            label="提测时间： ">
             <DatePicker {...testTimeProps} />
           </FormItem>
           <FormItem

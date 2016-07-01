@@ -1,10 +1,11 @@
 /**
- * @Author: lancui
- * @Date:   2016-06-27 13:06:00
- * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-29 15:06:16
- */
+* @Author: lancui
+* @Date:   2016-06-27 13:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-01 16:07:32
+*/
+console.log("=====app.js")
 
 
 import Koa from 'koa';
@@ -19,8 +20,8 @@ import sutil from './common/sutil';
 import _ from 'underscore';
 // import parse from 'co-body';
 // var parse = require('co-body')
-// import finalHandler from './lib/finalHandler';
-// import router from './router';
+    // import finalHandler from './lib/finalHandler';
+    // import router from './router';
 
 const app = new Koa();
 
@@ -28,7 +29,7 @@ const app = new Koa();
 
 // middleware
 app.use(views(`${__dirname}/view`, {
-  extension: 'jade'
+    extension: 'jade'
 }));
 app.use(logger());
 
@@ -53,64 +54,81 @@ app.keys = ['fete'];
 // }));
 //
 //
+//
+
+// 监听message
+const serverSocket = require('./socket/server');
+serverSocket.init(app);
+
 
 app.use(function*(next) {
-  this.locals = {}
+    console.log(`22====${this.method} ${this.url}  ${this.path}`);
 
-  this.set({
-    'Pragma': 'No-cache',
-    'Cache-Control': 'no-cache'
-  });
-  // yield* sutil.setLoginUser(this, 'jade1', '111111');
+    this.locals = {}
 
-  //sutil.getLoginUser(this);
+    this.set({
+        'Pragma': 'No-cache',
+        'Cache-Control': 'no-cache'
+    });
+    // yield* sutil.setLoginUser(this, 'jade1', '111111');
 
-  this.locals._now = new Date().getTime();
-  let p = this.query;
-  try {
-    p = _.extend(p, this.request.body, this.params);
-  } catch (e) {
+    //sutil.getLoginUser(this);
 
-  }
+    this.locals._now = new Date().getTime();
+    let p = this.query;
+    try {
+        p = _.extend(p, this.request.body, this.params);
+    } catch (e) {
 
-  this.parse = p;
-  var user = _.extend({}, yield * sutil.getLoginUser(this));
-  delete user.password;
-  this.locals._user = user;
-  try {
-    yield next;
-    // Handle 404 upstream.
-    var status = this.status || 404;
-    if (status === 404) this.throw(404);
-  } catch (error) {
-    this.status = error.status || 500;
-    if (this.status === 404) {
-      yield this.render('error', {
-        error
-      });
-    } else {
-      yield this.render('error', {
-        error
-      });
     }
-    this.app.emit('error', error, this);
-  }
+
+    this.parse = p;
+    var user = _.extend({}, yield * sutil.getLoginUser(this));
+    delete user.password;
+    this.locals._user = user;
+    try {
+        yield next;
+        // Handle 404 upstream.
+        var status = this.status || 404;
+        if (status === 404) this.throw(404);
+
+        // 新增消息
+        if(this.path === '/message/messages' && this.method === 'POST'){
+          let remindUsers = this.query.msgData.toUsers;
+          serverSocket.sendMsg(remindUsers);
+        }
+        //修改消息状态
+        if(this.path === '/message/messages' && this.method === 'PUT'){
+          serverSocket.sendMsg([user.username]);
+        }
+
+    } catch (error) {
+        this.status = error.status || 500;
+        if (this.status === 404) {
+            yield this.render('error', {
+                error
+            });
+        } else {
+            yield this.render('error', {
+                error
+            });
+        }
+        this.app.emit('error', error, this);
+    }
 });
 
 import main from './main/router';
 import team from './team/router';
-import project from './project/router';
 import apiModule from './api/router';
 import msgModule from './message/router';
 app.use(main.routes());
 app.use(team.routes());
-app.use(project.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 
-app.on('error', function (err) {
-  console.log('sent error %s to the cloud', err.message);
-  console.log(err);
+app.on('error', function(err) {
+    console.log('sent error %s to the cloud', err.message);
+    console.log(err);
 });
 
 module.exports = app;

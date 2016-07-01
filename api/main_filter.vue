@@ -1,7 +1,7 @@
 <template>
   <div class="main-filter">
     <div class="ui breadcrumb">
-      <a class="section">当前位置</a>
+      <div class="section grey">当前位置</div>
       <div class="divider"> / </div>
       <div class="section">
         团队：
@@ -46,7 +46,7 @@
       </div>
     </div>
     <div>
-      <button class="mini ui right floated button" @click="addApi">新建API</button>
+      <button class="mini ui right floated button add-btn" @click="add">新建API</button>
       <div class="url-info">
         当前项目URL：<span>{{host}}/fete_api/{{currentProject.id}}</span>
       </div>
@@ -58,8 +58,14 @@
 </template>
 
 <script>
+import { add } from './vuex/action'
 export default {
   name: 'main-filter',
+  vuex: {
+    actions: {
+      add
+    }
+  },
   data() {
     return {
       teamData: [],
@@ -120,26 +126,36 @@ export default {
       this.currentProject = item
       this.prdData = this.currentProject.prds
       this.currentPrd = this.prdData[0] || {}
-    },
-    addApi(e) {
-      this.$parent.$parent.$broadcast('slide-menu-open')
-      e.stopPropagation();
     }
   }
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="sass" scoped>
   .ui.breadcrumb {
     width: calc(100% + 30px);
     margin: 0 -15px 10px;
     padding: 0 15px 15px;
     border-bottom: 1px solid #e9e9e9;
+    font-size: 12px;
+    &.grey {
+      color: #999;
+    }
   }
   .ui.inline.dropdown > .text {
     font-weight: normal;
   }
   .url-info {
     margin-bottom: 10px;
+  }
+  .add-btn {
+    color: #fff;
+    background-color: #2db7f5;
+    border-color: #2db7f5;
+    &:hover {
+      background-color: #57c5f7;
+      border-color: #57c5f7;
+      color: #fff;
+    }
   }
 </style>

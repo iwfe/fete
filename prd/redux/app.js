@@ -52,10 +52,11 @@ class App extends Component {
         key: 'opts', render: (text, prd) =>
         <div>
           <a href={"/api?prdId=" + prd.id}>api</a>&nbsp;
+          <a href={"/prd/" + prd.id}>详情</a>&nbsp;
           <a onClick={() => actions.updateShow(true, prd)}>更新</a>&nbsp;
           <a style={{color: 'red'}} onClick={() => actions.deleteShow(true, prd)}>删除</a>
         </div>,
-        width: 90
+        width: 120
       }, {
         title: '版本号',
         dataIndex: 'name',

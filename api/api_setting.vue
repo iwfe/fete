@@ -107,6 +107,7 @@ export default {
   },
   events: {
     getDetail() {
+      // 防止list_active没有来的及更新
       setTimeout(() => {
         console.log(this.list_active.id);
         if (this.list_active.id && this.list_active.id !== 1) {

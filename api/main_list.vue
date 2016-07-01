@@ -1,13 +1,13 @@
 <template>
-<div id="main_list">
-    <table class="table">
+<div>
+  <main-filter></main-filter>
+  <div class="main-list">
+    <table class="ui grey table">
         <thead>
             <tr class="line">
-                <th style="width:1%;"></th>
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <th style="width:10%;color:#999">共{{list?list.length:0}}个</th>
             </tr>
         </thead>
         <tbody>
@@ -15,21 +15,24 @@
                 @click="showDetail(item, $event)"
                 v-for="item in list"
                 :class="{'active': list_active === item}">
-                <td>{{item.id}}</td>
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
-                <td>查看</td>
             </tr>
         </tbody>
     </table>
+  </div>
 </div>
 </template>
 
 <script type="text/babel">
   import { tog, add } from './vuex/action'
+  import MainFilter from './main_filter.vue'
 
   export default {
+    components: {
+      MainFilter
+    },
     vuex: {
       getters: {
         list: state => state.list,
@@ -57,8 +60,8 @@
         this.lockScreen(e);
       },
       showDetail(item, e) {
-        toastr.info('you open an api !')
-        this.$dispatch('open');
+        this.$parent.$broadcast('slide-menu-open');
+        this.$parent.$broadcast('getDetail');
         this.tog(item);
         e.stopPropagation();
       },
@@ -71,29 +74,11 @@
 </script>
 
 <style>
-#main_list{
+.main-list{
   padding-top: 12px;
-  overflow: hidden;
-  border-left: 1px dashed #ddd;
-  min-height: 350px;
+  overflow: auto;
 }
-.table{
-  margin: 0 12px;
-  text-align: left;
-}
-.table tr:nth-of-type(even){background:#f5f5f5;border-radius: 5%;}
-.table tr:hover{
-  color: #000;
-}
-.table td,.table th{
-  line-height: 36px;
-  padding: 0 6px;
-}
-.table tr.active{
-  background: #2DB7F5;
-  color: #fff;
-}
-.line{
-  border-bottom: 1px dotted #ddd;
+.ui.table {
+  border-radius: 0;
 }
 </style>

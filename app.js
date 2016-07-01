@@ -65,6 +65,7 @@ app.use(function*(next) {
 
   //sutil.getLoginUser(this);
 
+  this.locals.host = config.host;
   this.locals._now = new Date().getTime();
   let p = this.query;
   try {

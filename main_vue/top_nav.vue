@@ -35,7 +35,7 @@
     name: 'top-nav',
     replace: true,
     attached() {
-      $('.ui.dropdown').dropdown({ transition: 'drop', on: 'hover' });
+      $('#header .ui.dropdown').dropdown({ transition: 'drop', on: 'hover' });
     },
     data() {
       return {

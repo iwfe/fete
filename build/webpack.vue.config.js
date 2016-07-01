@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-30 18:48:33
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-01 10:01:08
+ * @Last Modified time: 2016-07-01 15:36:07
  */
 
 var path = require('path'),
@@ -42,6 +42,7 @@ module.exports = {
       'semantic-ui/dist/components/input.min.css',
       'semantic-ui/dist/components/label.min.css',
       'semantic-ui/dist/components/list.min.css',
+      'semantic-ui/dist/components/breadcrumb.min.css',
       './layout/layout.scss'
     ]
   },

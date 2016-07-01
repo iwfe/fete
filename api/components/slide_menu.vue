@@ -41,8 +41,8 @@
         display: none;
         position: fixed;
         right: 0;
-        top:-16px;
-        width: 70%;
+        top: 0;
+        width: 60%;
         height: 100%;
         background-color: #fff;
         -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);

@@ -60,10 +60,10 @@
       </div>
   </div>
 
-    <div class="operation-button">
-        <button class="positive ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-        <button class="negative ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
-        <button class="ui button" @click="closeSlide">取消</button>
+    <div class="detail-bottom">
+        <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
+        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+        <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
     <!-- <editor-frame></editor-frame> -->
 </div>
@@ -229,11 +229,18 @@ export default {
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 #api-detail {
-    width: 96%;
-    height:94%;
-    margin: 10px auto 0;
+    position: relative;
+    height: 100%;
+    padding: 0 0 0 20px;
+
+    .ui.header {
+      height: 50px;
+      margin: 0 -20px;
+      padding: 8px;
+      box-shadow: 1px 3px #eee;
+    }
     .container.body{
-      height:calc(100% - 100px);
+      height:calc(100% - 105px);
       overflow-x:hidden;
       overflow-y:auto;
       padding:10px;
@@ -249,11 +256,18 @@ export default {
         height: 190px;
         overflow: auto;
     }
-    .operation-button {
-        display: flex;
-        justify-content: space-between;
-        margin: 10px auto 10px;
-        width: 50%;
+    .detail-bottom {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        text-align: center;
+        border-top: 1px solid #eee;
+    }
+    .ui[class*="very relaxed"].list:not(.horizontal)>.item{
+      padding: 0;
     }
 }
 

@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 19:06:35
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 19:06:35
+ * @Last modified by:   geyuanjun
+ * @Last modified time: 2016-06-30 19:06:35
+ * @Last modified by:   geyuanjun
+ * @Last modified time: 2016-06-30 19:06:35
  */
 
 
@@ -26,7 +26,7 @@ var wrap = require('co-monk');
 var db = require('../common/db');
 var apiDao = wrap(db.get('api'));
 var teamDao = wrap(db.get('team'));
-var productDao = wrap(db.get('product'));
+var projectDao = wrap(db.get('project'));
 var prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil'
@@ -46,14 +46,14 @@ router.get('/', sutil.login, function*(next) {
 // api 列表页，获取 团队，产品，prd 下拉列表的数据
 router.get('/dropdown', sutil.login, function*(next) {
   let teams = yield teamDao.find({}, { fields: { _id: 0, id: 1, name: 1 } })
-  let products = yield productDao.find({}, { fields: { _id: 0, id: 1, name: 1, teamId: 1 } })
-  let prds = yield prdDao.find({}, { fields: { _id: 0, id: 1, name: 1, productId: 1 } })
+  let projects = yield projectDao.find({}, { fields: { _id: 0, id: 1, name: 1, teamId: 1 } })
+  let prds = yield prdDao.find({}, { fields: { _id: 0, id: 1, name: 1, projectId: 1 } })
 
-  _.each(teams, function (item) {
-      item.products = _.where(products, {teamId: item.id})
-      _.each(item.products, pItem => {
-          pItem.prds = _.where(prds, {productId: pItem.id})
-      })
+  _.each(teams, function(item) {
+    item.projects = _.where(projects, { teamId: item.id })
+    _.each(item.projects, pItem => {
+      pItem.prds = _.where(prds, { projectId: pItem.id })
+    })
   })
 
   sutil.success(this, teams)
@@ -152,14 +152,14 @@ router.get('/apis', sutil.login, function*(next) {
 
 
 // api for mock
-router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
+router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
   let tmpUrlArr = this.request.path.split('/mock')
   let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
     url: realUrl,
     method: this.method.toUpperCase(),
-    productId: this.parse.productId
+    projectId: this.parse.projectId
   }
   if (this.parse.prdId) {
     filter.prdId = this.parse.prdId
@@ -168,16 +168,16 @@ router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let apiItem = yield apiDao.findOne(filter)
   if (apiItem) {
     let data = Mock.mock(mockTree2MockTemplate(apiItem.output))
-    // let data = Mock.mock({
-    //     "data|1-10":[
-    //         {
-    //             "isActive|1":true,
-    //             "name|3-5":/\w/,
-    //             "id|+1":1
-    //         }
-    //     ],
-    //     "status|":1
-    // });
+      // let data = Mock.mock({
+      //     "data|1-10":[
+      //         {
+      //             "isActive|1":true,
+      //             "name|3-5":/\w/,
+      //             "id|+1":1
+      //         }
+      //     ],
+      //     "status|":1
+      // });
     this.body = data // 这里就不要用 sutil 的 success 方法了
     return false
   } else {
@@ -186,14 +186,14 @@ router.all('/fete_api/:productId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
 })
 
 // mock_check.js file
-// must with productId as query, like: /api/mock_check.js?productId=123
+// must with projectId as query, like: /api/mock_check.js?projectId=123
 router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
-  if (!this.parse.productId) {
+  if (!this.parse.projectId) {
     this.type = 'js'
-    this.body = `console.log('no productId');`;
+    this.body = `console.log('no projectId');`;
   } else {
     let jsContent = `
-                    var feteApiProductId = '${this.parse.productId}';
+                    var feteApiProductId = '${this.parse.projectId}';
                     var feteApiHost = '${config.host}'
                     `;
     jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');

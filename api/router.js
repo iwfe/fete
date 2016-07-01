@@ -34,7 +34,7 @@ import util from '../common/util.js'
 import config from '../config.js'
 
 // api 管理平台
-router.get('/', sutil.login, function*(next) {
+router.get('/', sutil.prdLogin, function*(next) {
   yield sutil.render(this, {
     commonTag: 'vue',
     html: '',

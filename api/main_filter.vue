@@ -9,10 +9,10 @@
           <div class="text">{{currentTeam.name}}</div>
           <i class="dropdown icon"></i>
           <div class="menu">
-            <div class="item"
+            <a class="item"
               data-text="{{item.name}}"
-              @click="changeTeam(item)"
-              v-for="item in teamData">{{item.name}}</div>
+              href="/project?teamId={{item.id}}"
+              v-for="item in teamData">{{item.name}}</a>
           </div>
         </div>
       </div>
@@ -23,10 +23,10 @@
           <div class="text">{{currentProject.name}}</div>
           <i class="dropdown icon"></i>
           <div class="menu">
-            <div class="item"
+            <a class="item"
               data-text="{{item.name}}"
-              @click="changeProject(item)"
-              v-for="item in projectData">{{item.name}}</div>
+              href="/prd?projectId={{item.id}}"
+              v-for="item in projectData">{{item.name}}</a>
           </div>
         </div>
       </div>
@@ -37,10 +37,11 @@
           <div class="text">{{currentPrd.name}}</div>
           <i class="dropdown icon"></i>
           <div class="menu">
-            <div class="item"
+            <a class="item"
               data-text="{{item.name}}"
-              @click="currentPrd = item"
-              v-for="item in prdData">{{item.name}}</div>
+              v-link="{name: 'list', query: {prdId: item.id}}"
+              @click="changePrdApi"
+              v-for="item in prdData">{{item.name}}</a>
           </div>
         </div>
       </div>
@@ -69,63 +70,46 @@ export default {
   data() {
     return {
       teamData: [],
-      currentTeam: {},
-      currentProject: {},
-      currentPrd: {},
+      projectData: [],
+      prdData: [],
+      currentTeam: pageConfig.me.team,
+      currentProject: pageConfig.me.project,
+      currentPrd: pageConfig.me.prd,
       host: pageConfig.host
     }
   },
-  computed: {
-    projectData() {
-      return this.currentTeam.projects
-    },
-    prdData() {
-      return this.currentProject.prds
-    }
-  },
   attached() {
-    $('.main-filter .ui.dropdown').dropdown()
+    $('.main-filter .ui.dropdown').dropdown({ on: 'hover' })
   },
   ready() {
-    const self = this
-
-    fetch('/api/dropdown').then(res => {
+    // team dropdown list
+    fetch('/team/data').then(res => {
       if (res.code === 200) {
-        self.teamData = res.data
+        this.teamData = res.data
+      }
+    })
 
-        // if there is a prdId in query string
-        if (self.$route.query.prdId) {
-          self.currentTeam = _.filter(self.teamData, teamItem => {
-            return _.some(teamItem.projects, projectItem => {
-              return _.some(projectItem.prds, { id: self.$route.query.prdId })
-            })
-          })[0]
-        } else {
-          self.currentTeam = self.teamData[0]
-        }
-        if (self.currentTeam.id && self.currentTeam.projects) {
-          self.currentProject = self.currentTeam.projects[0]
-          if (self.currentProject.id && self.currentProject.prds) {
-            self.currentPrd = self.currentProject.prds[0]
-          }
-        }
+    // project dropdown list
+    fetch('/project/data', {
+      body: { teamId: this.currentTeam.id }
+    }).then(res => {
+      if (res.code === 200) {
+        this.projectData = res.data
+      }
+    })
+
+    // prd dropdown list
+    fetch('/prd/data', {
+      body: { projectId: this.currentProject.id }
+    }).then(res => {
+      if (res.code === 200) {
+        this.prdData = res.data
       }
     })
   },
   methods: {
-    changeTeam(item) {
-      this.currentTeam = item
-      this.projectData = this.currentTeam.projects
-      this.currentProject = this.projectData[0] || {}
-      if (this.currentProject.prds) {
-        this.prdData = this.currentProject.prds
-        this.currentPrd = this.prdData[0] || {}
-      }
-    },
-    changeProject(item) {
-      this.currentProject = item
-      this.prdData = this.currentProject.prds
-      this.currentPrd = this.prdData[0] || {}
+    changePrdApi() {
+      this.$parent.$emit('reloadApiList')
     }
   }
 };

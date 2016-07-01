@@ -46,10 +46,15 @@
     ready() {
       this.getList();
     },
+    events: {
+      reloadApiList() {
+        this.getList()
+      }
+    },
     methods: {
       getList() {
         fetch('/api/apis', {
-          body: { prdId: '111' }
+          body: { prdId: this.$route.query.prdId }
         }).then(res => {
           res.data.forEach(v => {
             this.add(v);

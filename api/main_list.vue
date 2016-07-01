@@ -2,7 +2,7 @@
 <div>
   <main-filter></main-filter>
   <div class="main-list">
-    <table class="ui grey table">
+    <table class="ui table">
         <thead>
             <tr class="line">
                 <th>描述</th>
@@ -80,5 +80,31 @@
 }
 .ui.table {
   border-radius: 0;
+  border: none;
+}
+.table td,
+.table th {
+  line-height: 30px;
+  padding: 0 6px;
+}
+.table thead {
+  background: #f7f7f7;
+}
+.ui.table thead tr:first-child > th:first-child {
+  border-top-left-radius: 5px;
+}
+.ui.table thead tr:first-child > th:last-child {
+  border-top-right-radius: 5px;
+}
+.ui.table tr th {
+  border-bottom: none;
+}
+.ui.table tr td {
+  border-top: none;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+}
+.ui.table tbody tr:hover,
+.ui.table tbody tr.active {
+  background-color: #eaf8fe !important;
 }
 </style>

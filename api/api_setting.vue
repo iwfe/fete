@@ -55,15 +55,15 @@
       <div class="ui form backData">
           <div class="field">
               <label>返回数据格式<i class="red">*</i></label>
-              <textarea class="output-param" placeholder="返回数据格式" v-model="output"></textarea>
+              <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea>
           </div>
       </div>
   </div>
 
-    <div class="operation-button">
-        <button class="positive ui loading button" @click="sendData">确定</button>
-        <button class="negative ui button" @click="delList">删除</button>
-        <button class="ui button" @click="closeSlide">取消</button>
+    <div class="detail-bottom">
+        <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
+        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+        <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
     <!-- <editor-frame></editor-frame> -->
 </div>
@@ -71,7 +71,7 @@
 
 <script text="text/babel">
 
-import { tog, add, del } from './vuex/action'
+import { add, del } from './vuex/action'
 
 export default {
   vuex: {
@@ -85,7 +85,6 @@ export default {
       teamId: state => state.teamId
     },
     actions: {
-      tog,
       add,
       del
     }
@@ -95,84 +94,109 @@ export default {
     return {
       updateDesc: '',
       updateDescList: [],
+      sendLoad: false,
+      delLoad: false,
       apiData: {
         title: '',
-        method: '',
+        method: 'GET',
         input: '',
         url: '',
         output: ['']
       }
     }
   },
-  watch: {
-    'list_active.id'() {
-      if (this.list_active && this.list_active.id) {
-        this.getdata()
-      }
+  events: {
+    getDetail() {
+      // 防止list_active没有来的及更新
+      setTimeout(() => {
+        console.log(this.list_active.id);
+        if (this.list_active.id && this.list_active.id !== 1) {
+          this.getdata()
+        }
+      }, 300)
     }
   },
   methods: {
+    /**
+     * 发送数据
+     * @desc 修改以及新建API都是用同一种方法
+     * @return {[type]} [description]
+     */
     sendData() {
+      this.sendLoad = true;
       // 判断是新增还是修改接口
       let status = 1;
       if (this.list_active.id) {
         status = 2;
       }
+      // 定义最基本的数据结构
       const apiData = this.apiData;
       _.extend(apiData, {
         status: status,
-        updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
-        createTime: new Date(),
         prdId: this.prdId,
         productId: this.productId,
         teamId: this.teamId
       });
       // 如果是新增接口
       if (status === 1) {
+        _.extend(apiData, {
+          updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
+          createTime: new Date(),
+        });
         fetch('/api/apis', {
           body: { apiData },
           method: 'POST'
-        }).then(res => {
+        }).then((res) => {
           if (res.code === 200) {
             if (this.list_active) {
-              this.list_active.title = apiData.title;
-              this.list_active.url = apiData.url;
-              this.list_active.method = apiData.method;
+              _.extend(this.list_active, res.data);
             }
             toastr.success('新增API成功！');
-            toastr.options = {
-              closeButton: true
-            };
             window.setTimeout(this.closeSlide, 300);
           } else {
             toastr.error('新增API失败，请重试！');
-            toastr.options = {
-              closeButton: true
-            };
           }
-        })
+          this.sendLoad = false;
+        }, () => {
+          this.sendLoad = false;
+          toastr.warning('网络异常，请重试！');
+        });
       } else {
+        // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
+        apiData.updateTime = new Date();
+        apiData.updateDescList.push({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
         fetch(`/api/apis/${this.list_active.id}`, {
           body: { apiData },
           method: 'PUT'
         }).then(res => {
           if (res.code === 200) {
             toastr.success('修改API成功！');
-            toastr.options = {
-              closeButton: true
-            };
+            this.resetData();
+            // 弹出层提示出现之后再关闭组件
             window.setTimeout(this.closeSlide, 300);
           } else {
             toastr.error('API修改失败，请重试！');
-            toastr.options = {
-              closeButton: true
-            };
           }
+          this.sendLoad = false;
         })
       }
     },
     closeSlide() {
+      // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
       this.$dispatch('slide-menu-close');
+    },
+    resetData() {
+      _.extend(this, {
+        updateDesc: '',
+        updateDescList: [],
+        apiData: {
+          title: '',
+          method: 'GET',
+          input: '',
+          url: '',
+          output: ['']
+        }
+      });
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {
@@ -181,26 +205,22 @@ export default {
         _.extend(this.apiData, res.data);
         this.updateDescList = res.data.updateDescList;
         this.updateDescList.forEach(v => {
-          v.updateTime = v.updateTime.substring(0, 10);
+          v.updateTime = v.updateTime.substr(0, 10);
         })
       })
     },
     delList() {
+      this.delLoad = true;
       fetch(`/api/apis/${this.list_active.id}`, {
         method: 'DELETE'
       }).then(res => {
         if (res.code === 200) {
           toastr.success('成功删除API！');
-          toastr.options = {
-            closeButton: true
-          };
           this.del();
         } else {
           toastr.error('删除API失败，请重试！');
-          toastr.options = {
-            closeButton: true
-          };
         }
+        this.delLoad = false;
       });
       window.setTimeout(this.closeSlide, 300);
     }
@@ -209,11 +229,18 @@ export default {
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 #api-detail {
-    width: 96%;
-    height:94%;
-    margin: 10px auto 0;
+    position: relative;
+    height: 100%;
+    padding: 0 0 0 20px;
+
+    .ui.header {
+      height: 50px;
+      margin: 0 -20px;
+      padding: 8px;
+      box-shadow: 1px 3px #eee;
+    }
     .container.body{
-      height:calc(100% - 100px);
+      height:calc(100% - 105px);
       overflow-x:hidden;
       overflow-y:auto;
       padding:10px;
@@ -229,11 +256,18 @@ export default {
         height: 190px;
         overflow: auto;
     }
-    .operation-button {
-        display: flex;
-        justify-content: space-between;
-        margin: 10px auto 10px;
-        width: 50%;
+    .detail-bottom {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        text-align: center;
+        border-top: 1px solid #eee;
+    }
+    .ui[class*="very relaxed"].list:not(.horizontal)>.item{
+      padding: 0;
     }
 }
 

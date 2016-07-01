@@ -21,10 +21,10 @@ export default class Project extends Component {
     const {project, updateShow, deleteShow, actions} = this.props;
     return (
       <div className="project">
-        <Card title={project.name}>
+        <Card title={<div>{project.name}<a style={{float: 'right'}} href={'/project/' + project.id}>详情</a></div>}>
           <p className="description">{project.description}</p>
           <div className="operators">
-            <a className="ant-btn ant-btn-dashed" href={"/prd?projectId=" + project.id}>进入</a>
+            <a className="ant-btn ant-btn-dashed" href={"/prd?projectId=" + project.id}>进入PRD</a>
             &nbsp;
             <Button type="primary" htmlType="submit" onClick={() => actions.updateShow(true, project)}>更新</Button>
             &nbsp;

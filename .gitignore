@@ -43,3 +43,5 @@ config.js
 semantic
 
 semantic.json
+
+backup_db.sh

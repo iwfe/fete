@@ -29,6 +29,8 @@ router.get('/data', sutil.login, function*(next) {
             id: {
                 $in: teamIds
             }
+        }, {
+          sort: {createTime: -1}
         });
     }
     sutil.success(this, teams);

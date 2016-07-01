@@ -32,7 +32,7 @@ function teams(state = [], action) {
         case GET:
             return action.teams
         case ADD:
-            return [...state, action.team]
+            return [action.team, ...state]
         case UPDATE:
             return _.map(state, item => item.id == action.team.id ? action.team : item)
         case DELETE:

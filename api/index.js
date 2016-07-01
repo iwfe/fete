@@ -9,13 +9,13 @@
 
 const router = vueCommon.createRouter();
 router.map({
-  '/api': {
-    name: 'index',
-    component: require('../main_vue/index.vue'),
+  '': {
+    name: 'main',
+    component: require('./main.vue'),
     subRoutes: {
-      '': {
+      '/api': {
         name: 'list',
-        component: require('./main.vue')
+        component: require('./main_list.vue')
       }
     }
   }

@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 13:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-01 16:07:32
+* @Last modified time: 2016-07-01 20:07:77
 */
 console.log("=====app.js")
 
@@ -62,67 +62,70 @@ serverSocket.init(app);
 
 
 app.use(function*(next) {
-    console.log(`22====${this.method} ${this.url}  ${this.path}`);
+  this.locals = {}
 
-    this.locals = {}
+  this.set({
+    'Pragma': 'No-cache',
+    'Cache-Control': 'no-cache'
+  });
+  // yield* sutil.setLoginUser(this, 'jade1', '111111');
 
-    this.set({
-        'Pragma': 'No-cache',
-        'Cache-Control': 'no-cache'
-    });
-    // yield* sutil.setLoginUser(this, 'jade1', '111111');
+  //sutil.getLoginUser(this);
 
-    //sutil.getLoginUser(this);
+  this.locals.host = config.host;
+  this.locals._now = new Date().getTime();
+  let p = this.query;
+  try {
+    p = _.extend(p, this.request.body, this.params);
+  } catch (e) {
 
-    this.locals._now = new Date().getTime();
-    let p = this.query;
-    try {
-        p = _.extend(p, this.request.body, this.params);
-    } catch (e) {
+  }
 
+  this.parse = p;
+  var user = _.extend({}, yield * sutil.getLoginUser(this));
+  delete user.password;
+  this.locals._user = user;
+  try {
+    yield next;
+    // Handle 404 upstream.
+    var status = this.status || 404;
+    if (status === 404) this.throw(404);
+
+
+    // 新增消息提醒
+    if(this.path === '/message/messages' && this.method === 'POST'){
+      let remindUsers = this.query.msgData.toUsers;
+      serverSocket.sendMsg(remindUsers);
+    }
+    //修改消息状态提醒
+    if(this.path === '/message/messages' && this.method === 'PUT'){
+      serverSocket.sendMsg([user.username]);
     }
 
-    this.parse = p;
-    var user = _.extend({}, yield * sutil.getLoginUser(this));
-    delete user.password;
-    this.locals._user = user;
-    try {
-        yield next;
-        // Handle 404 upstream.
-        var status = this.status || 404;
-        if (status === 404) this.throw(404);
-
-        // 新增消息
-        if(this.path === '/message/messages' && this.method === 'POST'){
-          let remindUsers = this.query.msgData.toUsers;
-          serverSocket.sendMsg(remindUsers);
-        }
-        //修改消息状态
-        if(this.path === '/message/messages' && this.method === 'PUT'){
-          serverSocket.sendMsg([user.username]);
-        }
-
-    } catch (error) {
-        this.status = error.status || 500;
-        if (this.status === 404) {
-            yield this.render('error', {
-                error
-            });
-        } else {
-            yield this.render('error', {
-                error
-            });
-        }
-        this.app.emit('error', error, this);
+  } catch (error) {
+    this.status = error.status || 500;
+    if (this.status === 404) {
+      yield this.render('error', {
+        error
+      });
+    } else {
+      yield this.render('error', {
+        error
+      });
     }
 });
 
 import main from './main/router';
 import team from './team/router';
+
+import project from './project/router';
+import prd from './prd/router';
 import apiModule from './api/router';
 import msgModule from './message/router';
 app.use(main.routes());
 app.use(team.routes());
+app.use(project.routes());
+app.use(prd.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 

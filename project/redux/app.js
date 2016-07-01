@@ -18,7 +18,7 @@ import Project from '../components/Project';
 import AddProject from '../components/AddProject';
 import Nav from '../components/Nav';
 import './app.scss';
-const me = pageConfig.me;
+const team = pageConfig.me.team;
 
 class App extends Component {
     constructor(props) {
@@ -31,27 +31,6 @@ class App extends Component {
     componentDidMount() {
         const { actions } = this.props
         actions.getProjects();
-    }
-
-    //每次接受新的props触发
-    componentWillReceiveProps(nextProps) {
-        // console.log('执行componentWillReceiveProps', nextProps);
-        // if (nextProps.selectedReddit !== this.props.selectedReddit) {
-        //     const { dispatch, selectedReddit } = nextProps
-        //     dispatch(fetchPostsIfNeeded(selectedReddit))
-        // }
-    }
-
-    handleChange(nextReddit) {
-        // this.props.dispatch(selectReddit(nextReddit))
-    }
-
-    handleRefreshClick(e) {
-        // e.preventDefault()
-
-        // const { dispatch, selectedReddit } = this.props
-        // dispatch(invalidateReddit(selectedReddit))
-        // dispatch(fetchPostsIfNeeded(selectedReddit))
     }
 
     addOk(project) {
@@ -69,7 +48,7 @@ class App extends Component {
         const { projects, actions, addShow, updateShow, deleteShow } = this.props;
         return (
             <div className="mod-project">
-                <Nav teamId={me.team}/>
+                <Nav team={team}/>
                 <Row gutter={16}>
                     {
                         projects.map(item=>

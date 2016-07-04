@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   geyuanjun
- * @Last modified time: 2016-06-30 19:06:35
- * @Last modified by:   geyuanjun
- * @Last modified time: 2016-06-30 19:06:35
+* @Last modified by:   chenjiangsong
+* @Last modified time: 2016-07-04 16:07:81
+* @Last modified by:   chenjiangsong
+* @Last modified time: 2016-07-04 16:07:81
  */
 
 
@@ -167,7 +167,7 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
 
   let apiItem = yield apiDao.findOne(filter)
   if (apiItem) {
-    let data = Mock.mock(mockTree2MockTemplate(apiItem.output))
+    let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
       // let data = Mock.mock({
       //     "data|1-10":[
       //         {

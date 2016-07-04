@@ -21,6 +21,7 @@
                   <div class="field">
                       <label>输入数据格式<i class="red">*</i></label>
                       <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+
                   </div>
               </div>
           </div>
@@ -55,7 +56,8 @@
       <div class="ui form backData">
           <div class="field">
               <label>返回数据格式<i class="red">*</i></label>
-              <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea>
+              <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
+              <editor-frame :output-model.sync="apiData.output" :show-mock=true></editor-frame>
           </div>
       </div>
   </div>
@@ -67,7 +69,8 @@
     </div>
 
 </div>
-<editor-frame></editor-frame>
+<!-- <editor-frame :output-model.sync="apiData.output" :show-mock=true></editor-frame> -->
+
 </template>
 
 <script text="text/babel">
@@ -235,7 +238,6 @@ export default {
     position: relative;
     height: 100%;
     padding: 0 0 0 20px;
-
     .ui.header {
       height: 50px;
       margin: 0 -20px;

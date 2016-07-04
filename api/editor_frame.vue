@@ -29,6 +29,7 @@
 
 <script type="text/babel">
 import tableItem from './table-item.vue'
+import util from '../common/util.js'
 const CodeMirror = require('codemirror/lib/codemirror.js');
 require('codemirror/lib/codemirror.css');
 require('codemirror/addon/lint/lint.css');
@@ -91,13 +92,9 @@ export default {
   },
   ready() {
     const inputFrame = this.$els.input;
-    const mockFrame = this.$els.mock;
     const self = this;
-    const data = mock.mock({
-      'list|1-10': [{
-        'id|+1': 1
-      }]
-    })
+    const mockFrame = this.$els.mock;
+
     setTimeout(() => {
       self.inputEditor = self.initEditor(inputFrame);
       self.inputEditor.on('change', (cm, obj) => {
@@ -106,6 +103,7 @@ export default {
     }, 100)
     // self.inputEditor.setSize('auto', 'auto');
 
+    self.mockEditor = self.initEditor(mockFrame, true);
     // setTimeout(() => {
     //   mockFrame.value = JSON.stringify(js, null, 2);
     //   self.mockEditor = self.initEditor(mockFrame, true);
@@ -212,12 +210,19 @@ export default {
       const self = this;
       console.log(self.outputModel);
       this.$parent.$parent.$parent.$broadcast('sub-slide-menu-open')
+      const mockModel = util.mockTree2MockTemplate(self.outputModel);
+      const mockData = mock.mock(mockModel);
+
+      self.mockEditor.setValue(JSON.stringify(mockData, null, 2));
     }
   }
 }
 </script>
 <style media="screen" lang="sass">
   .editor-wrap{
+    li{
+      list-style:none;
+    }
     .input-frame{
       display:inline-block;
       width: 45%;

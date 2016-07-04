@@ -73,103 +73,27 @@ gulp.task('webpack', function(callback) {
       except: ['$', 'm', 'webpackJsonpCallback']
     }
   }));
-  var map = {
-    index: ['./main/index.js', './main/index.scss'],
-    login: ['./main/login.js', './main/login.scss'],
-    user: './user',
-    team: './team',
-    project: './project',
-    prd: './prd',
-    react_common: [
-      'react',
-      'react-dom',
-      'react-router',
-      'antd/dist/antd.css',
-      './layout/layout.js',
-      './layout/layout.scss'
-    ]
-  };
 
+  //webpack配置文件，有几项需要动态配置的，只能写在这边
+  var config = require('./build/webpack.react.config.js')
+  config.watch =isWatch
+  config.devtool = isProduct ? false : 'source-map'
+  config.plugins.concat(minfy)
 
   if (entry) {
     console.log('您需要编译的模块有：' + entry);
     var arr = entry.split(',');
     entry = {
-      common: map.common
+      common: config.all_entry.common
     }
     for (var i = 0, len = arr.length; i < len; i++) {
       var item = arr[i];
-      entry[item] = map[item];
+      entry[item] = config.all_entry[item];
     }
   } else {
-    entry = map;
+    entry = config.all_entry;
   }
-
-  //webpack配置文件
-  var config = {
-    watch: isWatch,
-    entry: entry,
-    debug: true,
-
-    devtool: (isProduct ? false : 'source-map'),
-    // devtool: false,
-
-    output: {
-      path: './dist/',
-      filename: '[name].js',
-      chunkFilename: '[name].min.js',
-      publicPath: ''
-    },
-
-    resolve: {
-      alias: {}
-    },
-
-    plugins: [
-      new webpack.ProvidePlugin({
-        fetch: path.resolve('./common/fetch'),
-        _: 'underscore'
-        // React: 'react',
-        // ReactDom: 'react-dom'
-      }),
-      new webpack.optimize.DedupePlugin(),
-      new ExtractTextPlugin("[name].css"),
-      new WebpackNotifierPlugin(),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: ['react_common'],
-        minChunks: Infinity
-      })
-    ].concat(minfy),
-    module: {
-      loaders: [{
-        test: /\.js[x]?$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          compact: false,
-          presets: ['react', 'es2015']
-        }
-      }, {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap&-convertValues')
-      }, {
-        test: /\.less$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?-convertValues!less-loader')
-      }, {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap&-convertValues!sass-loader?sourceMap')
-      }, {
-        test: /\.(png|jpg|gif|woff|woff2|ttf|eot|svg|swf)$/,
-        loader: "file-loader?name=[name]_[sha512:hash:base64:7].[ext]"
-      }, {
-        test: /\.html/,
-        loader: "html-loader?" + JSON.stringify({
-          minimize: false
-        })
-      }]
-    }
-  };
-
+  config.entry = entry;
 
   webpack(config, function(err, stats) {
     console.log(stats.toString());
@@ -277,7 +201,7 @@ gulp.task('vue', function(callback) {
     }
   }));
   //webpack配置文件，有几项需要动态配置的，只能写在这边
-  var vue_config = require('./build/webpack.vue.config.js');
+  var vue_config = require('./build/webpack.vue.config.js')
   vue_config.watch =isWatch
   vue_config.devtool = isProduct ? false : 'source-map'
   vue_config.plugins.concat(minfy)

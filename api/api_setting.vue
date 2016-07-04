@@ -72,13 +72,8 @@
 
 <script text="text/babel">
 
-<<<<<<< HEAD
-import { add, del } from './vuex/action'
-
-=======
 import { tog, add, del } from './vuex/action'
 import editorFrame from './editor_frame.vue'
->>>>>>> cjs/1.0
 export default {
   vuex: {
     getters: {
@@ -237,7 +232,6 @@ export default {
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 #api-detail {
-<<<<<<< HEAD
     position: relative;
     height: 100%;
     padding: 0 0 0 20px;
@@ -248,12 +242,6 @@ export default {
       padding: 8px;
       box-shadow: 1px 3px #eee;
     }
-=======
-    display:none;
-    width: 96%;
-    height:94%;
-    margin: 10px auto 0;
->>>>>>> cjs/1.0
     .container.body{
       height:calc(100% - 105px);
       overflow-x:hidden;

@@ -65,14 +65,20 @@
         <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
         <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
-    <!-- <editor-frame></editor-frame> -->
+
 </div>
+<editor-frame></editor-frame>
 </template>
 
 <script text="text/babel">
 
+<<<<<<< HEAD
 import { add, del } from './vuex/action'
 
+=======
+import { tog, add, del } from './vuex/action'
+import editorFrame from './editor_frame.vue'
+>>>>>>> cjs/1.0
 export default {
   vuex: {
     getters: {
@@ -89,7 +95,9 @@ export default {
       del
     }
   },
-  components: {},
+  components: {
+    editorFrame
+  },
   data() {
     return {
       updateDesc: '',
@@ -229,6 +237,7 @@ export default {
 </script>
 <style lang="sass" rel="stylesheet/scss" type="text/css">
 #api-detail {
+<<<<<<< HEAD
     position: relative;
     height: 100%;
     padding: 0 0 0 20px;
@@ -239,6 +248,12 @@ export default {
       padding: 8px;
       box-shadow: 1px 3px #eee;
     }
+=======
+    display:none;
+    width: 96%;
+    height:94%;
+    margin: 10px auto 0;
+>>>>>>> cjs/1.0
     .container.body{
       height:calc(100% - 105px);
       overflow-x:hidden;

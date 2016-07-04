@@ -38,7 +38,7 @@
 
 <style lang="sass" rel="stylesheet/scss" type="text/css">
     .slide-menu {
-        display: none;
+        /* display: none; */
         position: fixed;
         right: 0;
         top: 0;

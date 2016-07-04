@@ -211,6 +211,7 @@ export default {
     revertMock() {
       const self = this;
       console.log(self.outputModel);
+      this.$parent.$parent.$parent.$broadcast('sub-slide-menu-open')
     }
   }
 }

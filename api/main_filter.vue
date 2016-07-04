@@ -116,7 +116,7 @@ export default {
   methods: {
     changePrdApi(pid) {
       this.changeFilter({ prdId: pid })
-      this.$parent.$emit('reloadApiList')
+      this.$parent.$emit('reloadApiList', pid)
     }
   }
 };

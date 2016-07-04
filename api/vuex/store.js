@@ -48,6 +48,10 @@ const mutations = {
   // change prdId, projectId, teamId
   CHANGE_FILTER(State, params) {
     State = _.extend(State, params)
+  },
+  EMPTY_LIST(State) {
+    State.list = []
+    State.list_active = {}
   }
 }
 

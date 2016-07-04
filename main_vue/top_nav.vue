@@ -11,7 +11,7 @@
                 </div>
             </div>
             <!-- <a class="item" v-link="{name: 'list', activeClass: 'active'}">API</a> -->
-            <a class="item" href="/api">API</a>
+            <!-- <a class="item" href="/api">API</a> -->
 
             <div class="right menu">
                 <a class="item msg-span"  href="/message">消息 (<span class="msg-count">0</span>)</a>

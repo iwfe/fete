@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 require('babel-core/register')({
-  presets: ['es2015-node5', 'stage-3', 'react']
+  presets: ['es2015-node5', 'stage-0', 'react']
 });
 
 try{
-    var setIterm2Badge = require('set-iterm2-badge')('FETE SERVER');    
+    var setIterm2Badge = require('set-iterm2-badge')('FETE SERVER');
 }catch(e){
-    
+
 }
 
 var app = require('./app')

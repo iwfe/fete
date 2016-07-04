@@ -84,7 +84,7 @@ module.exports = {
     }]
   },
   babel: {
-    presets: ['react', 'es2015'],
+    presets: ['react', 'es2015', 'stage-0'],
     compact: false
   }
 }

@@ -1,10 +1,11 @@
 /**
- * @Author: lancui
- * @Date:   2016-06-27 13:06:00
- * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-06-29 15:06:16
- */
+* @Author: lancui
+* @Date:   2016-06-27 13:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-01 20:07:77
+*/
+console.log("=====app.js")
 
 
 import Koa from 'koa';
@@ -19,8 +20,8 @@ import sutil from './common/sutil';
 import _ from 'underscore';
 // import parse from 'co-body';
 // var parse = require('co-body')
-// import finalHandler from './lib/finalHandler';
-// import router from './router';
+    // import finalHandler from './lib/finalHandler';
+    // import router from './router';
 
 const app = new Koa();
 
@@ -28,7 +29,7 @@ const app = new Koa();
 
 // middleware
 app.use(views(`${__dirname}/view`, {
-  extension: 'jade'
+    extension: 'jade'
 }));
 app.use(logger());
 
@@ -53,6 +54,12 @@ app.keys = ['fete'];
 // }));
 //
 //
+//
+
+// 监听message
+const serverSocket = require('./socket/server');
+serverSocket.init(app);
+
 
 app.use(function*(next) {
   this.locals = {}
@@ -83,6 +90,18 @@ app.use(function*(next) {
     // Handle 404 upstream.
     var status = this.status || 404;
     if (status === 404) this.throw(404);
+
+
+    // 新增消息提醒
+    if(this.path === '/message/messages' && this.method === 'POST'){
+      let remindUsers = this.query.msgData.toUsers;
+      serverSocket.sendMsg(remindUsers);
+    }
+    //修改消息状态提醒
+    if(this.path === '/message/messages' && this.method === 'PUT'){
+      serverSocket.sendMsg([user.username]);
+    }
+
   } catch (error) {
     this.status = error.status || 500;
     if (this.status === 404) {
@@ -94,12 +113,12 @@ app.use(function*(next) {
         error
       });
     }
-    this.app.emit('error', error, this);
   }
 });
 
 import main from './main/router';
 import team from './team/router';
+
 import project from './project/router';
 import prd from './prd/router';
 import apiModule from './api/router';
@@ -111,9 +130,9 @@ app.use(prd.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 
-app.on('error', function (err) {
-  console.log('sent error %s to the cloud', err.message);
-  console.log(err);
+app.on('error', function(err) {
+    console.log('sent error %s to the cloud', err.message);
+    console.log(err);
 });
 
 module.exports = app;

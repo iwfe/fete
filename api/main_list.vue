@@ -26,7 +26,7 @@
 </template>
 
 <script type="text/babel">
-  import { tog, add } from './vuex/action'
+  import { tog, add, emptyList } from './vuex/action'
   import MainFilter from './main_filter.vue'
 
   export default {
@@ -40,16 +40,23 @@
       },
       actions: {
         tog,
-        add
+        add,
+        emptyList
       }
     },
     ready() {
-      this.getList();
+      this.getList(this.$route.query.prdId);
+    },
+    events: {
+      reloadApiList(prdId) {
+        this.getList(prdId)
+      }
     },
     methods: {
-      getList() {
+      getList(prdId) {
+        this.emptyList()  // empty list first
         fetch('/api/apis', {
-          body: { prdId: '111' }
+          body: { prdId: prdId }
         }).then(res => {
           res.data.forEach(v => {
             this.add(v);

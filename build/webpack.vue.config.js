@@ -2,13 +2,13 @@
  * @Author: wjs
  * @Date:   2016-06-30 18:48:33
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-01 15:36:07
+ * @Last Modified time: 2016-07-04 11:24:51
  */
 
 var path = require('path'),
   webpack = require("webpack"),
   ExtractTextPlugin = require("extract-text-webpack-plugin"),
-  WebpackNotifierPlugin = require('webpack-notifier');
+  WebpackNotifierPlugin = require('webpack-notifier')
 
 module.exports = {
   // watch: isWatch,

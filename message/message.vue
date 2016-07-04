@@ -9,7 +9,8 @@
                     <th>用户名</th>
                     <th>操作</th>
                     <th>描述</th>
-                    <th style="width: 14%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button></th>
+                    <th style="width: 14%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
+                    <button class="ui basic button all-read" @click="addMsg">add</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -18,7 +19,7 @@
                     <td>{{item.userName}}</td>
                     <td>{{item.operation}}</td>
                     <td>{{item.desc}}</td>
-                    <td><span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item._id, index, item.status)">{{{item.status | msgStatus}}}</span></td>
+                    <td><span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -33,7 +34,8 @@
 
   Vue.filter('msgStatus', (value) => {
     return value === 1 ? '已读' : '未读';
-  })
+  });
+  const username = pageConfig.me.username;
   export default {
     data() {
       return {
@@ -47,7 +49,7 @@
       getMsgList() {
         fetch('/message/messages', {
           method: 'GET',
-          body: { toUsers: pageConfig.me._id }
+          body: { userId: username }
         }).then((res) => {
           this.msgList = res.data;
         });
@@ -56,7 +58,7 @@
         if (status === 1) return;
         fetch('/message/messages', {
           method: 'PUT',
-          body: JSON.stringify({ msgId: msgId })
+          body: JSON.stringify({ userId: username, msgId: msgId })
         }).then((res) => {
           this.msgList[i].status = 1;
         });
@@ -67,14 +69,25 @@
         if (confirm('确定要全部已读吗？')) {
           fetch('/message/messages', {
             method: 'PUT',
-            body: JSON.stringify({ msgId: null })
+            body: JSON.stringify({ userId: username, msgId: null })
           }).then(res => {
             this.msgList.forEach((item) => {
               item.status = 1;
             });
           });
         }
+      },
+      addMsg() {
+        const msg = { userId: 'wjs', userName: 'jade', operation: 'add', desc: '新增消息接口', createTime: '2016-07-01', apiId: '576b401056e121e6c9ef082b', toUsers: ['jade', 'jade1'] };
+        fetch('/message/messages', {
+          method: 'POST',
+          body: JSON.stringify({ msgData: msg })
+        }).then(res => {
+          res.data.status = 0;
+          this.msgList.push(res.data);
+        });
       }
+
     }
   }
 </script>

@@ -15,7 +15,7 @@ const state = {
   userName: 'geyuanjun',
   prdId: '111',
   teamId: '2222',
-  productId: '333'
+  projectId: '333'
 }
 
 const mutations = {
@@ -43,6 +43,15 @@ const mutations = {
     } else {
       State.list_active = list;
     }
+  },
+
+  // change prdId, projectId, teamId
+  CHANGE_FILTER(State, params) {
+    State = _.extend(State, params)
+  },
+  EMPTY_LIST(State) {
+    State.list = []
+    State.list_active = {}
   }
 }
 

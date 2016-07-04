@@ -65,14 +65,15 @@
         <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
         <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
-    <!-- <editor-frame></editor-frame> -->
+
 </div>
+<editor-frame></editor-frame>
 </template>
 
 <script text="text/babel">
 
-import { add, del } from './vuex/action'
-
+import { tog, add, del } from './vuex/action'
+import editorFrame from './editor_frame.vue'
 export default {
   vuex: {
     getters: {
@@ -89,7 +90,9 @@ export default {
       del
     }
   },
-  components: {},
+  components: {
+    editorFrame
+  },
   data() {
     return {
       updateDesc: '',

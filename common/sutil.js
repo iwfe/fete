@@ -255,6 +255,7 @@ var sutil = {
         redirect: redirect
       });
     }
+    user.prd = prd;
     user.project = project;
     user.team = team;
     yield next;

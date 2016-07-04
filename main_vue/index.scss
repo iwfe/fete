@@ -1,8 +1,8 @@
 /*
 * @Author: jade
 * @Date:   2016-06-12 00:02:08
-// @Last modified by:   geyuanjun
-// @Last modified time: 2016-06-29 19:25:23
+// @Last modified by:   chenjiangsong
+// @Last modified time: 2016-07-01 01:07:52
 */
 #container{
   width:97%;
@@ -29,4 +29,27 @@ html,
 body,
 #fete {
   height: 100%;
+  font-family: Arial;
+}
+ol,ul{
+  list-style: none;
+  margin:0;
+  padding:0;
+  border: 0;
+  vertical-align: baseline;
+  font: inherit;
+  font-size: 100%;
+}
+
+@mixin clearfix {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
 }

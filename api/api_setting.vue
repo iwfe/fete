@@ -119,6 +119,28 @@ export default {
     }
   },
   methods: {
+    validate() {
+      if (!this.apiData.title) {
+        // 未输入标题
+        toastr.error('请输入API标题！')
+        this.sendLoad = false
+        return true
+      } else if (!this.apiData.url) {
+        // 未输入url地址
+        toastr.error('请输入URL地址！')
+        this.sendLoad = false
+        return true
+      } else if (!this.updateDesc) {
+        toastr.error('请输入接口修改说明！')
+        this.sendLoad = false
+        return true
+      } else if (this.apiData.url[0] !== '/') {
+        toastr.error('URL必须以"/"开头')
+        this.sendLoad = false
+        return true
+      }
+      return false
+    },
     /**
      * 发送数据
      * @desc 修改以及新建API都是用同一种方法
@@ -128,25 +150,6 @@ export default {
       console.log(this.userName);
       this.sendLoad = true;
       // 判断是否输入格式正确
-      if (!this.apiData.title) {
-        // 未输入标题
-        toastr.error('请输入API标题！')
-        this.sendLoad = false
-        return
-      } else if (!this.apiData.url) {
-        // 未输入url地址
-        toastr.error('请输入URL地址！')
-        this.sendLoad = false
-        return
-      } else if (!this.updateDesc) {
-        toastr.error('请输入接口修改说明！')
-        this.sendLoad = false
-        return
-      } else if (this.apiData.url[0] !== '/') {
-        toastr.error('URL必须以"/"开头')
-        this.sendLoad = false
-        return
-      }
 
       // 判断是新增还是修改接口
       let status = 1

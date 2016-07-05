@@ -3,13 +3,15 @@
   <h3 class="ui header"><i class="icon settings"></i><div class="content">新建API</div></h3>
   <div class="container body">
       <div class="ui grid form">
-        <div class="six wide column field">
+        <div class="six wide column field small">
             <label>标题<i class="red">*</i></label>
             <input type="text" placeholder="一句话描述" v-model="apiData.title">
+            <div v-show="titleError" class="ui pointing red basic label">请输入API标题</div>
         </div>
         <div class="seven wide column field">
             <label>URL（首字符请输入/）<i class="red">*</i></label>
             <input type="text" placeholder="接口URL地址" v-model="apiData.url">
+            <div v-show="urlError" class="ui pointing red basic label">请输入API地址</div>
         </div>
         <div class="three wide column field">
             <label>method<i class="red">*</i></label>
@@ -69,7 +71,7 @@
 
 <script text="text/babel">
 
-import { tog, add, del } from './vuex/action'
+import { add, del } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 export default {
   vuex: {
@@ -94,6 +96,8 @@ export default {
     return {
       updateDesc: '',
       updateDescList: [],
+      titleError: false,
+      urlError: false,
       sendLoad: false,
       delLoad: false,
       apiData: {
@@ -124,10 +128,26 @@ export default {
      */
     sendData() {
       this.sendLoad = true;
+      // 判断是否输入格式正确
+      if (!this.apiData.title) {
+        // 未输入标题
+        this.titleError = true;
+        toastr.error('请输入API标题！')
+        this.sendLoad = false
+        return
+      } else if (!this.apiData.url) {
+        // 未输入url地址
+        this.urlError = true
+        toastr.error('请输入URL地址！')
+        this.sendLoad = false
+        return
+      }
+
       // 判断是新增还是修改接口
-      let status = 1;
+      let status = 1
       if (this.list_active.id) {
-        status = 2;
+        console.log(this.list_active.id)
+        status = 2
       }
       // 定义最基本的数据结构
       const apiData = this.apiData;
@@ -149,10 +169,10 @@ export default {
         }).then((res) => {
           if (res.code === 200) {
             if (this.list_active) {
-              _.extend(this.list_active, res.data);
+              _.extend(this.list_active, res.data)
             }
-            toastr.success('新增API成功！');
-            window.setTimeout(this.closeSlide, 300);
+            toastr.success('新增API成功！')
+            window.setTimeout(this.closeSlide, 300)
           } else {
             toastr.error('新增API失败，请重试！');
           }
@@ -170,12 +190,12 @@ export default {
           method: 'PUT'
         }).then(res => {
           if (res.code === 200) {
-            toastr.success('修改API成功！');
+            toastr.success('修改API成功！')
             this.resetData();
             // 弹出层提示出现之后再关闭组件
-            window.setTimeout(this.closeSlide, 300);
+            window.setTimeout(this.closeSlide, 300)
           } else {
-            toastr.error('API修改失败，请重试！');
+            toastr.error('API修改失败，请重试！')
           }
           this.sendLoad = false;
         })
@@ -183,7 +203,7 @@ export default {
     },
     closeSlide() {
       // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
-      this.$dispatch('slide-menu-close');
+      this.$dispatch('slide-menu-close')
     },
     resetData() {
       _.extend(this, {

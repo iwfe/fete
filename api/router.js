@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   chenjiangsong
-* @Last modified time: 2016-07-04 16:07:81
-* @Last modified by:   chenjiangsong
-* @Last modified time: 2016-07-04 16:07:81
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-07-05 14:50:33
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-07-05 14:50:33
  */
 
 
@@ -28,6 +28,7 @@ var apiDao = wrap(db.get('api'));
 var teamDao = wrap(db.get('team'));
 var projectDao = wrap(db.get('project'));
 var prdDao = wrap(db.get('prd'));
+var userDao = wrap(db.get('user'));
 
 import sutil from '../common/sutil'
 import util from '../common/util.js'
@@ -88,6 +89,12 @@ router.get('/apis', sutil.login, function*(next) {
     );
     if (insertResult) {
       sutil.success(this, insertResult);
+      // 添加消息，并提醒客户端
+      let userArr = [], users = yield userDao.find({teams: this.parse.apiData.teamId});
+      for(let i in users) {
+        userArr.push(users[i].username);
+      }
+      let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
     } else {
       sutil.failed(this, 150001);
     }
@@ -105,9 +112,10 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
-    delete(this.parse.apiData._id)
+    let apiData = this.parse.apiData;
+    delete(apiData._id)
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
-      $set: _.extend(this.parse.apiData, {
+      $set: _.extend(apiData, {
         updateTime: new Date(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
@@ -115,6 +123,13 @@ router.get('/apis', sutil.login, function*(next) {
     });
     if (updateResult) {
       sutil.success(this, updateResult);
+      // 添加消息并发送提醒
+      let userArr = [], users = yield userDao.find({teams: apiData.teamId});
+      for(let i in users) {
+        userArr.push(users[i].username);
+      }
+      // const msg = { userName: apiData.username, msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
+      // let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
     } else {
       sutil.failed(this, 150001);
     }

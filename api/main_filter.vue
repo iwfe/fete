@@ -47,10 +47,12 @@
     <div>
       <button class="mini ui right floated button add-btn" @click="add">新建API</button>
       <div class="url-info">
-        当前项目URL：<span>{{host}}/fete_api/{{currentProject.id}}</span>
+        当前项目URL：
+        <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/fete_api/{{currentProject.id}}</span>
       </div>
       <div class="url-info">
-        当前PRD URL：<span>{{host}}/fete_api/{{currentProject.id}}/{{currentPrd.id}}</span>
+        当前PRD URL：
+        <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/fete_api/{{currentProject.id}}/{{currentPrd.id}}</span>
       </div>
     </div>
   </div>
@@ -79,6 +81,15 @@ export default {
   },
   attached() {
     $('.main-filter .ui.dropdown').dropdown({ on: 'hover' })
+    const clipboard = new Clipboard('.copy-btn')
+    clipboard.on('success', e => {
+      // console.info('Action:', e.action)
+      // console.info('Text:', e.text)
+      // console.info('Trigger:', e.trigger)
+
+      // e.clearSelection()
+      toastr.info('已复制到剪贴板！', '', { positionClass: 'toast-top-center' })
+    })
   },
   ready() {
     // set vuex state

@@ -266,11 +266,6 @@ export default {
     padding: 0 0 0 5px;
     overflow-x: hidden;
     .ui.header {
-      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      color: #666;
-      font-weight: 400;
       height: 50px;
       margin: 0;
       padding: 8px;
@@ -315,6 +310,14 @@ export default {
     .ui.form select{
       height: 32px;
     }
+    .ui.header,.ui.form input[type=text],.ui.form select,.ui.form .field>label,.ui.form textarea:not([rows]),.ui.list .list>.item .header, .ui.list>.item .header,.ui.list .list>.item .description, .ui.list>.item .description{
+      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #666;
+      font-weight: 400;
+    }
+
 }
 
 </style>

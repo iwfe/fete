@@ -58,7 +58,7 @@
 
     <div class="detail-bottom">
         <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
         <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
 
@@ -108,6 +108,7 @@ export default {
   },
   events: {
     getDetail() {
+      $('#api-detail .container.body').scrollTop(0);
       // 防止list_active没有来的及更新
       window.setTimeout(() => {
         if (this.list_active.id) {
@@ -147,10 +148,13 @@ export default {
      * @return {[type]} [description]
      */
     sendData() {
-      console.log(this.userName);
-      this.sendLoad = true;
+      console.log(this.userName)
+      this.sendLoad = true
       // 判断是否输入格式正确
-
+      const validator = this.validate()
+      if (validator) {
+        return
+      }
       // 判断是新增还是修改接口
       let status = 1
       if (this.list_active.id) {

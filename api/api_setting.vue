@@ -2,65 +2,59 @@
 <div id="api-detail" >
   <h3 class="ui header"><i class="icon settings"></i><div class="content">新建API</div></h3>
   <div class="container body">
-      <div class="ui two column middle very relaxed stackable grid">
-          <div class="column">
-              <div class="ui form">
-                  <div class="field">
-                      <label>标题<i class="red">*</i></label>
-                      <input type="text" placeholder="一句话描述" v-model="apiData.title">
-                  </div>
-                  <div class="field">
-                      <label>method<i class="red">*</i></label>
-                      <select class="ui fluid dropdown" v-model="apiData.method">
-                          <option value="GET">get</option>
-                          <option value="POST">post</option>
-                          <option value="PUT">put</option>
-                          <option value="DELETE">delete</option>
-                      </select>
-                  </div>
-                  <div class="field">
-                      <label>输入数据格式<i class="red">*</i></label>
-                      <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+      <div class="ui grid form">
+        <div class="six wide column field">
+            <label>标题<i class="red">*</i></label>
+            <input type="text" placeholder="一句话描述" v-model="apiData.title">
+        </div>
+        <div class="seven wide column field">
+            <label>URL（首字符请输入/）<i class="red">*</i></label>
+            <input type="text" placeholder="接口URL地址" v-model="apiData.url">
+        </div>
+        <div class="three wide column field">
+            <label>method<i class="red">*</i></label>
+            <select class="ui dropdown" v-model="apiData.method">
+                <option value="GET">get</option>
+                <option value="POST">post</option>
+                <option value="PUT">put</option>
+                <option value="DELETE">delete</option>
+            </select>
+        </div>
+      </div>
 
-                  </div>
-              </div>
+      <div class="ui form">
+          <div class="field">
+              <label>输入数据格式<i class="red">*</i></label>
+              <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
           </div>
-          <div class="column">
-              <div class="ui form">
-                  <div class="field">
-                      <label>接口地址（首字符请输入/）<i class="red">*</i></label>
-                      <input type="text" placeholder="接口URL地址" v-model="apiData.url">
-                  </div>
 
-                  <div class="field">
-                      <label>修改说明<i class="red">*</i></label>
-                      <input type="text" placeholder="接口修改说明" v-model="updateDesc">
-                  </div>
-                  <div class="field">
-                      <label>接口修改日志</label>
-                      <div class="api-log">
-                          <div class="ui list very relaxed">
-                              <div class="item" v-for="list in updateDescList">
-                                  <i class="file icon"></i>
-                                  <div class="content">
-                                      <div class="header">{{list.userName}}</div>
-                                      <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
-                                  </div>
-                              </div>
+      <!-- </div> -->
+
+      <!-- <div class="ui form backData"> -->
+          <div class="field">
+              <label>返回数据格式<i class="red">*</i></label>
+              <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
+              <editor-frame :output-model.sync="apiData.output" :show-mock='true'></editor-frame>
+          </div>
+          <div class="field">
+              <label>修改说明</label>
+              <input type="text" class="input-revise" placeholder="接口修改说明" v-model="updateDesc">
+          </div>
+          <div class="field">
+              <label>接口修改日志</label>
+              <div class="api-log">
+                  <div class="ui list very relaxed">
+                      <div class="item" v-for="list in updateDescList">
+                          <i class="file icon"></i>
+                          <div class="content">
+                              <div class="header">{{list.userName}}</div>
+                              <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      <div class="ui form backData">
-          <div class="field">
-              <label>返回数据格式<i class="red">*</i></label>
-              <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
-              <editor-frame :output-model.sync="apiData.output" :show-mock=true></editor-frame>
-          </div>
-      </div>
-  </div>
 
     <div class="detail-bottom">
         <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
@@ -237,10 +231,11 @@ export default {
 #api-detail {
     position: relative;
     height: 100%;
-    padding: 0 0 0 20px;
+    padding: 0 0 0 5px;
+    overflow-x: hidden;
     .ui.header {
       height: 50px;
-      margin: 0 -20px;
+      margin: 0;
       padding: 8px;
       box-shadow: 1px 3px #eee;
     }
@@ -258,7 +253,7 @@ export default {
     }
     .api-log {
         width: 100%;
-        height: 190px;
+        height: auto;
         overflow: auto;
     }
     .detail-bottom {
@@ -273,6 +268,15 @@ export default {
     }
     .ui[class*="very relaxed"].list:not(.horizontal)>.item{
       padding: 0;
+    }
+    .ui.form input[type=text]{
+      padding: .4rem .6rem;
+    }
+    .ui.grid>.column:not(.row), .ui.grid>.row>.column{
+      padding-right: 0.1rem;
+    }
+    .ui.form select{
+      height: 32px;
     }
 }
 

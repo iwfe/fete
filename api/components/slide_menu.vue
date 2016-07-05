@@ -20,9 +20,16 @@
       });
     },
     events: {
-      'slide-menu-open': function () {
+      'slide-menu-open': function (cb) {
         if (!this.open) {
-          $('.slide-menu').transition('slide left');
+          $('.slide-menu').transition({
+            animation: 'slide left',
+            onComplete: () => {
+              if (typeof cb === 'function') {
+                cb()
+              }
+            }
+          })
           this.open = true;
         }
       },

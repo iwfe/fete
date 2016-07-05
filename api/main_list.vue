@@ -67,7 +67,9 @@
         this.lockScreen(e);
       },
       showDetail(item, e) {
-        this.$parent.$broadcast('slide-menu-open');
+        this.$parent.$broadcast('slide-menu-open', () => {
+          this.$parent.$broadcast('init-codemirror-editor')
+        });
         this.$parent.$broadcast('getDetail');
         this.tog(item);
         e.stopPropagation();

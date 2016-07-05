@@ -47,6 +47,9 @@ const mutations = {
   EMPTY_LIST(State) {
     State.list = []
     State.list_active = {}
+  },
+  DEL_BY_INDEX(State, index) {
+    State.list.splice(index, 1)
   }
 }
 const outputModel = [

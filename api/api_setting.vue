@@ -57,9 +57,11 @@
       </div>
 
     <div class="detail-bottom">
-        <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
-        <button class="mini ui button" @click="closeSlide">取消</button>
+      <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
+      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+      <button class="mini ui button" @click="closeSlide">取消</button>
+      <button class="mini ui button" :class="{'positive':first}" @click="prev($event)">上一条</button>
+      <button class="mini ui button" :class="{'positive':last}" @click="next($event)">下一条</button>
     </div>
 
 </div>
@@ -69,7 +71,7 @@
 
 <script text="text/babel">
 
-import { add, del } from './vuex/action'
+import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 export default {
   vuex: {
@@ -83,7 +85,8 @@ export default {
     },
     actions: {
       add,
-      del
+      del,
+      tog
     }
   },
   components: {
@@ -106,16 +109,22 @@ export default {
       }
     }
   },
-  events: {
-    getDetail() {
-      // 防止list_active没有来的及更新
-      window.setTimeout(() => {
-        if (this.list_active.id) {
-          this.getdata()
-        } else {
-          // this.resetData()
-        }
-      }, 300)
+  watch: {
+    list_active(v) {
+      if (v.id) {
+        this.getdata();
+      }
+    }
+  },
+  computed: {
+    last() {
+      const index = this.getIndex();
+      const last = this.list.length - 1;
+      return index !== last;
+    },
+    first() {
+      const index = this.getIndex();
+      return index
     }
   },
   methods: {
@@ -251,6 +260,36 @@ export default {
         this.delLoad = false;
       });
       window.setTimeout(this.closeSlide, 300);
+    },
+    next(e) {
+      if (!e.currentTarget.classList.contains('positive')) {
+        return;
+      }
+      let index = this.getIndex();
+      const all = this.list.length - 1;
+      if (index < all) {
+        index++;
+        this.tog(this.list[index]);
+      }
+    },
+    prev(e) {
+      if (!e.currentTarget.classList.contains('positive')) {
+        return;
+      }
+      let index = this.getIndex();
+      if (index > 0) {
+        index--;
+        this.tog(this.list[index]);
+      }
+    },
+    getIndex() {
+      let n = 0;
+      for (let i = 0; i < this.list.length; i++) {
+        if (this.list[i] === this.list_active) {
+          n = i;
+        }
+      }
+      return n;
     }
   }
 }

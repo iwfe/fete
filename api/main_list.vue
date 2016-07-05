@@ -17,10 +17,7 @@
                 :class="{'active': list_active === item}">
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
-                <td>
-                  <span @click="showJSON">{{item.method}}</span>
-                  <span style="float:right; cursor:pointer;" v-if="!item.id" @click="delByIndex($index)">X</span>
-                </td>
+                <td><span @click="showJSON">{{item.method}}</span></td>
             </tr>
         </tbody>
     </table>
@@ -29,7 +26,7 @@
 </template>
 
 <script type="text/babel">
-  import { tog, add, emptyList, delByIndex } from './vuex/action'
+  import { tog, add, emptyList } from './vuex/action'
   import MainFilter from './main_filter.vue'
 
   export default {
@@ -44,8 +41,7 @@
       actions: {
         tog,
         add,
-        emptyList,
-        delByIndex
+        emptyList
       }
     },
     ready() {
@@ -74,7 +70,6 @@
         this.$parent.$broadcast('slide-menu-open', () => {
           this.$parent.$broadcast('init-codemirror-editor')
         });
-        this.$parent.$broadcast('getDetail');
         this.tog(item);
         e.stopPropagation();
       },

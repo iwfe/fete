@@ -37,6 +37,9 @@ const mutations = {
   TOG(State, list) { // 选中
     State.list_active = list;
   },
+  BLUR_LIST(State) {
+    State.list_active = {};
+  },
   // change prdId, projectId, teamId
   CHANGE_FILTER(State, params) {
     State = _.extend(State, params)

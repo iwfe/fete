@@ -23,3 +23,8 @@ export const emptyList = ({ dispatch }) => {
 export const delByIndex = ({ dispatch }, index) => {
   dispatch('DEL_BY_INDEX')
 }
+
+export const blurList = ({ dispatch }) => {
+  dispatch('BLUR_LIST')
+}
+

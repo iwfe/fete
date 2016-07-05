@@ -5,10 +5,16 @@
 </template>
 
 <script>
+  import { blurList } from '../vuex/action'
   export default {
     data() {
       return {
         open: false
+      }
+    },
+    vuex: {
+      actions: {
+        blurList
       }
     },
     ready() {
@@ -38,6 +44,7 @@
           $('.slide-menu').transition('slide left');
           this.open = false;
         }
+        this.blurList();
       }
     }
   }

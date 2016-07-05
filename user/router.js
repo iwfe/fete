@@ -15,22 +15,35 @@ var wrap = require('co-monk');
 var db = require('../common/db');
 var userDao = wrap(db.get('user'));
 
-import utils from '../common/utils';
+import util from '../common/util';
+import sutil from '../common/sutil';
 
 import Index from './index';
 
-// 首页
-router.get('/profile', function*(next) {
-    var html = utils.reactRender(Index, {
-        number: 2
-    });
-    // let user = yield userDao.findOne({
-    //     username: 'jade'
-    // })
-    yield utils.render(this, {
-        html: html,
-        number: 2
-    });
+router.get('/data', function*(next) {
+  const username = this.parse.username;
+  const user = yield userDao.findOne({
+    username: username
+  });
+  if(user) {
+    sutil.success(this, sutil.wrapUser(user, ['teams']));
+  }else {
+    sutil.failed(this, 10004);
+  }
+
 });
+// 首页
+// router.get('/profile', function*(next) {
+//     var html = utils.reactRender(Index, {
+//         number: 2
+//     });
+//     // let user = yield userDao.findOne({
+//     //     username: 'jade'
+//     // })
+//     yield utils.render(this, {
+//         html: html,
+//         number: 2
+//     });
+// });
 
 export default router;;

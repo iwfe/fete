@@ -5,9 +5,6 @@
 * @Last modified by:   lancui
 * @Last modified time: 2016-07-04 17:07:24
 */
-console.log("=====app.js")
-
-
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
@@ -115,13 +112,14 @@ app.use(function*(next) {
 });
 
 import main from './main/router';
+import user from './user/router';
 import team from './team/router';
-
 import project from './project/router';
 import prd from './prd/router';
 import apiModule from './api/router';
 import msgModule from './message/router';
 app.use(main.routes());
+app.use(user.routes());
 app.use(team.routes());
 app.use(project.routes());
 app.use(prd.routes());

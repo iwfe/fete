@@ -15,8 +15,12 @@ export const UPDATE = 'UPDATE';
 export const UPDATE_SHOW = 'UPDATE_SHOW';
 export const DELETE = 'DELETE';
 export const DELETE_SHOW = 'DELETE_SHOW';
+export const GET_MEMBER= 'GET_MEMBER';
+export const INVITE_MEMBER= 'INVITE_MEMBER';
+export const INVITE_MEMBER_SHOW= 'INVITE_MEMBER_SHOW';
+export const DELETE_MEMBER= 'DELETE_MEMBER';
+export const DELETE_MEMBER_SHOW= 'DELETE_MEMBER_SHOW';
 
-//获取文章，先触发requestPosts开始获取action，完成后触发receivePosts获取成功的action
 export function getTeams() {
     return dispatch => {
         // dispatch(request())
@@ -92,4 +96,66 @@ export function deleteShow(deleteShow, team) {
         deleteShow: deleteShow,
         team: team
     }
+}
+
+/*********member相关*********/
+export function getMembers(team) {
+  return dispatch => {
+    // dispatch(request())
+    return fetch('/team/member',
+      {
+        body: {
+          teamId: team.id
+        }
+      })
+      .then(json => dispatch({
+        type: GET_MEMBER,
+        members: json.data
+      }))
+  }
+}
+
+export function inviteMemberShow(show) {
+  return {
+    type: INVITE_MEMBER_SHOW,
+    show: show
+  }
+}
+
+export function inviteMember(team, member) {
+  return dispatch => {
+    return fetch('/team/member/invite', {
+      method: 'post',
+      body: Object.assign({teamId: team.id}, member)
+    })
+      .then(json => dispatch({
+        type: INVITE_MEMBER,
+        member: json.data
+      }))
+  }
+}
+
+export function deleteMember(team, member) {
+  return dispatch => {
+    // dispatch(request())
+    return fetch('/team/member', {
+      method: 'delete',
+      body: {
+        username: member.username,
+        teamId: team.id
+      }
+    })
+      .then(json => dispatch({
+        type: DELETE_MEMBER,
+        member: member
+      }))
+  }
+}
+
+export function deleteMemberShow(show, member) {
+  return {
+    type: DELETE_MEMBER_SHOW,
+    show: show,
+    member: member
+  }
 }

@@ -15,11 +15,11 @@ const projectDao = wrap(db.get('project'));
 import sutil from '../common/sutil';
 
 // 项目
-router.get('/', sutil.teamLogin, function*(next) {
+router.get('/', sutil.teamLogin(), function*(next) {
     yield sutil.render(this, {});
 });
 
-router.get('/data', sutil.teamLogin, function*(next) {
+router.get('/data', sutil.teamLogin(), function*(next) {
     const user = this.locals._user;
 
     sutil.success(this, yield projectDao.find({
@@ -29,7 +29,7 @@ router.get('/data', sutil.teamLogin, function*(next) {
     }));
 });
 
-router.post('/data', sutil.teamLogin, function*(next) {
+router.post('/data', sutil.teamLogin(), function*(next) {
     const parse = this.parse;
     const user = this.locals._user;
     const id = yield sutil.genId(projectDao);
@@ -46,7 +46,7 @@ router.post('/data', sutil.teamLogin, function*(next) {
     sutil.success(this, project);
 });
 
-router.put('/data', sutil.teamLogin, function*(next) {
+router.put('/data', sutil.teamLogin(), function*(next) {
     const parse = this.parse;
     const id = parse.id;
     const user = this.locals._user;
@@ -77,7 +77,7 @@ router.put('/data', sutil.teamLogin, function*(next) {
     sutil.success(this, Object.assign({}, project, parse));
 });
 
-router.del('/data', sutil.teamLogin, function*(next) {
+router.del('/data', sutil.teamLogin(), function*(next) {
     const parse = this.parse;
     const id = parse.id;
     const user = this.locals._user;

@@ -5,18 +5,20 @@
         <table class="ui selectable celled table">
             <thead>
                 <tr>
-                    <th>时间</th>
-                    <th>用户名</th>
-                    <th>操作</th>
+                    <th width="20%">时间</th>
+                    <th width="10%">用户名</th>
+                    <th width="10%">平台</th>
+                    <th width="10%">操作</th>
                     <th>描述</th>
                     <th style="width: 14%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
-                    <button class="ui basic button all-read" @click="addMsg">add</button></th>
+                    <!-- <button class="ui basic button all-read" @click="addMsg">add</button></th> -->
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(index, item) in msgList" :class="item.status == 1 ? 'positive' : ''">
                     <td>{{item.createTime}}</td>
                     <td>{{item.userName}}</td>
+                    <td>{{item.platform}}</td>
                     <td>{{item.action}}</td>
                     <td>{{item.actionDetail}}</td>
                     <td><span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span></td>

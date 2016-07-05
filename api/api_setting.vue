@@ -58,7 +58,7 @@
 
     <div class="detail-bottom">
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
       <button class="mini ui button" :class="{'positive':first}" @click="prev($event)">上一条</button>
       <button class="mini ui button" :class="{'positive':last}" @click="next($event)">下一条</button>
@@ -156,10 +156,13 @@ export default {
      * @return {[type]} [description]
      */
     sendData() {
-      console.log(this.userName);
-      this.sendLoad = true;
+      console.log(this.userName)
+      this.sendLoad = true
       // 判断是否输入格式正确
-
+      const validator = this.validate()
+      if (validator) {
+        return
+      }
       // 判断是新增还是修改接口
       let status = 1
       if (this.list_active.id) {
@@ -301,11 +304,6 @@ export default {
     padding: 0 0 0 5px;
     overflow-x: hidden;
     .ui.header {
-      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      color: #666;
-      font-weight: 400;
       height: 50px;
       margin: 0;
       padding: 8px;
@@ -350,6 +348,14 @@ export default {
     .ui.form select{
       height: 32px;
     }
+    .ui.header,.ui.form input[type=text],.ui.form select,.ui.form .field>label,.ui.form textarea:not([rows]),.ui.list .list>.item .header, .ui.list>.item .header,.ui.list .list>.item .description, .ui.list>.item .description{
+      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #666;
+      font-weight: 400;
+    }
+
 }
 
 </style>

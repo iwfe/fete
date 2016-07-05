@@ -55,7 +55,7 @@ var sutil = {
     let staticTagMap = _.extend({}, data);
     delete staticTagMap.html;
     delete staticTagMap.header;
-    const user = Object.assign({},ctx.locals._user);
+    const user = Object.assign({}, ctx.locals._user);
     delete user._id;
     delete user.teams;
     ctx.locals._user = user;
@@ -115,37 +115,52 @@ var sutil = {
   },
 
   //team login
-  * teamLogin(next) {
-    let user = this.locals._user;
-    const {teamId} = this.parse;
-    const redirect = '/team';
-    if (!user.username) {
-      return yield sutil.result(this, {
-        code: 10001,
-        redirect: '/login?next=' + this.url
+  teamLogin(role) {
+    return function *(next) {
+      let user = this.locals._user;
+      const {teamId} = this.parse;
+      const redirect = '/team';
+      if (!user.username) {
+        return yield sutil.result(this, {
+          code: 10001,
+          redirect: '/login?next=' + this.url
+        });
+      }
+
+      let team = _.find(user.teams, function (item) {
+        return item === teamId;
       });
+      if (!team) {
+        return yield sutil.result(this, {
+          code: 11001,
+          redirect: redirect
+        });
+      }
+      team = yield teamDao.findOne({
+        id: team
+      });
+      if (!team) {
+        return yield sutil.result(this, {
+          code: 11001,
+          redirect: redirect
+        });
+      }
+      if (role) {
+        switch (role) {
+          case 'owner':
+            if(team.createUser !== user.username){
+              return yield sutil.result(this, {
+                code: 11002,
+                redirect: redirect
+              });
+            }
+            break;
+        }
+      }
+      user.team = team;
+      yield next;
     }
 
-    let team = _.find(user.teams, function (item) {
-      return item === teamId;
-    });
-    if (!team) {
-      return yield sutil.result(this, {
-        code: 11001,
-        redirect: redirect
-      });
-    }
-    team = yield teamDao.findOne({
-      id: team
-    });
-    if (!team) {
-      return yield sutil.result(this, {
-        code: 11001,
-        redirect: redirect
-      });
-    }
-    user.team = team;
-    yield next;
   },
 
   //project login
@@ -164,7 +179,7 @@ var sutil = {
       id: projectId
     });
 
-    if(!project) {
+    if (!project) {
       return yield sutil.result(this, {
         code: 12002,
         redirect: redirect
@@ -213,7 +228,7 @@ var sutil = {
       id: prdId
     })
 
-    if(!prd) {
+    if (!prd) {
       return yield sutil.result(this, {
         code: 13002,
         redirect: redirect
@@ -226,7 +241,7 @@ var sutil = {
       id: projectId
     });
 
-    if(!project) {
+    if (!project) {
       return yield sutil.result(this, {
         code: 12002,
         redirect: redirect
@@ -319,11 +334,29 @@ var sutil = {
     return md5sum;
   },
 
-  wrapUser: function (user) {
-    user.isSuperAdmin = user.role == 'superadmin'
-    user.isAdmin = user.role == 'admin'
-    user.isMember = user.role == 'member'
-    return user
+  /**
+   * 封装用户
+   * @param user,可以是数组或者单个user对象
+   * @param banKeys,过滤不要的字段,默认不需要_id和password
+   * @returns {*}
+   */
+  wrapUser: function (user, banKeys = []) {
+    banKeys = banKeys.concat(['_id', 'password']);
+
+    //封装单个用户
+    function wrap(item) {
+      return _.pick(item, function (value, key, object) {
+        return banKeys.indexOf(key) === -1;
+      });
+    }
+
+    if (_.isArray(user)) {
+      return user.map(item => {
+        return wrap(item);
+      })
+    } else {
+      return wrap(user);
+    }
   },
 
   * setRouterParams (next) {

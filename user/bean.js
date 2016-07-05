@@ -13,5 +13,6 @@ const user = {
     teams: [{
         id: '',
         role: 'owner|admin|member', //owner:创建者，admin:管理员，member:普通成员
+        stutas: 'normal|invited|request'//normal:正常,invited:邀请加入,request:申请加入
     }]
 }

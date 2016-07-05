@@ -45,14 +45,18 @@ let self = function fetch(url, options = {}) {
                 return response
             } else {
                 Message.error('服务器忙晕了，请稍后再试');
-                throw new Error(response);
+                var error = new Error('服务器忙晕了，请稍后再试')
+                error.response = response
+                throw error
             }
         })
         .then(response => response.json())
         .then(response => {
             if (response.code != 200) {
                 Message.error(response.message || '服务器忙晕了，请稍后再试');
-                throw new Error(response);
+                var error = new Error(response.message || '服务器忙晕了，请稍后再试')
+                error.response = response
+                throw error
             }
             return response;
         });

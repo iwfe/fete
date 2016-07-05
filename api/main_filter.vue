@@ -1,10 +1,9 @@
 <template>
   <div class="main-filter">
     <div class="ui breadcrumb">
-      <div class="section grey">当前位置</div>
+      <div class="section grey">全部团队</div>
       <div class="divider"> / </div>
       <div class="section">
-        团队：
         <div class="ui inline dropdown">
           <div class="text">{{currentTeam.name}}</div>
           <i class="dropdown icon"></i>
@@ -18,7 +17,6 @@
       </div>
       <div class="divider"> / </div>
       <div class="section">
-        项目：
         <div class="ui inline dropdown">
           <div class="text">{{currentProject.name}}</div>
           <i class="dropdown icon"></i>
@@ -40,7 +38,7 @@
             <a class="item"
               data-text="{{item.name}}"
               v-link="{name: 'list', query: {prdId: item.id}}"
-              @click="changePrdApi"
+              @click="changePrdApi(item.id)"
               v-for="item in prdData">{{item.name}}</a>
           </div>
         </div>
@@ -59,12 +57,13 @@
 </template>
 
 <script>
-import { add } from './vuex/action'
+import { add, changeFilter } from './vuex/action'
 export default {
   name: 'main-filter',
   vuex: {
     actions: {
-      add
+      add,
+      changeFilter
     }
   },
   data() {
@@ -82,6 +81,13 @@ export default {
     $('.main-filter .ui.dropdown').dropdown({ on: 'hover' })
   },
   ready() {
+    // set vuex state
+    this.changeFilter({
+      teamId: pageConfig.me.team.id,
+      projectId: pageConfig.me.project.id,
+      prdId: pageConfig.me.prd.id
+    })
+
     // team dropdown list
     fetch('/team/data').then(res => {
       if (res.code === 200) {
@@ -108,8 +114,9 @@ export default {
     })
   },
   methods: {
-    changePrdApi() {
-      this.$parent.$emit('reloadApiList')
+    changePrdApi(pid) {
+      this.changeFilter({ prdId: pid })
+      this.$parent.$emit('reloadApiList', pid)
     }
   }
 };

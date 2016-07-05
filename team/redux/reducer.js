@@ -6,7 +6,10 @@
  */
 
 'use strict';
-import {combineReducers} from 'redux'
+import {combineReducers} from 'redux';
+import {
+  routerStateReducer,
+} from 'redux-router';
 import {
     GET,
     ADD,
@@ -15,17 +18,7 @@ import {
     UPDATE_SHOW,
     DELETE,
     DELETE_SHOW,
-} from './action'
-
-//选择新闻后，将state.selectedReddit设为所选选项
-// function selectedReddit(state = 'reactjs', action) {
-//     switch (action.type) {
-//         case SELECT_REDDIT:
-//             return action.reddit
-//         default:
-//             return state
-//     }
-// }
+} from './action';
 
 function teams(state = [], action) {
     switch (action.type) {
@@ -74,26 +67,12 @@ function deleteShow(state = {deleteShow: false, team: {}}, action) {
             return state
     }
 }
-//废弃、接收到、开始接受新闻后，将state.postsByReddit设为相关参数
-// function postsByReddit(state = {}, action) {
-//     switch (action.type) {
-//         case INVALIDATE_REDDIT:
-//         case RECEIVE_POSTS:
-//         case REQUEST_POSTS:
-//             return Object.assign({}, state, {
-//                 [action.reddit]: posts(state[action.reddit], action)
-//             })
-//         default:
-//             return state
-//     }
-// }
-//将两个reducer合并成一个reducer,也就将全局的state加上postsByReddit,selectedReddit两个属性，每个属性都有自己的state
 const rootReducer = combineReducers({
+    router: routerStateReducer,
     teams,
     addShow,
     updateShow,
     deleteShow,
-    // selectedReddit
 })
 
 export default rootReducer

@@ -15,11 +15,6 @@ const menus = [{
     text: '团队',
     link: '/team',
     isVueLink: false
-}, {
-    key: 'api',
-    text: 'API',
-    link: '/api',
-    isVueLink: true
 }];
 
 export default menus;

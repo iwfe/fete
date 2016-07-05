@@ -131,7 +131,3 @@ export default connect(state=>{
         deleteShow: state.deleteShow,
     }
 }, mapDispatchToProps)(App);
-
-/**
- * 
- */

@@ -1,4 +1,12 @@
 /**
+* @Author: chenjiangsong
+* @Date:   2016-07-04 15:07:00
+* @Email:  chenjiangsong.sh@superjia.com
+* @Last modified by:   chenjiangsong
+* @Last modified time: 2016-07-04 16:07:63
+*/
+
+/**
  * Created by zyy on 15/6/26.
  * zhangyuyu@superjia.com
  */
@@ -228,7 +236,7 @@ var util = {
     if (Array.isArray(data)) {
       // data is array
       for (let i = data.length - 1; i >= 0; i--) {
-        mockTree2MockTemplate(data[i], result)
+        util.mockTree2MockTemplate(data[i], result)
       }
       return result
     } else if (typeof data === 'object' && data.key && data.dataType && data.mock) {
@@ -241,13 +249,13 @@ var util = {
           // object
           tmpChildren = {}
           for (var i = data.children.length - 1; i >= 0; i--) {
-            mockTree2MockTemplate(data.children[i], tmpChildren)
+            util.mockTree2MockTemplate(data.children[i], tmpChildren)
           }
         } else {
           // array
           tmpChildren = [{}]
           for (var i = data.children.length - 1; i >= 0; i--) {
-            mockTree2MockTemplate(data.children[i], tmpChildren[0])
+            util.mockTree2MockTemplate(data.children[i], tmpChildren[0])
           }
         }
         result[`${data.key}${mockArr[0]}`] = tmpChildren

@@ -16,8 +16,12 @@ import sutil from '../common/sutil';
 
 // 团队
 router.get('/', sutil.login, function*(next) {
-
     yield sutil.render(this, {});
+});
+
+//团队详情
+router.get('/:teamId', sutil.login, sutil.setRouterParams, function*(next) {
+  yield sutil.render(this, {});
 });
 
 router.get('/data', sutil.login, function*(next) {

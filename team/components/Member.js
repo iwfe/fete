@@ -1,11 +1,7 @@
-/*
- * @Author: jade
- * @Date:   2016-06-12 00:03:50
- * @Last Modified by:   jade
- * @Last Modified time: 2016-06-28 23:37:31
+/**
+ * Created by zyy on 16/7/4.
+ * zhangyuyu@superjia.com
  */
-
-'use strict';
 import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
 import Card from 'antd/lib/card';

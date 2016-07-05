@@ -1,5 +1,5 @@
 <template>
-    <div class="slide-menu">
+    <div class="sub-slide-menu">
         <slot></slot>
     </div>
 </template>
@@ -13,16 +13,16 @@
     },
     ready() {
       $('html').click(() => {
-        this.$emit('slide-menu-close');
-      });
-      $('.slide-menu').click((e) => {
-        e.stopPropagation();
-      });
+        this.$emit('sub-slide-menu-close')
+      })
+      $('.sub-slide-menu').click((e) => {
+        e.stopPropagation()
+      })
     },
     events: {
-      'slide-menu-open': function (cb) {
+      'sub-slide-menu-open': function (cb) {
         if (!this.open) {
-          $('.slide-menu').transition({
+          $('.sub-slide-menu').transition({
             animation: 'slide left',
             onComplete: () => {
               if (typeof cb === 'function') {
@@ -30,32 +30,32 @@
               }
             }
           })
-          this.open = true;
+          this.open = true
         }
       },
-      'slide-menu-close': function () {
+      'sub-slide-menu-close': function () {
         if (this.open) {
-          $('.slide-menu').transition('slide left');
-          this.open = false;
+          $('.sub-slide-menu').transition('slide left')
+          this.open = false
         }
       }
     }
   }
 </script>
 
-<style lang="sass"  scoped>
-    .slide-menu {
+<style lang="sass" scoped>
+    .sub-slide-menu {
         display: none;
         position: fixed;
-        right: 0;
+        right: 50%;
         top: 0;
-        width: 50%;
+        width: 25%;
         height: 100%;
         background-color: #fff;
         -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         -moz-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
         overflow:auto;
-        z-index: 100;
+        z-index: 99;
     }
 </style>

@@ -26,7 +26,7 @@
 </template>
 
 <script type="text/babel">
-  import { tog, add } from './vuex/action'
+  import { tog, add, emptyList } from './vuex/action'
   import MainFilter from './main_filter.vue'
 
   export default {
@@ -40,21 +40,23 @@
       },
       actions: {
         tog,
-        add
+        add,
+        emptyList
       }
     },
     ready() {
-      this.getList();
+      this.getList(this.$route.query.prdId);
     },
     events: {
-      reloadApiList() {
-        this.getList()
+      reloadApiList(prdId) {
+        this.getList(prdId)
       }
     },
     methods: {
-      getList() {
+      getList(prdId) {
+        this.emptyList()  // empty list first
         fetch('/api/apis', {
-          body: { prdId: this.$route.query.prdId }
+          body: { prdId: prdId }
         }).then(res => {
           res.data.forEach(v => {
             this.add(v);
@@ -65,7 +67,9 @@
         this.lockScreen(e);
       },
       showDetail(item, e) {
-        this.$parent.$broadcast('slide-menu-open');
+        this.$parent.$broadcast('slide-menu-open', () => {
+          this.$parent.$broadcast('init-codemirror-editor')
+        });
         this.$parent.$broadcast('getDetail');
         this.tog(item);
         e.stopPropagation();

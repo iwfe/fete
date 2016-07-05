@@ -8,6 +8,9 @@
   <slide-menu v-if="$route.name === 'list'">
     <api-setting></api-setting>
   </slide-menu>
+  <sub-slide-menu>
+    <output-preview></output-preview>
+  </sub-slide-menu>
 </template>
 
 <script type="text/babel">
@@ -17,7 +20,9 @@ import store from './vuex/store.js'
 // import Path from './main_path.vue'
 import TopNav from '../main_vue/top_nav.vue'
 import SlideMenu from './components/slide_menu.vue';
+import SubSlideMenu from './components/sub_slide_menu.vue';
 import ApiSetting from './api_setting.vue';
+import OutputPreview from './output_preview.vue';
 
 export default {
   store,
@@ -28,7 +33,9 @@ export default {
     // MainFilter,
     TopNav,
     SlideMenu,
-    ApiSetting
+    SubSlideMenu,
+    ApiSetting,
+    OutputPreview
   },
   ready() {
 

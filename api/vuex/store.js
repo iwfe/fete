@@ -3,7 +3,7 @@
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 18:21:46
+* @Last modified time: 2016-07-05 15:44:9
 */
 import Vuex from 'vuex'
 Vue.use(Vuex)
@@ -12,10 +12,9 @@ const state = {
   list: [],
   list_active: {},
   userId: '123',
-  userName: 'geyuanjun',
-  prdId: '111',
-  teamId: '2222',
-  projectId: '333'
+  prdId: '',
+  teamId: '',
+  projectId: ''
 }
 
 const mutations = {
@@ -38,11 +37,7 @@ const mutations = {
     }
   },
   TOG(State, list) { // 选中
-    if (State.list_active === list) {
-      State.list_active = {};
-    } else {
-      State.list_active = list;
-    }
+    State.list_active = list;
   },
 
   // change prdId, projectId, teamId
@@ -52,10 +47,34 @@ const mutations = {
   EMPTY_LIST(State) {
     State.list = []
     State.list_active = {}
+  },
+  DEL_BY_INDEX(State, index) {
+    State.list.splice(index, 1)
   }
 }
-
+const outputModel = [
+  {
+    key: '', // 属性名
+    dataType: '', // 属性类型
+    comment: '', // 说明
+    mock: '', // mock规则
+    children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
+      {
+        key: '',
+        dataType: '',
+        comment: '',
+        mock: ''
+      }
+    ]
+  }
+]
+// const editOutputModel = {
+//   SET() {
+//
+//   }
+// }
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  outputModel
 })

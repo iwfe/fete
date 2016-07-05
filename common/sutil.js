@@ -1,4 +1,14 @@
 /**
+* @Author: lancui
+* @Date:   2016-07-04 11:07:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-05 16:07:04
+*/
+
+
+
+/**
  * Created by zyy on 15/6/26.
  * zhangyuyu@superjia.com
  */
@@ -18,10 +28,14 @@ import {
 
 import util from './util';
 
+// 监听message
+import serverSocket from '../socket/server';
+
 var userDao = wrap(db.get('user'));
 var teamDao = wrap(db.get('team'));
 var projectDao = wrap(db.get('project'));
 var prdDao = wrap(db.get('prd'));
+var msgDao = wrap(db.get('message'));
 var loginUserStore = new Map();
 
 var sutil = {
@@ -381,6 +395,46 @@ var sutil = {
     this.set('Access-Control-Allow-Headers', 'X-Requested-With')
     yield next
   },
+  // 初始化 socket.io
+  initSocketServer (app) {
+    serverSocket.init(app)
+  },
+  /**
+   * 添加消息并发送提醒
+   * @param msgData 消息对象，toUsers为空
+   * @param toUsers 可选
+   */
+  * addMessage (msgData, teamId, toUsers) {
+    //获取team里的所有user
+    if(!!teamId) {
+      let users = yield userDao.find({teams: teamId});
+      toUsers = [];
+      for(let i in users) {
+        toUsers.push(users[i].username);
+      }
+    }
+    console.log(`===toUsers==${toUsers}`);
+    // 保存消息对象
+    let addToUsers = [];
+    for(let i in toUsers) {
+      addToUsers.push({userId:toUsers[i], status: 0});
+    }
+    let res = yield msgDao.insert(
+      _.extend(msgData, {
+        id: yield sutil.genId(msgDao, 10),
+        toUsers: addToUsers
+    }));
+
+    // 发送消息
+    if(toUsers.length > 0) {
+      serverSocket.sendMsg(toUsers);
+    }
+    return res;
+  },
+  // 更新客户端的提醒个数
+  updateClientMsg (toUsers) {
+    serverSocket.sendMsg(toUsers, false);
+  }
 
   // sendMail: function(name, title){
   //     var transporter = nodemailer.createTransport();

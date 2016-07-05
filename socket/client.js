@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-01 19:07:30
+* @Last modified time: 2016-07-05 16:07:70
 */
 const socket = require('socket.io-client')('http://localhost:3000');
 
@@ -11,8 +11,10 @@ socket.on('getUserId', (data) => {
   socket.emit('addToUserSocketMap', pageConfig.me.username);
 });
 socket.on('updateMsgs', (data) => {
-  console.log(`==datas=${data}`);
-  $('.msg-count').html(data);
+  $('.msg-count').html(data.count);
+  if (data.isToastr) {
+    toastr.success('您有新的消息！');
+  }
 });
 
 

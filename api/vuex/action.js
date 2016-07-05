@@ -19,3 +19,7 @@ export const changeFilter = ({ dispatch }, params) => {
 export const emptyList = ({ dispatch }) => {
   dispatch('EMPTY_LIST')
 }
+
+export const delByIndex = ({ dispatch }, index) => {
+  dispatch('DEL_BY_INDEX')
+}

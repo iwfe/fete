@@ -1,70 +1,64 @@
 <template>
 <div id="api-detail" >
-  <h3 class="ui header"><i class="icon settings"></i><div class="content">新建API</div></h3>
+  <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
-      <div class="ui two column middle very relaxed stackable grid">
-          <div class="column">
-              <div class="ui form">
-                  <div class="field">
-                      <label>标题<i class="red">*</i></label>
-                      <input type="text" placeholder="一句话描述" v-model="apiData.title">
-                  </div>
-                  <div class="field">
-                      <label>method<i class="red">*</i></label>
-                      <select class="ui fluid dropdown" v-model="apiData.method">
-                          <option value="GET">get</option>
-                          <option value="POST">post</option>
-                          <option value="PUT">put</option>
-                          <option value="DELETE">delete</option>
-                      </select>
-                  </div>
-                  <div class="field">
-                      <label>输入数据格式<i class="red">*</i></label>
-                      <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+      <div class="ui grid form">
+        <div class="six wide column field small">
+            <label><i class="red">*</i>标题</label>
+            <input type="text" placeholder="一句话描述" v-model="apiData.title">
+        </div>
+        <div class="seven wide column field">
+            <label><i class="red">*</i>URL（首字符请输入/）</label>
+            <input type="text" placeholder="接口URL地址" v-model="apiData.url">
+        </div>
+        <div class="three wide column field">
+            <label><i class="red">*</i>method</label>
+            <select class="ui dropdown" v-model="apiData.method">
+                <option value="GET">get</option>
+                <option value="POST">post</option>
+                <option value="PUT">put</option>
+                <option value="DELETE">delete</option>
+            </select>
+        </div>
+      </div>
 
-                  </div>
-              </div>
+      <div class="ui form">
+          <div class="field">
+              <label><i class="red">*</i>输入数据格式</label>
+              <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
           </div>
-          <div class="column">
-              <div class="ui form">
-                  <div class="field">
-                      <label>接口地址（首字符请输入/）<i class="red">*</i></label>
-                      <input type="text" placeholder="接口URL地址" v-model="apiData.url">
-                  </div>
 
-                  <div class="field">
-                      <label>修改说明<i class="red">*</i></label>
-                      <input type="text" placeholder="接口修改说明" v-model="updateDesc">
-                  </div>
-                  <div class="field">
-                      <label>接口修改日志</label>
-                      <div class="api-log">
-                          <div class="ui list very relaxed">
-                              <div class="item" v-for="list in updateDescList">
-                                  <i class="file icon"></i>
-                                  <div class="content">
-                                      <div class="header">{{list.userName}}</div>
-                                      <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
-                                  </div>
-                              </div>
+      <!-- </div> -->
+
+      <!-- <div class="ui form backData"> -->
+          <div class="field">
+              <label><i class="red">*</i>返回数据格式</label>
+              <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
+              <editor-frame :output-model.sync="apiData.output" :show-mock='true'></editor-frame>
+          </div>
+          <div class="field">
+              <label><i class="red">*</i>修改说明</label>
+              <input type="text" class="input-revise" placeholder="接口修改说明" v-model="updateDesc">
+          </div>
+          <div class="field">
+              <label>接口修改日志</label>
+              <div class="api-log">
+                  <div class="ui list very relaxed">
+                      <div class="item" v-for="list in updateDescList">
+                          <i class="file icon"></i>
+                          <div class="content">
+                              <div class="header">{{list.userName}}</div>
+                              <div class="description">{{list.updateTime}} {{list.updateDesc}}</div>
                           </div>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      <div class="ui form backData">
-          <div class="field">
-              <label>返回数据格式<i class="red">*</i></label>
-              <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
-              <editor-frame :output-model.sync="apiData.output" :show-mock=true></editor-frame>
-          </div>
-      </div>
-  </div>
 
     <div class="detail-bottom">
         <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
+        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
         <button class="mini ui button" @click="closeSlide">取消</button>
     </div>
 
@@ -75,14 +69,13 @@
 
 <script text="text/babel">
 
-import { tog, add, del } from './vuex/action'
+import { add, del } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 export default {
   vuex: {
     getters: {
       list: state => state.list,
       list_active: state => state.list_active,
-      userName: state => state.userName,
       userId: state => state.userId,
       prdId: state => state.prdId,
       productId: state => state.productId,
@@ -98,10 +91,12 @@ export default {
   },
   data() {
     return {
+      apiName: '',
       updateDesc: '',
       updateDescList: [],
       sendLoad: false,
       delLoad: false,
+      userName: pageConfig.me.username,
       apiData: {
         title: '',
         method: 'GET',
@@ -113,27 +108,57 @@ export default {
   },
   events: {
     getDetail() {
+      $('#api-detail .container.body').scrollTop(0);
       // 防止list_active没有来的及更新
-      setTimeout(() => {
-        console.log(this.list_active.id);
-        if (this.list_active.id && this.list_active.id !== 1) {
+      window.setTimeout(() => {
+        if (this.list_active.id) {
           this.getdata()
+        } else {
+          // this.resetData()
         }
       }, 300)
     }
   },
   methods: {
+    validate() {
+      if (!this.apiData.title) {
+        // 未输入标题
+        toastr.error('请输入API标题！')
+        this.sendLoad = false
+        return true
+      } else if (!this.apiData.url) {
+        // 未输入url地址
+        toastr.error('请输入URL地址！')
+        this.sendLoad = false
+        return true
+      } else if (!this.updateDesc) {
+        toastr.error('请输入接口修改说明！')
+        this.sendLoad = false
+        return true
+      } else if (this.apiData.url[0] !== '/') {
+        toastr.error('URL必须以"/"开头')
+        this.sendLoad = false
+        return true
+      }
+      return false
+    },
     /**
      * 发送数据
      * @desc 修改以及新建API都是用同一种方法
      * @return {[type]} [description]
      */
     sendData() {
-      this.sendLoad = true;
+      console.log(this.userName)
+      this.sendLoad = true
+      // 判断是否输入格式正确
+      const validator = this.validate()
+      if (validator) {
+        return
+      }
       // 判断是新增还是修改接口
-      let status = 1;
+      let status = 1
       if (this.list_active.id) {
-        status = 2;
+        status = 2
       }
       // 定义最基本的数据结构
       const apiData = this.apiData;
@@ -155,10 +180,10 @@ export default {
         }).then((res) => {
           if (res.code === 200) {
             if (this.list_active) {
-              _.extend(this.list_active, res.data);
+              _.extend(this.list_active, res.data)
             }
-            toastr.success('新增API成功！');
-            window.setTimeout(this.closeSlide, 300);
+            toastr.success('新增API成功！')
+            window.setTimeout(this.closeSlide, 300)
           } else {
             toastr.error('新增API失败，请重试！');
           }
@@ -170,18 +195,17 @@ export default {
       } else {
         // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
         apiData.updateTime = new Date();
-        apiData.updateDescList.push({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
+        apiData.updateDescList.unshift({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
         fetch(`/api/apis/${this.list_active.id}`, {
           body: { apiData },
           method: 'PUT'
         }).then(res => {
           if (res.code === 200) {
-            toastr.success('修改API成功！');
-            this.resetData();
+            toastr.success('修改API成功！')
             // 弹出层提示出现之后再关闭组件
-            window.setTimeout(this.closeSlide, 300);
+            window.setTimeout(this.closeSlide, 300)
           } else {
-            toastr.error('API修改失败，请重试！');
+            toastr.error('API修改失败，请重试！')
           }
           this.sendLoad = false;
         })
@@ -189,7 +213,8 @@ export default {
     },
     closeSlide() {
       // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
-      this.$dispatch('slide-menu-close');
+      this.$dispatch('slide-menu-close')
+      this.resetData()
     },
     resetData() {
       _.extend(this, {
@@ -208,10 +233,11 @@ export default {
       fetch(`/api/apis/${this.list_active.id}`, {
         method: 'GET'
       }).then(res => {
-        _.extend(this.apiData, res.data);
-        this.updateDescList = res.data.updateDescList;
+        _.extend(this.apiData, res.data)
+        this.apiName = res.data.title
+        this.updateDescList = res.data.updateDescList
         this.updateDescList.forEach(v => {
-          v.updateTime = v.updateTime.substr(0, 10);
+          v.updateTime = v.updateTime.substr(0, 10)
         })
       })
     },
@@ -237,10 +263,11 @@ export default {
 #api-detail {
     position: relative;
     height: 100%;
-    padding: 0 0 0 20px;
+    padding: 0 0 0 5px;
+    overflow-x: hidden;
     .ui.header {
       height: 50px;
-      margin: 0 -20px;
+      margin: 0;
       padding: 8px;
       box-shadow: 1px 3px #eee;
     }
@@ -258,7 +285,7 @@ export default {
     }
     .api-log {
         width: 100%;
-        height: 190px;
+        height: auto;
         overflow: auto;
     }
     .detail-bottom {
@@ -274,6 +301,23 @@ export default {
     .ui[class*="very relaxed"].list:not(.horizontal)>.item{
       padding: 0;
     }
+    .ui.form input[type=text]{
+      padding: .4rem .6rem;
+    }
+    .ui.grid>.column:not(.row), .ui.grid>.row>.column{
+      padding-right: 0.1rem;
+    }
+    .ui.form select{
+      height: 32px;
+    }
+    .ui.header,.ui.form input[type=text],.ui.form select,.ui.form .field>label,.ui.form textarea:not([rows]),.ui.list .list>.item .header, .ui.list>.item .header,.ui.list .list>.item .description, .ui.list>.item .description{
+      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #666;
+      font-weight: 400;
+    }
+
 }
 
 </style>

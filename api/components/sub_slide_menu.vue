@@ -20,9 +20,16 @@
       })
     },
     events: {
-      'sub-slide-menu-open': function () {
+      'sub-slide-menu-open': function (cb) {
         if (!this.open) {
-          $('.sub-slide-menu').transition('slide left')
+          $('.sub-slide-menu').transition({
+            animation: 'slide left',
+            onComplete: () => {
+              if (typeof cb === 'function') {
+                cb()
+              }
+            }
+          })
           this.open = true
         }
       },

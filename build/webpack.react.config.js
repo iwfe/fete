@@ -1,8 +1,8 @@
 /*
  * @Author: wjs
  * @Date:   2016-07-04 11:23:43
- * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-04 11:39:06
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-05 11:07:50
  */
 
 var path = require('path'),
@@ -29,7 +29,10 @@ module.exports = {
       'react-router',
       'antd/dist/antd.css',
       './layout/layout.js',
-      './layout/layout.scss'
+      './layout/layout.scss',
+      './socket/client.js',
+      'toastr/toastr.less',
+      'toastr',
     ]
   },
 
@@ -47,7 +50,10 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       fetch: path.resolve('./common/fetch'),
-      _: 'underscore'
+      _: 'underscore',
+      $: 'jquery',
+      jQuery: 'jquery',
+      toastr: 'toastr'
         // React: 'react',
         // ReactDom: 'react-dom'
     }),

@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-01 19:07:25
+* @Last modified time: 2016-07-05 14:07:50
 */
 
 const wrap = require('co-monk');
@@ -17,7 +17,7 @@ const router = new Router({
 
 // CURD for message
 const msgDao = wrap(db.get('message'));
-const userMsgDao = wrap(db.get('userMessage'));
+const userDao = wrap(db.get('user'));
 router.get('/', sutil.login, function*(next) {
     yield sutil.render(this, {
         commonTag: 'vue',
@@ -33,15 +33,16 @@ router.get('/messages', sutil.login, function* (next) {
     if (!uid) {
         sutil.failed(this, 1003);
     }
-    let msgs = yield msgDao.find({toUsers: uid}, {sort: {createTime:-1, status:1}});
-    let userMsgs = yield userMsgDao.find({userId: uid});
-    let umMap = {};
-    for(let i in userMsgs) {
-      let um = userMsgs[i];
-      umMap[um.msgId] = um.status;
-    }
+    let msgs = yield msgDao.find({'toUsers.userId': uid}, {sort: {createTime:-1, status:1}});
     for(let j in msgs) {
-      msgs[j].status = umMap[msgs[j].id];
+      let status = 0, toUsers = msgs[j].toUsers;
+      for(let i in toUsers){
+        let tu = toUsers[i];
+        if(tu.userId === uid){
+          msgs[j].status = tu.status;
+          break;
+        }
+      }
     }
     sutil.success(this, msgs);
 });
@@ -53,9 +54,12 @@ router.put('/messages', sutil.login, function* (next) {
         sutil.failed(this, 1003);
     }
     let msgId = _parse.msgId;
-    let query = !msgId ? {userId: uid} : {userId: uid, msgId: msgId};
+    let query = !msgId ? {'toUsers.userId': uid} : {'toUsers.userId': uid, id: msgId};
     let multi = !msgId ? true : false; //批量修改
-    let updateRes = yield userMsgDao.update(query, { $set: {status: 1}}, {multi: multi});
+    let updateRes = yield msgDao.update(query, { $set: {'toUsers.$.status': 1}}, {multi: multi});
+    //更新消息
+    sutil.updateClientMsg([uid]);
+
     sutil.success(this, updateRes);
 });
 
@@ -66,14 +70,12 @@ router.post('/messages', sutil.login, function* (next) {
         sutil.failed(this, 1003);
     }
     _parse.msgData.id = yield sutil.genId(msgDao, 10);
-    let insertResult = yield msgDao.insert(_parse.msgData);
-    // 添加用户信息表
-    let toUsers = _parse.msgData.toUsers;
-    if(toUsers.length > 0) {
-      for(let i in toUsers) {
-        yield userMsgDao.insert({msgId: insertResult.id, userId: toUsers[i], status: 0 });
-      }
+    // 添加消息，并提醒客户端
+    let userArr = [], users = yield userDao.find({teams: '05zQT8'});
+    for(let i in users) {
+      userArr.push(users[i].username);
     }
+    let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
 
     if (insertResult) {
         sutil.success(this, insertResult);

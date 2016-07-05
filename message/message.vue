@@ -17,8 +17,8 @@
                 <tr v-for="(index, item) in msgList" :class="item.status == 1 ? 'positive' : ''">
                     <td>{{item.createTime}}</td>
                     <td>{{item.userName}}</td>
-                    <td>{{item.operation}}</td>
-                    <td>{{item.desc}}</td>
+                    <td>{{item.action}}</td>
+                    <td>{{item.actionDetail}}</td>
                     <td><span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span></td>
                 </tr>
             </tbody>
@@ -78,13 +78,12 @@
         }
       },
       addMsg() {
-        const msg = { userId: 'wjs', userName: 'jade', operation: 'add', desc: '新增消息接口', createTime: '2016-07-01', apiId: '576b401056e121e6c9ef082b', toUsers: ['jade', 'jade1'] };
+        const msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
         fetch('/message/messages', {
           method: 'POST',
           body: JSON.stringify({ msgData: msg })
         }).then(res => {
-          res.data.status = 0;
-          this.msgList.push(res.data);
+          this.getMsgList();
         });
       }
 

@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 13:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-01 20:07:77
+* @Last modified time: 2016-07-04 17:07:24
 */
 console.log("=====app.js")
 
@@ -57,9 +57,7 @@ app.keys = ['fete'];
 //
 
 // 监听message
-const serverSocket = require('./socket/server');
-serverSocket.init(app);
-
+sutil.initSocketServer(app);
 
 app.use(function*(next) {
   this.locals = {}
@@ -92,15 +90,15 @@ app.use(function*(next) {
     if (status === 404) this.throw(404);
 
 
-    // 新增消息提醒
-    if(this.path === '/message/messages' && this.method === 'POST'){
-      let remindUsers = this.query.msgData.toUsers;
-      serverSocket.sendMsg(remindUsers);
-    }
-    //修改消息状态提醒
-    if(this.path === '/message/messages' && this.method === 'PUT'){
-      serverSocket.sendMsg([user.username]);
-    }
+    // // 新增消息提醒
+    // if(this.path === '/message/messages' && this.method === 'POST'){
+    //   let remindUsers = this.query.msgData.toUsers;
+    //   serverSocket.sendMsg(remindUsers);
+    // }
+    // //修改消息状态提醒
+    // if(this.path === '/message/messages' && this.method === 'PUT'){
+    //   serverSocket.sendMsg([user.username]);
+    // }
 
   } catch (error) {
     this.status = error.status || 500;

@@ -1,8 +1,8 @@
 /*
  * @Author: wjs
  * @Date:   2016-06-30 18:48:33
- * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-04 11:24:51
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-05 11:07:25
  */
 
 var path = require('path'),
@@ -23,6 +23,7 @@ module.exports = {
       'jquery',
       'toastr/toastr.less',
       'toastr',
+      './socket/client.js',
       'semantic-ui/dist/components/reset.css',
       'semantic-ui/dist/components/transition.css',
       'semantic-ui/dist/components/transition.js',

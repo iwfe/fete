@@ -6,8 +6,8 @@
 </template>
 
 <script type="text/babel">
-  require('../socket/client.js')
-  
+  // require('../socket/client.js')
+
   import TopNav from './top_nav.vue';
   export default {
     components: {

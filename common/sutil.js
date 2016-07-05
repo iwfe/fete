@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 11:07:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 14:07:25
+* @Last modified time: 2016-07-05 16:07:04
 */
 
 
@@ -371,16 +371,28 @@ var sutil = {
    * @param msgData 消息对象，toUsers为空
    * @param toUsers 可选
    */
-  * addMessage (msgData, toUsers) {
-    if(!toUsers) {
-      //获取team里的所有user
+  * addMessage (msgData, teamId, toUsers) {
+    //获取team里的所有user
+    if(!!teamId) {
+      let users = yield userDao.find({teams: teamId});
+      toUsers = [];
+      for(let i in users) {
+        toUsers.push(users[i].username);
+      }
     }
+    console.log(`===toUsers==${toUsers}`);
+    // 保存消息对象
     let addToUsers = [];
     for(let i in toUsers) {
       addToUsers.push({userId:toUsers[i], status: 0});
     }
-    msgData.toUsers = addToUsers;
-    let res = yield msgDao.insert(msgData);
+    let res = yield msgDao.insert(
+      _.extend(msgData, {
+        id: yield sutil.genId(msgDao, 10),
+        toUsers: addToUsers
+    }));
+
+    // 发送消息
     if(toUsers.length > 0) {
       serverSocket.sendMsg(toUsers);
     }

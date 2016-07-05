@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 14:50:33
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 14:50:33
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-05 15:07:73
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-05 15:07:73
  */
 
 
@@ -77,9 +77,9 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.apiData) {
       sutil.failed(this, 1003)
     }
-
+    let apiData = this.parse.apiData;
     let insertResult = yield apiDao.insert(
-      _.extend(this.parse.apiData, {
+      _.extend(apiData, {
         id: yield sutil.genId(apiDao, 8),
         createTime: new Date(),
         updateTime: new Date(),
@@ -90,11 +90,8 @@ router.get('/apis', sutil.login, function*(next) {
     if (insertResult) {
       sutil.success(this, insertResult);
       // 添加消息，并提醒客户端
-      let userArr = [], users = yield userDao.find({teams: this.parse.apiData.teamId});
-      for(let i in users) {
-        userArr.push(users[i].username);
-      }
-      let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
+      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: insertResult.id, action: 'add', actionDetail: apiData.updateDescList[0].updateDesc, createTime: new Date };
+      yield sutil.addMessage(msg, apiData.teamId);
     } else {
       sutil.failed(this, 150001);
     }
@@ -123,13 +120,9 @@ router.get('/apis', sutil.login, function*(next) {
     });
     if (updateResult) {
       sutil.success(this, updateResult);
-      // 添加消息并发送提醒
-      let userArr = [], users = yield userDao.find({teams: apiData.teamId});
-      for(let i in users) {
-        userArr.push(users[i].username);
-      }
-      // const msg = { userName: apiData.username, msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
-      // let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
+      // 添加消息，并提醒客户端
+      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: updateResult.id, action: 'update', actionDetail: apiData.updateDescList[0].updateDesc, createTime: new Date };
+      yield sutil.addMessage(msg, apiData.teamId);
     } else {
       sutil.failed(this, 150001);
     }

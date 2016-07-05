@@ -2,8 +2,8 @@
 * @Author: geyuanjun
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-06-30 18:21:46
+* @Last modified by:   chenjiangsong
+* @Last modified time: 2016-07-05 11:07:56
 */
 import Vuex from 'vuex'
 Vue.use(Vuex)
@@ -54,8 +54,29 @@ const mutations = {
     State.list_active = {}
   }
 }
-
+const outputModel = [
+  {
+    key: '', // 属性名
+    dataType: '', // 属性类型
+    comment: '', // 说明
+    mock: '', // mock规则
+    children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
+      {
+        key: '',
+        dataType: '',
+        comment: '',
+        mock: ''
+      }
+    ]
+  }
+]
+// const editOutputModel = {
+//   SET() {
+//
+//   }
+// }
 export default new Vuex.Store({
   state,
-  mutations
+  mutations,
+  outputModel
 })

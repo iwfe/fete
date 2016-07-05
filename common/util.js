@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 15:07:00
 * @Email:  chenjiangsong.sh@superjia.com
 * @Last modified by:   chenjiangsong
-* @Last modified time: 2016-07-04 16:07:63
+* @Last modified time: 2016-07-05 21:07:54
 */
 
 /**
@@ -277,6 +277,10 @@ var util = {
     } else {
       console.log('mock tree data format error !')
     }
+  },
+
+  getDataType: function (obj) {
+    return Object.prototype.toString.call(obj).substring(8).replace(/\]/g,'');
   }
 }
 export default util;

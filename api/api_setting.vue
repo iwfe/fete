@@ -1,6 +1,6 @@
 <template>
 <div id="api-detail" >
-  <h3 class="ui header"><i class="icon settings"></i><div class="content">新建API</div></h3>
+  <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
         <div class="six wide column field small">
@@ -91,11 +91,12 @@ export default {
   },
   data() {
     return {
+      apiName: '',
       updateDesc: '',
       updateDescList: [],
       sendLoad: false,
       delLoad: false,
-      userName: pageConfig.me.userName,
+      userName: pageConfig.me.username,
       apiData: {
         title: '',
         method: 'GET',
@@ -109,7 +110,6 @@ export default {
     getDetail() {
       // 防止list_active没有来的及更新
       window.setTimeout(() => {
-        console.log(this.list_active.id);
         if (this.list_active.id) {
           this.getdata()
         } else {
@@ -140,6 +140,12 @@ export default {
         return
       } else if (!this.updateDesc) {
         toastr.error('请输入接口修改说明！')
+        this.sendLoad = false
+        return
+      } else if (this.apiData.url[0] !== '/') {
+        toastr.error('URL必须以"/"开头')
+        this.sendLoad = false
+        return
       }
 
       // 判断是新增还是修改接口
@@ -220,10 +226,11 @@ export default {
       fetch(`/api/apis/${this.list_active.id}`, {
         method: 'GET'
       }).then(res => {
-        _.extend(this.apiData, res.data);
-        this.updateDescList = res.data.updateDescList;
+        _.extend(this.apiData, res.data)
+        this.apiName = res.data.title
+        this.updateDescList = res.data.updateDescList
         this.updateDescList.forEach(v => {
-          v.updateTime = v.updateTime.substr(0, 10);
+          v.updateTime = v.updateTime.substr(0, 10)
         })
       })
     },
@@ -252,6 +259,11 @@ export default {
     padding: 0 0 0 5px;
     overflow-x: hidden;
     .ui.header {
+      font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #666;
+      font-weight: 400;
       height: 50px;
       margin: 0;
       padding: 8px;

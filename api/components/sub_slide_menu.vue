@@ -20,7 +20,7 @@
       })
     },
     events: {
-      'sub-slide-menu-open': function () {
+      'sub-slide-menu-open': function (cb) {
         if (!this.open) {
           $('.sub-slide-menu').transition({
             animation: 'slide left',

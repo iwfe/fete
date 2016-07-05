@@ -3,7 +3,7 @@
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-01 11:07:72
+* @Last modified time: 2016-07-05 15:07:59
 */
 
 
@@ -12,6 +12,7 @@
 
 const api = {
 	_id: '',
+	id: '',
 	userId:'', // 操作用户ID
 	userName:'', // 操作用户名
     title:'', // 标题

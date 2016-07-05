@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 14:07:50
+* @Last modified time: 2016-07-05 15:07:91
 */
 
 const wrap = require('co-monk');
@@ -69,13 +69,8 @@ router.post('/messages', sutil.login, function* (next) {
     if (!_parse.userId) {
         sutil.failed(this, 1003);
     }
-    _parse.msgData.id = yield sutil.genId(msgDao, 10);
     // 添加消息，并提醒客户端
-    let userArr = [], users = yield userDao.find({teams: '05zQT8'});
-    for(let i in users) {
-      userArr.push(users[i].username);
-    }
-    let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
+    let insertResult = yield sutil.addMessage(_parse.msgData, '05zQT8');
 
     if (insertResult) {
         sutil.success(this, insertResult);

@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 13:07:55
+* @Last modified time: 2016-07-05 16:07:36
 */
 
 /** 监听message **/
@@ -21,13 +21,13 @@ let serverSocket = {
     const server = require('http').createServer(app.callback());
     const io = require('socket.io')(server);
 
-    let _usersSocketMap = this.usersSocketMap = {};
+    self.usersSocketMap = {};
 
     io.on('connection', function(socket){
       console.log(`===socket connection====${socket.id}`);
       // 用户名添加到Map
       socket.on('addToUserSocketMap', function(username){
-        _usersSocketMap[username] = socket;
+        self.usersSocketMap[username] = socket;
         socket.username = username;
         self.sendMsg([username], false);
       });
@@ -60,6 +60,7 @@ let serverSocket = {
       let uid = remindUsers[i],
           socket = this.usersSocketMap[uid];
       // 获得数据
+      if(!socket) continue;
       msgDao.count({toUsers: {'$elemMatch': {'userId': uid, 'status': 0}}}, (err, res) => {
         if(!!err) {
           console.log('ERROR: getMsgs has error!'); return;

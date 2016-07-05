@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 14:50:33
+* @Last modified time: 2016-07-05 15:33:3
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 14:50:33
+* @Last modified time: 2016-07-05 15:33:3
  */
 
 
@@ -90,11 +90,11 @@ router.get('/apis', sutil.login, function*(next) {
     if (insertResult) {
       sutil.success(this, insertResult);
       // 添加消息，并提醒客户端
-      let userArr = [], users = yield userDao.find({teams: this.parse.apiData.teamId});
-      for(let i in users) {
-        userArr.push(users[i].username);
-      }
-      let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
+      // let userArr = [], users = yield userDao.find({teams: this.parse.apiData.teamId});
+      // for(let i in users) {
+      //   userArr.push(users[i].username);
+      // }
+      // let insertResult = yield sutil.addMessage(_parse.msgData, userArr);
     } else {
       sutil.failed(this, 150001);
     }

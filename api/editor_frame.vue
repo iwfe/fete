@@ -1,15 +1,15 @@
 <template>
     <div class="editor-wrap">
-      <div class="input-frame">
+      <div class="input-frame" >
         <form>
-          <textarea v-el:input v-model="inputData"></textarea>
+          <textarea v-codemirror="inputData"></textarea>
         </form>
       </div>
       <div class="save-button" @click="revertMock">
         保存
       </div>
-      <div class="mock-frame" v-if="showMock">
-        <textarea v-el:mock></textarea>
+      <div class="mock-frame">
+        <textarea v-codemirror:readonly="mockData"></textarea>
       </div>
       <div class="" v-if="inputModel">
         <div class="table-tr table-head">
@@ -36,7 +36,9 @@ require('codemirror/mode/css/css.js');
 require('jsonlint/lib/jsonlint.js');
 require('codemirror/addon/lint/lint.js');
 require('codemirror/addon/lint/json-lint.js');
+// require('./directive.js');
 const mock = require('mockjs');
+
 export default {
   components: {
     tableItem
@@ -64,7 +66,9 @@ export default {
           b1: '2',
           b2: '3'
         }
-      }
+      },
+      testData: '',
+      mockData: 'lalla'
     }
   },
   watch: {
@@ -91,17 +95,17 @@ export default {
   ready() {
     const inputFrame = this.$els.input;
     const self = this;
-    const mockFrame = this.$els.mock;
+    // const mockFrame = this.$els.mock;
 
-    setTimeout(() => {
-      self.inputEditor = self.initEditor(inputFrame);
-      self.inputEditor.on('change', (cm, obj) => {
-        self.inputData = $.trim(self.getInputData());
-      });
-    }, 100)
+    // setTimeout(() => {
+    //   self.inputEditor = self.initEditor(inputFrame);
+    //   self.inputEditor.on('change', (cm, obj) => {
+    //     self.inputData = $.trim(self.getInputData());
+    //   });
+    // }, 100)
     // self.inputEditor.setSize('auto', 'auto');
 
-    self.mockEditor = self.initEditor(mockFrame, true);
+    // self.mockEditor = self.initEditor(mockFrame, true);
     // setTimeout(() => {
     //   mockFrame.value = JSON.stringify(js, null, 2);
     //   self.mockEditor = self.initEditor(mockFrame, true);

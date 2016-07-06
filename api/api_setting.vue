@@ -25,7 +25,7 @@
       <div class="ui form">
           <div class="field">
               <label><i class="red">*</i>输入数据格式</label>
-              <textarea style="resize:none;" class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+              <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea>
           </div>
 
       <!-- </div> -->
@@ -74,6 +74,7 @@
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, productId, teamId, listIndex } from './vuex/getters.js'
+require('./directive.js');
 export default {
   vuex: {
     getters: {
@@ -105,7 +106,8 @@ export default {
         input: '',
         url: '',
         output: ['']
-      }
+      },
+      codemirrorReady: false
     }
   },
   watch: {
@@ -124,6 +126,11 @@ export default {
     first() {
       const index = this.getIndex();
       return index
+    }
+  },
+  events: {
+    'init-code-mirror'() {
+      // this.codemirrorReady = true;
     }
   },
   methods: {

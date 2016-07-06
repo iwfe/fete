@@ -25,7 +25,7 @@
       <div class="ui form">
           <div class="field">
               <label><i class="red">*</i>输入数据格式</label>
-              <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+              <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea>
           </div>
 
       <!-- </div> -->
@@ -57,9 +57,11 @@
       </div>
 
     <div class="detail-bottom">
-        <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-        <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
-        <button class="mini ui button" @click="closeSlide">取消</button>
+      <button class="positive mini ui button" @click="pageList">上一条</button>
+      <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
+      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
+      <button class="mini ui button" @click="closeSlide">取消</button>
+      <button class="positive mini ui button" @click="pageList('')">下一条</button>
     </div>
 
 </div>
@@ -69,21 +71,22 @@
 
 <script text="text/babel">
 
-import { add, del } from './vuex/action'
+import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
+import { list, listActive, userId, prdId, productId, teamId, listIndex } from './vuex/getters.js'
+require('./directive.js');
 export default {
   vuex: {
     getters: {
-      list: state => state.list,
-      list_active: state => state.list_active,
-      userId: state => state.userId,
-      prdId: state => state.prdId,
-      productId: state => state.productId,
-      teamId: state => state.teamId
+      list,
+      list_active: listActive,
+      userId, prdId,
+      productId,
+      teamId,
+      listIndex
     },
     actions: {
-      add,
-      del
+      add, del, tog
     }
   },
   components: {
@@ -103,20 +106,31 @@ export default {
         input: '',
         url: '',
         output: ['']
+      },
+      codemirrorReady: false
+    }
+  },
+  watch: {
+    list_active(v) {
+      if (v.id) {
+        this.getdata();
       }
     }
   },
+  computed: {
+    last() {
+      const index = this.getIndex();
+      const last = this.list.length - 1;
+      return index !== last;
+    },
+    first() {
+      const index = this.getIndex();
+      return index
+    }
+  },
   events: {
-    getDetail() {
-      $('#api-detail .container.body').scrollTop(0);
-      // 防止list_active没有来的及更新
-      window.setTimeout(() => {
-        if (this.list_active.id) {
-          this.getdata()
-        } else {
-          // this.resetData()
-        }
-      }, 300)
+    'init-code-mirror'() {
+      // this.codemirrorReady = true;
     }
   },
   methods: {
@@ -255,6 +269,16 @@ export default {
         this.delLoad = false;
       });
       window.setTimeout(this.closeSlide, 300);
+    },
+    pageList(leo) {
+      let i = this.listIndex
+      let obj = {}
+      if (leo) {
+        obj = i > 0 ? this.list[--i] : this.list[this.list.length - 1]
+      } else {
+        obj = i < this.list.length - 1 ? this.list[++i] : this.list[0]
+      }
+      this.tog(obj)
     }
   }
 }
@@ -276,6 +300,9 @@ export default {
       overflow-x:hidden;
       overflow-y:auto;
       padding:10px;
+    }
+    i.red{
+      margin-right: 5px;
     }
     .red {
         color: red;

@@ -31,18 +31,8 @@
     <div class="table-tr" :class="getLoopClass(loop)">
       <ul class="clearfix-sp" :class="{'folder':model.children}">
         <li class="td-key"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{model.key}}</li>
+        <li class="td-datatype">{{model.dataType}}</li>
         <li class="td-remark" @click="toggleInput"><input class="mock-input comment-input" v-model="model.comment"></li>
-        <!--<li class="td-datatype">{{model.dataType}}</li>-->
-        <li class="td-datatype">{{model.dataType}}
-            <!-- <select class="ui search dropdown datatype-search">
-              <option value="">{{model.dataType}}</option>
-              <option value="String">String</option>
-              <option value="Object">Object</option>
-              <option value="Array">Array</option>
-              <option value="Number">Number</option>
-              <option value="Boolean">Boolean</option>
-            </select> -->
-        </li>
         <li class="td-mock"><input class="mock-input" v-model="model.mock"></li>
       </ul>
       <div v-if="model.children && showChild" class="children">
@@ -52,6 +42,7 @@
   </div>
 </template>
 <script type="text/babel">
+  import util from '../common/util.js'
   export default {
     name: 'table-item',
     props: {
@@ -81,12 +72,11 @@
 
     },
     ready() {
-//      console.log(this.model);
       $('.datatype-search').dropdown();
     },
     methods: {
       isFolder(obj) {
-        const dataType = this.getDataType(obj);
+        const dataType = util.getDataType(obj);
         let returnData = '';
 
         if (dataType === 'Object' || dataType === 'Array') {
@@ -180,8 +170,8 @@
         display: inline-block;
         width: 100%;
         height: 100%;
-        background-color: transparent;
-        border: 0;
+        background-color: transparent!important;
+        border: 0!important;
         &:focus{
           outline: none;
         }

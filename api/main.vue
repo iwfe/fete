@@ -15,9 +15,6 @@
 
 <script type="text/babel">
 import store from './vuex/store.js'
-// import List from './main_list.vue'
-// import Bar from './main_bar.vue'
-// import Path from './main_path.vue'
 import TopNav from '../main_vue/top_nav.vue'
 import SlideMenu from './components/slide_menu.vue';
 import SubSlideMenu from './components/sub_slide_menu.vue';
@@ -27,24 +24,11 @@ import OutputPreview from './output_preview.vue';
 export default {
   store,
   components: {
-    // List,
-    // Path,
-    // Bar,
-    // MainFilter,
     TopNav,
     SlideMenu,
     SubSlideMenu,
     ApiSetting,
     OutputPreview
-  },
-  ready() {
-
-  },
-  events: {
-    // open() {
-    //   this.$parent.$broadcast('slide-menu-open');
-    //   this.$broadcast('getDetail');
-    // }
   }
 }
 </script>

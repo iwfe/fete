@@ -25,7 +25,7 @@
       <div class="ui form">
           <div class="field">
               <label><i class="red">*</i>输入数据格式</label>
-              <textarea class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
+              <textarea style="resize:none;" class="input-param" placeholder="输入数据格式" v-model="apiData.input"></textarea>
           </div>
 
       <!-- </div> -->
@@ -57,11 +57,11 @@
       </div>
 
     <div class="detail-bottom">
+      <button class="positive mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
       <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
-      <button class="mini ui button" :class="{'positive':first}" @click="prev($event)">上一条</button>
-      <button class="mini ui button" :class="{'positive':last}" @click="next($event)">下一条</button>
+      <button class="positive mini ui button" @click="pageList('')">下一条</button>
     </div>
 
 </div>
@@ -73,20 +73,19 @@
 
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
+import { list, listActive, userId, prdId, productId, teamId, listIndex } from './vuex/getters.js'
 export default {
   vuex: {
     getters: {
-      list: state => state.list,
-      list_active: state => state.list_active,
-      userId: state => state.userId,
-      prdId: state => state.prdId,
-      productId: state => state.productId,
-      teamId: state => state.teamId
+      list,
+      list_active: listActive,
+      userId, prdId,
+      productId,
+      teamId,
+      listIndex
     },
     actions: {
-      add,
-      del,
-      tog
+      add, del, tog
     }
   },
   components: {
@@ -264,35 +263,15 @@ export default {
       });
       window.setTimeout(this.closeSlide, 300);
     },
-    next(e) {
-      if (!e.currentTarget.classList.contains('positive')) {
-        return;
+    pageList(leo) {
+      let i = this.listIndex
+      let obj = {}
+      if (leo) {
+        obj = i > 0 ? this.list[--i] : this.list[this.list.length - 1]
+      } else {
+        obj = i < this.list.length - 1 ? this.list[++i] : this.list[0]
       }
-      let index = this.getIndex();
-      const all = this.list.length - 1;
-      if (index < all) {
-        index++;
-        this.tog(this.list[index]);
-      }
-    },
-    prev(e) {
-      if (!e.currentTarget.classList.contains('positive')) {
-        return;
-      }
-      let index = this.getIndex();
-      if (index > 0) {
-        index--;
-        this.tog(this.list[index]);
-      }
-    },
-    getIndex() {
-      let n = 0;
-      for (let i = 0; i < this.list.length; i++) {
-        if (this.list[i] === this.list_active) {
-          n = i;
-        }
-      }
-      return n;
+      this.tog(obj)
     }
   }
 }

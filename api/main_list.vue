@@ -26,59 +26,57 @@
 </template>
 
 <script type="text/babel">
-  import { tog, add, emptyList } from './vuex/action'
-  import MainFilter from './main_filter.vue'
-
-  export default {
-    components: {
-      MainFilter
+import { tog, add, emptyList } from './vuex/action'
+import MainFilter from './main_filter.vue'
+import { list, listActive } from './vuex/getters.js'
+export default {
+  components: {
+    MainFilter
+  },
+  vuex: {
+    getters: {
+      list,
+      list_active: listActive
     },
-    vuex: {
-      getters: {
-        list: state => state.list,
-        list_active: state => state.list_active
-      },
-      actions: {
-        tog,
-        add,
-        emptyList
-      }
-    },
-    ready() {
-      this.getList(this.$route.query.prdId);
-    },
-    events: {
-      reloadApiList(prdId) {
-        this.getList(prdId)
-      }
-    },
-    methods: {
-      getList(prdId) {
-        this.emptyList()  // empty list first
-        fetch('/api/apis', {
-          body: { prdId: prdId }
-        }).then(res => {
-          res.data.forEach(v => {
-            this.add(v);
-          });
+    actions: {
+      tog, add, emptyList
+    }
+  },
+  ready() {
+    this.getList(this.$route.query.prdId);
+  },
+  events: {
+    reloadApiList(prdId) {
+      this.getList(prdId)
+    }
+  },
+  methods: {
+    getList(prdId) {
+      this.emptyList()  // empty list first
+      fetch('/api/apis', {
+        body: { prdId: prdId }
+      }).then(res => {
+        res.data.forEach(v => {
+          this.add(v);
         });
-      },
-      showJSON(e) {
-        this.lockScreen(e);
-      },
-      showDetail(item, e) {
-        this.$parent.$broadcast('slide-menu-open', () => {
-          this.$parent.$broadcast('init-codemirror-editor')
-        });
-        this.tog(item);
-        e.stopPropagation();
-      },
-      lockScreen(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      });
+    },
+    showJSON(e) {
+      this.lockScreen(e);
+    },
+    showDetail(item, e) {
+      this.$parent.$broadcast('slide-menu-open', () => {
+        this.$parent.$broadcast('init-codemirror-editor')
+      });
+      this.tog(item);
+      e.stopPropagation();
+    },
+    lockScreen(e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
+}
 </script>
 
 <style>

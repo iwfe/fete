@@ -6,8 +6,8 @@
 * @Last modified time: 2016-07-05 15:44:9
 */
 import Vuex from 'vuex'
+import mutations from './mutations'
 Vue.use(Vuex)
-
 const state = {
   list: [],
   list_active: {},
@@ -15,42 +15,6 @@ const state = {
   prdId: '',
   teamId: '',
   projectId: ''
-}
-
-const mutations = {
-  ADD(State, list) { // 添加
-    if (!list.url) {
-      list = {
-        id: '',
-        url: '-',
-        title: '-',
-        method: '-'
-      }
-    }
-    State.list.unshift(list);
-  },
-  DEL(State) { // 删除
-    if (State.list_active) {
-      State.list.$remove(State.list_active)
-    }
-  },
-  TOG(State, list) { // 选中
-    State.list_active = list;
-  },
-  BLUR_LIST(State) {
-    State.list_active = {};
-  },
-  // change prdId, projectId, teamId
-  CHANGE_FILTER(State, params) {
-    State = _.extend(State, params)
-  },
-  EMPTY_LIST(State) {
-    State.list = []
-    State.list_active = {}
-  },
-  DEL_BY_INDEX(State, index) {
-    State.list.splice(index, 1)
-  }
 }
 const outputModel = [
   {

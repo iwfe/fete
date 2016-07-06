@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Alert from 'antd/lib/Alert';
+import Alert from 'antd/lib/alert';
 
 const FormItem = Form.Item;
 

@@ -71,9 +71,31 @@ export default {
       this.tog(item);
       e.stopPropagation();
     },
-    lockScreen(e) {
-      e.preventDefault();
-      e.stopPropagation();
+    methods: {
+      getList(prdId) {
+        this.emptyList()  // empty list first
+        fetch('/api/apis', {
+          body: { prdId: prdId }
+        }).then(res => {
+          res.data.forEach(v => {
+            this.add(v);
+          });
+        });
+      },
+      showJSON(e) {
+        this.lockScreen(e);
+      },
+      showDetail(item, e) {
+        this.$parent.$broadcast('slide-menu-open', () => {
+          this.$parent.$broadcast('init-code-mirror')
+        });
+        this.tog(item);
+        e.stopPropagation();
+      },
+      lockScreen(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     }
   }
 }

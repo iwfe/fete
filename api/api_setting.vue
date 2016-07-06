@@ -277,6 +277,9 @@ export default {
       overflow-y:auto;
       padding:10px;
     }
+    i.red{
+      margin-right: 5px;
+    }
     .red {
         color: red;
     }

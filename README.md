@@ -60,4 +60,6 @@ AssertionError: app.use() requires a generator function
 4,遇到安装semantic-ui，直接ctr+c就可以了
 
 
+启动: pm2 start server.js -i max
+
 整体架构介绍：

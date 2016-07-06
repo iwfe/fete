@@ -1,43 +1,110 @@
 <template>
-    <div class="editor-wrap">
-      <div class="input-frame" >
+    <div class='editor-wrap'>
+      <div class='input-frame' >
         <form>
-          <textarea v-codemirror="inputData"></textarea>
+          <textarea v-codemirror='inputData'></textarea>
         </form>
       </div>
-      <div class="save-button" @click="revertMock">
+      <div class='save-button' @click='revertMock'>
         保存
       </div>
-      <div class="mock-frame">
-        <textarea v-codemirror:readonly="mockData"></textarea>
+      <div class='mock-frame'>
+        <textarea v-codemirror:readonly='mockData'></textarea>
       </div>
-      <div class="" v-if="inputModel">
-        <div class="table-tr table-head">
-          <ul class="clearfix-sp">]
-            <li class="td-key" style="text-align:center">属性</li>
-            <li class="td-datatype">数据类型</li>
-            <li class="td-remark">含义</li>
-            <li class="td-mock">mock规则</li>
+      <div class='' v-if='inputModel'>
+        <div class='table-tr table-head'>
+          <ul class='clearfix-sp'>]
+            <li class='td-key' style='text-align:center'>属性</li>
+            <li class='td-datatype'>数据类型</li>
+            <li class='td-remark'>含义</li>
+            <li class='td-mock'>mock规则</li>
           </ul>
         </div>
-        <table-item :model="output" :is-child=false :loop=1 v-for="output in outputModel"></table-item>
+        <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
       </div>
     </div>
 </template>
 
-<script type="text/babel">
+<script type='text/babel'>
 import tableItem from './table-item.vue'
 import util from '../common/util.js'
-const CodeMirror = require('codemirror/lib/codemirror.js');
-require('codemirror/lib/codemirror.css');
-require('codemirror/addon/lint/lint.css');
-require('codemirror/mode/javascript/javascript.js');
-require('codemirror/mode/css/css.js');
-require('jsonlint/lib/jsonlint.js');
-require('codemirror/addon/lint/lint.js');
-require('codemirror/addon/lint/json-lint.js');
-// require('./directive.js');
+require('./directive.js');
 const mock = require('mockjs');
+
+const o = [
+  {
+    key: 'status',
+    comment: '状态位',
+    dataType: 'String',
+    mock: '1212',
+    children: null
+  },
+  {
+    key: 'msg',
+    comment: '提示信息',
+    dataType: 'String',
+    mock: '',
+    children: null
+  },
+  {
+    key: 'data',
+    comment: '数据',
+    dataType: 'Array',
+    mock: '',
+    children: [
+      {
+        key: 'c2',
+        comment: '啊哈哈',
+        dataType: 'Object',
+        mock: '',
+        children: [
+          {
+            key: 'vc',
+            comment: 'vc啊哈哈',
+            dataType: 'String',
+            mock: ''
+          }
+        ]
+      },
+      {
+        key: 'c3',
+        comment: 'hehe',
+        dataType: 'Array',
+        mock: '',
+        children: [
+          {
+            key: 'v1',
+            comment: 'v1hehe',
+            dataType: 'String',
+            mock: '',
+          },
+          {
+            key: 'v2',
+            comment: 'v2hehe',
+            dataType: 'String',
+            mock: '',
+          }
+        ]
+      }
+    ]
+  }
+];
+
+const i = {
+  status: '正确为1，错误非1',
+  msg: '报错报错报错',
+  data: [
+    {
+      c2: {
+        vc: '11'
+      },
+      c3: {
+        v1: '1',
+        v2: '2'
+      }
+    }
+  ]
+}
 
 export default {
   components: {
@@ -68,7 +135,8 @@ export default {
         }
       },
       testData: '',
-      mockData: 'lalla'
+      mockData: 'lalla',
+      parants: ''
     }
   },
   watch: {
@@ -77,7 +145,8 @@ export default {
       if (val && self.isJson(val)) {
         console.log('yes, is json');
         self.inputModel = JSON.parse(val.replace(/[\s\r\n]/, ''));
-        self.outputModel = self.revertFormat(self.inputModel);
+        self.outputModel = self.revertFormat(self.inputModel, []);
+        console.log(JSON.stringify(self.outputModel));
       } else {
         console.log('no, is not json');
       }
@@ -93,47 +162,14 @@ export default {
     }
   },
   ready() {
-    const inputFrame = this.$els.input;
     const self = this;
-    // const mockFrame = this.$els.mock;
-
-    // setTimeout(() => {
-    //   self.inputEditor = self.initEditor(inputFrame);
-    //   self.inputEditor.on('change', (cm, obj) => {
-    //     self.inputData = $.trim(self.getInputData());
-    //   });
-    // }, 100)
-    // self.inputEditor.setSize('auto', 'auto');
-
-    // self.mockEditor = self.initEditor(mockFrame, true);
-    // setTimeout(() => {
-    //   mockFrame.value = JSON.stringify(js, null, 2);
-    //   self.mockEditor = self.initEditor(mockFrame, true);
-    // }, 1000);
+    // const a = self.revertFormat(i, []);
+    // console.log(JSON.stringify(a));
+    // console.log(_.extend(a, o));
+    // console.log(_.keys(i));
   },
   methods: {
-    /**
-     * 初始化codeMirror编辑区
-     * @param dom
-       */
-    initEditor(dom, readOnly) {
-      const editor = CodeMirror.fromTextArea(dom, {
-        lineNumbers: true,
-        mode: 'application/json',
-        gutters: ['CodeMirror-lint-markers'],
-        lint: true,
-        readOnly: readOnly ? 'nocursor' : false
-      })
-      return editor;
-    },
-    /**
-     * 获取输入数据
-     * @returns {*}
-       */
-    getInputData() {
-      const self = this;
-      return self.inputEditor.getValue();
-    },
+
     /**
      * 校验输入数据是否为json
      * @param str
@@ -160,41 +196,62 @@ export default {
      * @param inputModel
      * @returns {{key: *, comment: string, dataType: string, mock: string, children: Array}}
        */
-    revertFormat(inputModel) {
+    revertFormat(inputModel, parents) {
       const self = this;
       const output = [];
       let children = '';
       let comment = '';
       let dataType = '';
-      let parents = '';
+      let mockModel = '';
+      let child = '';
+      // let initParents = parents;
       _.each(inputModel, (value, key) => {
         const _dataType = util.getDataType(value);
         switch (_dataType) {
           case 'Object':
-            parents = key;
-            children = self.revertFormat(value);
-            comment = '';
+            child = self.comparison(key, parents, self.outputModel, 0)
+            parents.push(key);
+            children = self.revertFormat(value, parents);
+            comment = child.comment;
             dataType = 'Object';
+            mockModel = child.mock;
+            parents.pop();
             break;
           case 'Array':
-            parents = key;
-            children = self.revertFormat(value[0]);
-            comment = '';
+            child = self.comparison(key, parents, self.outputModel, 0)
+            parents.push(key);
+            children = self.revertFormat(value[0], parents);
+            comment = child.comment;
             dataType = 'Array';
+            mockModel = child.mock;
+            parents.pop();
             break;
           default:
-            comment = value;
-            children = null;
-            dataType = _dataType;
+            console.log(parents);
+            if (o.length > 0) {
+              child = self.comparison(key, parents, self.outputModel, 0)
+              comment = child.comment || '';
+              children = child.children || null;
+              mockModel = child.mock || '';
+              dataType = _dataType;
+            } else {
+              comment = value;
+              children = null;
+              dataType = _dataType;
+              mockModel = '';
+            }
+
             break;
         }
-        output.push({
+        const tmp = {
           key: key,
-          comment: '',
+          comment: comment,
           dataType: dataType,
-          mock: '',
+          mock: mockModel,
           children: children
-        });
+        }
+        // console.log(tmp);
+        output.push(tmp);
       })
       return output;
     },
@@ -213,17 +270,41 @@ export default {
     },
     revertMock() {
       const self = this;
-      console.log(self.outputModel);
-      this.$parent.$parent.$parent.$broadcast('sub-slide-menu-open')
+      // this.$parent.$parent.$parent.$broadcast('sub-slide-menu-open')
       const mockModel = util.mockTree2MockTemplate(self.outputModel);
       const mockData = mock.mock(mockModel);
-
-      self.mockEditor.setValue(JSON.stringify(mockData, null, 2));
+      self.mockData = JSON.stringify(mockData, null, 2);
+    },
+    comparison(key, parents, output, loop) {
+      // console.log(key, parents);
+      const self = this;
+      let child = '';
+      const parentKey = parents[loop];
+      if (parentKey) {
+        // console.log(parentKey);
+        // console.log('before', output);
+        output = self.findChild(parentKey, output).children;
+        // console.log('after', output);
+        loop++;
+        child = self.comparison(key, parents, output, loop);
+      } else {
+        child = self.findChild(key, output)
+      }
+      return child;
+    },
+    findChild(key, output) {
+      let v = '';
+      _.each(output, (item) => {
+        if (item.key === key) {
+          v = item;
+        }
+      });
+      return v;
     }
   }
 }
 </script>
-<style media="screen" lang="sass">
+<style media='screen' lang='sass'>
   .editor-wrap{
     li{
       list-style:none;

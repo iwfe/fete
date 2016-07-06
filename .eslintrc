@@ -17,7 +17,8 @@
     "no-underscore-dangle": 0,
     "no-unused-vars": 1,
     "object-shorthand": 1,
-    "arrow-body-style": 1
+    "arrow-body-style": 1,
+    "no-new": 0
   },
   "globals": {
     "$": true,
@@ -27,6 +28,7 @@
     "pageConfig": true,
     "CodeMirror": true,
     "socket": true,
-    "toastr": true
+    "toastr": true,
+    "Clipboard": true
   }
 }

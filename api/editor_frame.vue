@@ -15,13 +15,11 @@
         <div class="table-tr table-head">
           <ul class="clearfix-sp">]
             <li class="td-key" style="text-align:center">属性</li>
-            <li class="td-remark">含义</li>
             <li class="td-datatype">数据类型</li>
+            <li class="td-remark">含义</li>
             <li class="td-mock">mock规则</li>
           </ul>
         </div>
-        <!--<table-item :model="inputModel" :is-child=false></table-item>-->
-        <!--<table-item :model="outputModel" :is-child=false :loop=1></table-item>-->
         <table-item :model="output" :is-child=false :loop=1 v-for="output in outputModel"></table-item>
       </div>
     </div>
@@ -164,15 +162,18 @@ export default {
       let children = '';
       let comment = '';
       let dataType = '';
+      let parents = '';
       _.each(inputModel, (value, key) => {
-        const _dataType = vueCommon.getDataType(value);
+        const _dataType = util.getDataType(value);
         switch (_dataType) {
           case 'Object':
+            parents = key;
             children = self.revertFormat(value);
             comment = '';
             dataType = 'Object';
             break;
           case 'Array':
+            parents = key;
             children = self.revertFormat(value[0]);
             comment = '';
             dataType = 'Array';

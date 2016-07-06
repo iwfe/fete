@@ -32,14 +32,14 @@ const mutations = {
   DEL(State) { // 删除
     if (State.list_active) {
       State.list.$remove(State.list_active)
-    } else {
-      // console.log(str)
     }
   },
   TOG(State, list) { // 选中
     State.list_active = list;
   },
-
+  BLUR_LIST(State) {
+    State.list_active = {};
+  },
   // change prdId, projectId, teamId
   CHANGE_FILTER(State, params) {
     State = _.extend(State, params)

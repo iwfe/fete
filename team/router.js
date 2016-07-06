@@ -14,16 +14,6 @@ const teamDao = wrap(db.get('team'));
 
 import sutil from '../common/sutil';
 
-// 团队
-router.get('/', sutil.login, function*(next) {
-    yield sutil.render(this, {});
-});
-
-//团队详情
-router.get('/:teamId', sutil.login, sutil.setRouterParams, function*(next) {
-  yield sutil.render(this, {});
-});
-
 router.get('/data', sutil.login, function*(next) {
     const user = this.locals._user;
     const teamIds = user.teams;
@@ -132,5 +122,84 @@ router.del('/data', sutil.login, function*(next) {
     });
     sutil.success(this, team);
 });
+
+
+/********member**********/
+router.get('/member', sutil.teamLogin(), function*(next) {
+  const user = this.locals._user;
+  const {teamId} = this.parse;
+  const teamIds = user.teams;
+  if(teamIds.indexOf(teamId) === -1) {
+    sutil.failed(this, 11001);
+    return;
+  }
+
+  let users = sutil.wrapUser(yield userDao.find({
+    teams: teamId
+  },{
+    sort: {createTime: -1}
+  }), ['teams']);
+  sutil.success(this, users);
+});
+
+router.post('/member/invite', sutil.teamLogin(), function*(next) {
+  const user = this.locals._user;
+  const {teamId, username} = this.parse;
+  const member = sutil.wrapUser(yield userDao.findOne({
+    username: username
+  }));
+  if(member) {
+    let teams = member.teams;
+    if(teams.indexOf(teamId) === -1) {
+      teams.push(teamId);
+    }
+    yield userDao.update({
+      username: username
+    }, {
+      $set: {
+        teams: teams
+      }
+    });
+  }
+  sutil.success(this, member);
+});
+
+router.del('/member', sutil.teamLogin('owner'), function*(next) {
+  const parse = this.parse;
+  const {teamId, username} = parse;
+  const member = sutil.wrapUser(yield userDao.findOne({
+    username: username
+  }));
+
+  if(member) {
+    let teamIds = member.teams;
+    teamIds = _.without(teamIds, teamId);
+    yield userDao.update({
+      username: username
+    }, {
+      $set: {
+        teams: teamIds
+      }
+    });
+    member.teams = teamIds;
+  }
+  sutil.success(this, member);
+});
+
+
+// 团队
+router.get('/', sutil.login, function*(next) {
+  yield sutil.render(this, {});
+});
+
+//团队详情
+router.get('/:teamId',  sutil.setRouterParams, sutil.teamLogin(), function*(next) {
+  yield sutil.render(this, {
+    team: yield teamDao.findOne({
+      id: this.parse.teamId
+    })
+  });
+});
+
 
 export default router;

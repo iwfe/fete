@@ -22,6 +22,7 @@
     "bootstrap-webpack": "0.0.5",
     "bundle-loader": "^0.5.4",
     "classnames": "*",
+    "clipboard": "^1.5.12",
     "co": "*",
     "co-body": "*",
     "co-busboy": "*",
@@ -41,7 +42,7 @@
     "gulp-rename": "*",
     "gulp-uglify": "*",
     "gulp-zip": "*",
-    "history": "^1.12.5",
+    "history": "^1.13.0",
     "imports-loader": "^0.6.5",
     "jade": "~1.11.0",
     "jquery": "~2.1.4",
@@ -73,8 +74,8 @@
     "redux": "^3.0.0",
     "redux-devtools": "*",
     "redux-logger": "^2.0.2",
-    "redux-thunk": "^0.1.0",
     "redux-router": "^2.0.0",
+    "redux-thunk": "^0.1.0",
     "sass-loader": "^3.1.2",
     "semantic-ui": "~2.1.8",
     "set-iterm2-badge": "*",
@@ -91,8 +92,7 @@
     "vuex": "^0.8.0",
     "webpack": "~1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "whatwg-fetch": "*",
-    "history": "^1.13.0"
+    "whatwg-fetch": "*"
   },
   "devDependencies": {
     "eslint": "^2.13.1",

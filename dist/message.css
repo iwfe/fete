@@ -1,0 +1,92 @@
+/*
+* @Author: jade
+* @Date:   2016-06-12 00:02:08
+// @Last modified by:   chenjiangsong
+// @Last modified time: 2016-07-01 01:07:52
+*/
+#main {
+  margin: 18px auto 0;
+  padding: 10px 0;
+  background: #fff;
+  font-size: 14px;
+  color: #666;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px #ccc; }
+
+@font-face {
+  font-family: 'Icons';
+  src: url(icons_oiumT7u.eot);
+  src: url(icons_oiumT7u.eot?#iefix) format("embedded-opentype"), url(icons_30LP1VH.woff2) format("woff2"), url(icons_3KaI0Zq.woff) format("woff"), url(icons_3EVVRfn.ttf) format("truetype"), url(icons_IEWZrwk.svg#icons) format("svg");
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-decoration: inherit;
+  text-transform: none; }
+
+html,
+body,
+#fete {
+  height: 100%;
+  font-family: Arial; }
+
+ol, ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  font: inherit;
+  font-size: 100%; }
+
+@-webkit-keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0); } }
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-20px);
+            transform: translateY(-20px); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0); } }
+
+.fadeInDown-transition {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: fadeInDown;
+  animation-name: fadeInDown; }
+
+.fadeInDown-enter {
+  display: block; }
+
+.fadeInDown-leave {
+  display: none; }
+.msg-list .read-status {
+  display: inline-block;
+  border: solid 1px #E74C3C;
+  background: #E74C3C;
+  color: #fff;
+  width: 44px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 12px;
+  border-radius: 3px;
+  cursor: pointer; }
+
+.msg-list .read {
+  border: solid 1px #1ABC9C;
+  background: #1ABC9C;
+  cursor: default; }
+
+.msg-list .all-read {
+  margin-left: 10px;
+  font-size: 12px;
+  padding: 5px 10px; }

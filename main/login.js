@@ -31,13 +31,13 @@ let Login = React.createClass ({
     },
     handleSubmit(e){
         const form = this.props.form;
-        
+
         const result = form.validateFields((errors, values) => {
             if (!!errors) {
                 e.preventDefault();
                 return false;
             }
-            
+
         });
         console.log(result);
     },
@@ -68,20 +68,21 @@ let Login = React.createClass ({
                 <Form horizontal className="form" method="post" form={this.props.form} onSubmit={this.handleSubmit}>
                     <FormItem
                         {...formItemLayout}
-                        label="用户名/邮箱： ">
-                        <Input 
-                            name="username" 
-                            autoFocus {...usernameProps} 
-                            placeholder="请输入用户名" 
-                            onKeyPress={this.handleKeyPress} />    
+                        label="用户名： ">
+                        <Input
+                            name="username"
+                            autoFocus {...usernameProps}
+                            placeholder="请输入用户名"
+                            onKeyPress={this.handleKeyPress} />
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
                         label="密码： "
                         hasFeedback>
-                        <Input name="password" {...passwordProps} type="password" placeholder="请输入密码"/>    
+                        <Input name="password" {...passwordProps} type="password" placeholder="请输入密码"/>
                     </FormItem>
                     {this.state.error ? <Alert message={this.state.error} type="error" showIcon/> : ''}
+                    <div className="register clearfix"><a className="pull-right" href="/register">没有帐号?</a></div>
                     <FormItem
                         wrapperCol = {{span: 16, offset: 6}} style={{marginTop: 24}}
                     >
@@ -98,7 +99,7 @@ Login = Form.create()(Login);
 if (typeof document != 'undefined') {
     ReactDOM.render(
         <Login username={pageConfig.login.username} error={pageConfig.login.error} />, document.getElementById('main')
-    );    
+    );
 }
 
 export default Login;

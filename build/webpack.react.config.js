@@ -19,6 +19,7 @@ module.exports = {
   all_entry: {
     index: ['./main/index.js', './main/index.scss'],
     login: ['./main/login.js', './main/login.scss'],
+    register: ['./main/register.js', './main/register.scss'],
     user: './user',
     team: './team',
     project: './project',

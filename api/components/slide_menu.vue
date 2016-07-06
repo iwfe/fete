@@ -51,18 +51,33 @@
 </script>
 
 <style lang="sass"  scoped>
+  .slide-menu {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
+    background-color: #fff;
+    -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
+    box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
+    overflow:auto;
+    z-index: 100;
+  }
+  @media screen and (max-width: 1680px) {
     .slide-menu {
-        display: none;
-        position: fixed;
-        right: 0;
-        top: 0;
-        width: 50%;
-        height: 100%;
-        background-color: #fff;
-        -webkit-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
-        -moz-box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
-        box-shadow: 0px 0px 3px 2px rgba(0,0,0,.2);
-        overflow:auto;
-        z-index: 100;
+      width: 70%;
     }
+  }
+  @media screen and (max-width: 1480px) {
+    .slide-menu {
+      width: 75%;
+    }
+  }
+  @media screen and (max-width: 1280px) {
+    .slide-menu {
+      width: 80%;
+    }
+  }
 </style>

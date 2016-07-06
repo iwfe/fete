@@ -77,6 +77,8 @@ function members(state = [], action) {
   switch (action.type) {
     case GET_MEMBER:
       return action.members
+    case INVITE_MEMBER:
+      return [action.member, ...state]
     case DELETE_MEMBER:
       return _.filter(state, item => item.username != action.member.username)
     default:

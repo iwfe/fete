@@ -20,8 +20,6 @@ router.get('/', sutil.teamLogin(), function*(next) {
 });
 
 router.get('/data', sutil.teamLogin(), function*(next) {
-    const user = this.locals._user;
-
     sutil.success(this, yield projectDao.find({
       teamId: this.parse.teamId
     }, {

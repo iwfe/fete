@@ -6,6 +6,7 @@ import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
+import Tag from 'antd/lib/tag';
 
 export default class Team extends Component {
   constructor(props, context) {
@@ -16,10 +17,19 @@ export default class Team extends Component {
     const {member, actions} = this.props;
     return (
       <div className={classNames({
-        'member': true
+        'member': true,
+        'invite': member.team.status === 'invite',
+        'apply': member.team.status === 'apply',
       })}>
         <Card style={{ height: 90 }}>
-          <div className="custom-card">
+          <div className={
+            classNames({
+              'custom-card': true,
+            })
+          }>
+            {
+              member.team.status === 'invite' ? <Tag color="yellow">待加入</Tag> : null
+            }
             <h3>{member.username}</h3>
             <div className="operators">
               <Button type="danger" htmlType="button" onClick={() => actions.deleteMemberShow(true, member)}>删除</Button>

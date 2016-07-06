@@ -140,18 +140,17 @@ var sutil = {
           redirect: '/login?next=' + this.url
         });
       }
-
-      let team = _.find(user.teams, function (item) {
-        return item === teamId;
+      let userTeam = _.find(user.teams, function (item) {
+        return item.id === teamId && item.status === 'normal';
       });
-      if (!team) {
+      if (!userTeam) {
         return yield sutil.result(this, {
           code: 11001,
           redirect: redirect
         });
       }
-      team = yield teamDao.findOne({
-        id: team
+      const team = yield teamDao.findOne({
+        id: userTeam.id
       });
       if (!team) {
         return yield sutil.result(this, {
@@ -171,7 +170,7 @@ var sutil = {
             break;
         }
       }
-      user.team = team;
+      user.team = Object.assign({},team,userTeam);
       yield next;
     }
 
@@ -201,19 +200,19 @@ var sutil = {
     }
     const teamId = project.teamId;
 
-    let team = _.find(user.teams, function (item) {
-      return item === teamId;
+    let userTeam = _.find(user.teams, function (item) {
+      return item.id === teamId && item.status === 'normal';
     });
 
-    if (!team) {
+    if (!userTeam) {
       return yield sutil.result(this, {
         code: 11001,
         redirect: redirect
       });
     }
 
-    team = yield teamDao.findOne({
-      id: team
+    const team = yield teamDao.findOne({
+      id: userTeam.id
     });
 
     if (!team) {
@@ -223,7 +222,7 @@ var sutil = {
       });
     }
     user.project = project;
-    user.team = team;
+    user.team = Object.assign({},team,userTeam);;
     yield next;
   },
 
@@ -263,19 +262,19 @@ var sutil = {
     }
     const teamId = project.teamId;
 
-    let team = _.find(user.teams, function (item) {
-      return item === teamId;
+    let userTeam = _.find(user.teams, function (item) {
+      return item.id === teamId && item.status === 'normal';
     });
 
-    if (!team) {
+    if (!userTeam) {
       return yield sutil.result(this, {
         code: 11001,
         redirect: redirect
       });
     }
 
-    team = yield teamDao.findOne({
-      id: team
+    const team = yield teamDao.findOne({
+      id: userTeam.id
     });
 
     if (!team) {
@@ -286,7 +285,7 @@ var sutil = {
     }
     user.prd = prd;
     user.project = project;
-    user.team = team;
+    user.team = Object.assign({},team,userTeam);;
     yield next;
   },
 
@@ -352,13 +351,20 @@ var sutil = {
    * 封装用户
    * @param user,可以是数组或者单个user对象
    * @param banKeys,过滤不要的字段,默认不需要_id和password
+   * @param teamId,如果存在则需要知道该用户在该团队的权限
    * @returns {*}
    */
-  wrapUser: function (user, banKeys = []) {
+  wrapUser: function (user, banKeys = [], teamId) {
     banKeys = banKeys.concat(['_id', 'password']);
 
     //封装单个用户
     function wrap(item) {
+      const teams = item.teams;
+      let team;
+      if(teams && teamId) {
+        team = _.find(teams, item => item.id === teamId)
+      }
+      item.team = team;
       return _.pick(item, function (value, key, object) {
         return banKeys.indexOf(key) === -1;
       });

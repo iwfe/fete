@@ -11,7 +11,6 @@ import logger from 'koa-logger';
 import views from 'koa-views';
 import mount from 'koa-mount';
 import serve from 'koa-static';
-import co from 'co';
 import config from './config';
 import sutil from './common/sutil';
 import _ from 'underscore';

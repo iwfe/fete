@@ -16,9 +16,9 @@ import sutil from '../common/sutil';
 
 router.get('/data', sutil.login, function*(next) {
     const user = this.locals._user;
-    const teamIds = user.teams;
-    let teams = [];
-    if (teamIds && teamIds.length) {
+    let teams = user.teams;
+    const teamIds = _.pluck(teams, 'id');
+    if (teams && teams.length) {
         teams = yield teamDao.find({
             id: {
                 $in: teamIds
@@ -33,7 +33,7 @@ router.get('/data', sutil.login, function*(next) {
 router.post('/data', sutil.login, function*(next) {
     const parse = this.parse;
     const user = this.locals._user;
-    const teamIds = user.teams || [];
+    let teams = user.teams || [];
     const id = yield sutil.genId(teamDao);
 
     const team = yield teamDao.insert({
@@ -44,12 +44,16 @@ router.post('/data', sutil.login, function*(next) {
         createTime: Date.now(),
         updateTime: Date.now()
     });
-    teamIds.push(team.id);
+    teams.push({
+      id: team.id,
+      role: 'owner',
+      status: 'normal',
+    });
     yield userDao.update({
         _id: user._id
     }, {
         $set: {
-            teams: teamIds
+            teams: teams
         }
     })
     sutil.success(this, team);
@@ -90,7 +94,7 @@ router.del('/data', sutil.login, function*(next) {
     const parse = this.parse;
     const id = parse.id;
     const user = this.locals._user;
-    let teamIds = user.teams || [];
+    let teams = user.teams || [];
 
     const team = yield teamDao.findOne({
         id: id
@@ -110,14 +114,14 @@ router.del('/data', sutil.login, function*(next) {
         id: id
     });
 
-    teamIds = _.without(teamIds, id);
+    teams = _.filter(teams, item => item.id === id);
 
 
     yield userDao.update({
         _id: user._id
     }, {
         $set: {
-            teams: teamIds
+            teams: teams
         }
     });
     sutil.success(this, team);
@@ -128,17 +132,13 @@ router.del('/data', sutil.login, function*(next) {
 router.get('/member', sutil.teamLogin(), function*(next) {
   const user = this.locals._user;
   const {teamId} = this.parse;
-  const teamIds = user.teams;
-  if(teamIds.indexOf(teamId) === -1) {
-    sutil.failed(this, 11001);
-    return;
-  }
+  const teams = user.teams;
 
   let users = sutil.wrapUser(yield userDao.find({
-    teams: teamId
+    'teams.id': teamId
   },{
     sort: {createTime: -1}
-  }), ['teams']);
+  }), ['teams'], teamId);
   sutil.success(this, users);
 });
 
@@ -150,8 +150,13 @@ router.post('/member/invite', sutil.teamLogin(), function*(next) {
   }));
   if(member) {
     let teams = member.teams;
-    if(teams.indexOf(teamId) === -1) {
-      teams.push(teamId);
+    let team = {
+      id: teamId,
+      role: 'member',
+      status: 'invite'
+    };
+    if(!_.find(teams, item => item.id === teamId)) {
+      teams.push(team);
     }
     yield userDao.update({
       username: username
@@ -160,28 +165,34 @@ router.post('/member/invite', sutil.teamLogin(), function*(next) {
         teams: teams
       }
     });
+    member.team = team;
   }
   sutil.success(this, member);
 });
 
 router.del('/member', sutil.teamLogin('owner'), function*(next) {
+  const user = this.locals._user;
   const parse = this.parse;
   const {teamId, username} = parse;
+  if(username === user.username) {
+    sutil.failed(this, 1002);
+    return false
+  }
   const member = sutil.wrapUser(yield userDao.findOne({
     username: username
   }));
 
   if(member) {
-    let teamIds = member.teams;
-    teamIds = _.without(teamIds, teamId);
+    let teams = member.teams;
+    teams = _.filter(teams, item => item.id !== teamId);
     yield userDao.update({
       username: username
     }, {
       $set: {
-        teams: teamIds
+        teams: teams
       }
     });
-    member.teams = teamIds;
+    member.teams = teams;
   }
   sutil.success(this, member);
 });

@@ -11,7 +11,7 @@ try{
 
 var app = require('./app')
 
-console.log('服务已经启动....端口：8888');
+console.log('服务已经启动....端口：3888');
 
 // listen
-app.listen(8888);
+app.listen(3888);

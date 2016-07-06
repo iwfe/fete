@@ -1,6 +1,6 @@
 export default {
   ADD_LIST(state, list) {
-    if (!list.url) {
+    if (!list || !list.url) {
       list = {
         url: '/',
         title: '-',

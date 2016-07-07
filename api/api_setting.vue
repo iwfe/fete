@@ -36,7 +36,8 @@
               <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
               <editor-frame :output-model.sync="apiData.output"
                             :output-json.sync="apiData.outputJson"
-                            :input-json.sync="apiData.input"></editor-frame>
+                            :input-json.sync="apiData.input"
+                            :is-add.sync="isAdd"></editor-frame>
           <!-- </div> -->
           <div class="field">
               <label><i class="red">*</i>修改说明</label>
@@ -110,13 +111,17 @@ export default {
         outputJson: {},
         output: []
       },
-      codemirrorReady: false
+      codemirrorReady: false,
+      isAdd: true
     }
   },
   watch: {
     list_active(v) {
+      this.isAdd = true;
       if (v.id) {
         this.getdata();
+      } else {
+        this.resetData();
       }
     }
   },
@@ -255,17 +260,17 @@ export default {
       this.resetData()
     },
     resetData() {
-      _.extend(this, {
-        updateDesc: '',
-        updateDescList: [],
-        apiData: {
-          title: '',
-          method: 'GET',
-          input: '',
-          url: '',
-          output: []
-        }
-      });
+      this.apiName = ''
+      this.updateDesc = ''
+      this.updateDescList = []
+      this.apiData = {
+        id: '',
+        title: '',
+        method: 'GET',
+        input: '',
+        url: '',
+        output: []
+      }
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {
@@ -277,6 +282,7 @@ export default {
         this.updateDescList.forEach(v => {
           v.updateTime = v.updateTime.substr(0, 10)
         })
+        this.isAdd = false;
       })
     },
     delList() {

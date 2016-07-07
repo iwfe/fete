@@ -5,21 +5,24 @@
           <!-- <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea> -->
           <textarea v-el:inputeditor ></textarea>
       </div>
-      <div class="field">
+      <div class="field output-field">
           <label><i class="red">*</i>返回数据格式</label>
-          <div class='input-frame'>
-            <form>
-              <!-- <textarea v-codemirror='inputData'></textarea> -->
-              <textarea v-el:outputeditor ></textarea>
-            </form>
+          <div class="output-editor">
+            <div class='input-frame'>
+              <form>
+                <!-- <textarea v-codemirror='inputData'></textarea> -->
+                <textarea v-el:outputeditor ></textarea>
+              </form>
+            </div>
+            <div class='save-button mini ui button' @click='revertMock'>
+              mock->
+            </div>
+            <div class='mock-frame'>
+              <!-- <textarea v-codemirror:readonly='mockData'></textarea> -->
+              <textarea v-el:mockeditor ></textarea>
+            </div>
           </div>
-          <div class='save-button' @click='revertMock'>
-            保存
-          </div>
-          <div class='mock-frame'>
-            <!-- <textarea v-codemirror:readonly='mockData'></textarea> -->
-            <textarea v-el:mockeditor ></textarea>
-          </div>
+
           <div class='' v-if='outputModel.length'>
             <div class='table-tr table-head'>
               <ul class='clearfix-sp'>]
@@ -172,6 +175,13 @@ export default {
         return {}
       },
       twoWay: true
+    },
+    inputJson: {
+      type: String,
+      default() {
+        return {}
+      },
+      twoWay: true
     }
 
   },
@@ -211,13 +221,17 @@ export default {
         console.log('yes, is json');
         self.outputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
         self.outputModel = self.revertFormat(self.outputJson, []);
-        console.log(JSON.stringify(self.outputModel));
       } else {
         console.log('no, is not json');
       }
-
-      if (!val) {
-        self.inputModel = '';
+    },
+    inputData(val) {
+      const self = this;
+      if (val && self.isJson(val)) {
+        console.log('yes, is json');
+        self.inputJson = val.replace(/[\s\r\n]/, '');
+      } else {
+        console.log('no, is not json');
       }
     },
     list_active(v) {
@@ -225,50 +239,54 @@ export default {
       // if (!v.id) {
       //   self.outputJson = {};
       //   self.outputModel = [];
-      //   console.log('hehe');
       // } else {
-      //   console.log(self.outputEditor);
+      //   self.$emit('init-code-mirror-all')
       // }
-    }
-  },
-  filters: {
-    deepGet(key) {
-      console.log(key);
+    },
+    isAdd(v) {
+      const self = this;
+      if (v) {
+        self.inputJson = '';
+        self.outputJson = {};
+        self.outputModel = [];
+      }
+      self.$emit('init-code-mirror-all');
     }
   },
   ready() {
     const self = this;
-    // if (self.outputJson) {
-    //   console.log(self.outputJson);
-    //   self.inputData = JSON.stringify(self.outputJson, null, 2);
-    // }
-    // if (self.isAdd) {
-    //   self.outputJson = {};
-    //   self.outputModel = [];
-    // }
-    // self.outputEditor.setValue(111);
   },
   events: {
     'init-code-mirror-all'() {
       const self = this;
       if (self.editorReady) {
+        self.setEditorData('input', self.inputJson);
+        self.setEditorData('output', self.outputJson);
+        self.setEditorData('mock', {});
         return;
       }
       const inputEditorDom = self.$els.inputeditor;
       const outputEditorDom = self.$els.outputeditor;
       const mockEditorDom = self.$els.mockeditor;
       self.inputEditor = self.initEditor(inputEditorDom);
+      self.inputEditor.on('change', (cm, obj) => {
+        self.inputData = $.trim(self.getEditorData('input'));
+      })
+
       self.outputEditor = self.initEditor(outputEditorDom);
       self.outputEditor.on('change', (cm, obj) => {
         self.outputData = $.trim(self.getEditorData('output'))
       });
-      self.mockEditor = self.initEditor(mockEditorDom);
+
+      self.mockEditor = self.initEditor(mockEditorDom, true);
       self.editorReady = true;
       if (!self.list_active.id) {
         self.outputJson = {};
         self.outputModel = [];
       }
+      self.setEditorData('input', self.inputJson);
       self.setEditorData('output', self.outputJson);
+      self.setEditorData('mock', {});
     },
     'remove-code-mirror-all'() {
       self.editorReady = false;
@@ -292,6 +310,9 @@ export default {
     },
     setEditorData(editor, value) {
       const self = this;
+      if (self.isJson(value)) {
+        value = JSON.parse(value)
+      }
       const jsonStr = JSON.stringify(value, null, 2);
       self[`${editor}Editor`].setValue(jsonStr);
     },
@@ -395,7 +416,6 @@ export default {
       const mockModel = util.mockTree2MockTemplate(self.outputModel);
       const mockData = mock.mock(mockModel);
       self.setEditorData('mock', mockData);
-      // self.mockData = JSON.stringify(mockData, null, 2);
     },
     comparison(key, parents, output, loop) {
       const self = this;
@@ -424,30 +444,56 @@ export default {
 </script>
 <style media='screen' lang='sass'>
   .editor-wrap{
+    margin-bottom: 30px;
+    font-size: 14px;
     li{
       list-style:none;
     }
+    .output-editor{
+      position:relative;
+      border-top:1px solid rgb(221,221,221);
+      margin-bottom:30px;
+    }
     .input-frame{
       display:inline-block;
-      width: 45%;
-      /* height:300px; */
-      border: 1px solid rgb(221,221,221);
+      width: 50%;
+      min-height:300px;
+      border-right: 1px solid rgb(221,221,221);
     }
     .mock-frame{
-        display:inline-block;
-        width:45%;
-        border:1px solid rgb(221,221,221)
+        /* display:inline-block; */
+        float:right;
+        width:50%;
+        min-height:300px;
+        /* border:1px solid rgb(221,221,221) */
     }
     .save-button{
-      display:inline-block;
-      width:8%;
-      height:40px;
+      display:block;
+      position:absolute;
+      width:10%;
+      /* height:40px; */
       line-height:40px;
-      background-color:#ccc;
+      /* background-color:#ddf0ed; */
+      color:#fff;
       text-align:center;
+      left:50%;
+      margin-left:-5%;
+      top:100px;
+      z-index:99;
+      border-radius:5%;
+      cursor:pointer;
     }
     .table-head{
       font-weight: bold;
     }
+  }
+  .CodeMirror-gutters{
+      border: 0 !important;
+      background-color: #fff !important;
+  }
+  .CodeMirror{
+    height:auto !important;
+    /* max-height:300px !important; */
+    overflow:scroll;
   }
 </style>

@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 15:07:00
 * @Email:  chenjiangsong.sh@superjia.com
 * @Last modified by:   chenjiangsong
-* @Last modified time: 2016-07-05 21:07:54
+* @Last modified time: 2016-07-07 19:07:71
 */
 
 /**
@@ -268,7 +268,8 @@ var util = {
           value = parseFloat(mockArr[1])
         } else if (!mockArr[0] && value[0] === '/') {
           // regexp
-          value = new RegExp(mockArr[1])
+          let regArr = mockArr[1].split('/')
+          value = new RegExp(regArr[1], regArr[2])
         }
         result[`${data.key}${mockArr[0]}`] = value
       }

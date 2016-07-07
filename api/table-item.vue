@@ -107,7 +107,6 @@
       toggle() {
         const self = this;
         self.showChild = !self.showChild;
-//        console.log('哈哈哈')
       },
       toggleInput() {
         const self = this;
@@ -124,10 +123,10 @@
     .table-tr{
       &>ul{
         font-size: 0;
-        width:80%;
+        width:100%!important;
         &>li{
-          height: 24px;
-          line-height: 24px;
+          height: 30px;
+          line-height: 30px;
           text-align: center;
           /*display: inline-block;*/
           float: left;

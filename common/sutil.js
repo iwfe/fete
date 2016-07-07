@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 11:07:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 16:07:04
+* @Last modified time: 2016-07-07 11:07:81
 */
 
 
@@ -413,7 +413,8 @@ var sutil = {
   * addMessage (msgData, teamId, toUsers) {
     //获取team里的所有user
     if(!!teamId) {
-      let users = yield userDao.find({teams: teamId});
+      // let users = yield userDao.find({teams: {'$elemMatch':{id: teamId, role: 'member', status: 'normal'}}});
+      let users = yield userDao.find({teams: {'$elemMatch':{id: teamId}}});
       toUsers = [];
       for(let i in users) {
         toUsers.push(users[i].username);

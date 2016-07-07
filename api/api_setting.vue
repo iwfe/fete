@@ -23,19 +23,21 @@
       </div>
 
       <div class="ui form">
-          <div class="field">
+          <!-- <div class="field">
               <label><i class="red">*</i>输入数据格式</label>
               <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea>
-          </div>
+          </div> -->
 
       <!-- </div> -->
 
       <!-- <div class="ui form backData"> -->
-          <div class="field">
-              <label><i class="red">*</i>返回数据格式</label>
+        <!--   <div class="field">
+            <label><i class="red">*</i>返回数据格式</label> -->
               <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
-              <editor-frame :output-model.sync="apiData.output" :show-mock='true'></editor-frame>
-          </div>
+              <editor-frame :output-model.sync="apiData.output"
+                            :output-json.sync="apiData.outputJson"
+                            :input-json.sync="apiData.input"></editor-frame>
+          <!-- </div> -->
           <div class="field">
               <label><i class="red">*</i>修改说明</label>
               <input type="text" class="input-revise" placeholder="接口修改说明" v-model="updateDesc">
@@ -57,11 +59,11 @@
       </div>
 
     <div class="detail-bottom">
-      <button class="positive mini ui button" @click="pageList">上一条</button>
+      <button class="primary mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
       <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
-      <button class="positive mini ui button" @click="pageList('')">下一条</button>
+      <button class="primary mini ui button" @click="pageList('')">下一条</button>
     </div>
 
 </div>
@@ -105,7 +107,8 @@ export default {
         method: 'GET',
         input: '',
         url: '',
-        output: ['']
+        outputJson: {},
+        output: []
       },
       codemirrorReady: false
     }
@@ -134,6 +137,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * 校验输入数据是否为json
+     * @param str
+     * @returns {boolean}
+       */
+    isJson(str) {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     validate() {
       if (!this.apiData.title) {
         // 未输入标题
@@ -145,12 +161,18 @@ export default {
         toastr.error('请输入URL地址！')
         this.sendLoad = false
         return true
-      } else if (!this.updateDesc) {
-        toastr.error('请输入接口修改说明！')
-        this.sendLoad = false
-        return true
       } else if (this.apiData.url[0] !== '/') {
         toastr.error('URL必须以"/"开头')
+        this.sendLoad = false
+        return true
+      } else if (this.apiData.input) {
+        const isJ = this.isJson(this.apiData.input)
+        if (!isJ) {
+          toastr.error('传入参数格式必须为JSON！')
+          return true
+        }
+      } else if (!this.updateDesc) {
+        toastr.error('请输入接口修改说明！')
         this.sendLoad = false
         return true
       }
@@ -162,11 +184,11 @@ export default {
      * @return {[type]} [description]
      */
     sendData() {
-      console.log(this.userName)
       this.sendLoad = true
       // 判断是否输入格式正确
       const validator = this.validate()
       if (validator) {
+        this.sendLoad = false
         return
       }
       // 判断是新增还是修改接口
@@ -227,7 +249,9 @@ export default {
     },
     closeSlide() {
       // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
-      this.$dispatch('slide-menu-close')
+      this.$dispatch('slide-menu-close', () => {
+        this.$dispatch('remove-code-mirror-all')
+      })
       this.resetData()
     },
     resetData() {
@@ -239,7 +263,7 @@ export default {
           method: 'GET',
           input: '',
           url: '',
-          output: ['']
+          output: []
         }
       });
     },
@@ -277,6 +301,9 @@ export default {
         obj = i > 0 ? this.list[--i] : this.list[this.list.length - 1]
       } else {
         obj = i < this.list.length - 1 ? this.list[++i] : this.list[0]
+      }
+      if (!obj.id) {
+        this.resetData()
       }
       this.tog(obj)
     }

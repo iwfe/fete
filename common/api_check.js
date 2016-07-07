@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-06-29 14:12:15
+ * @Last Modified time: 2016-07-07 13:11:19
  */
 
 
@@ -31,8 +31,7 @@ function ApiCheckOutput(output) {
 
 
 // jquery ajax global interceptor
-window.ApiCheckForJqueryAjax = function($) {
-
+function ApiCheckForJqueryAjax() {
   // to get ajaxSend and ajaxSend work
   $.ajaxSetup({
     global: true
@@ -46,7 +45,9 @@ window.ApiCheckForJqueryAjax = function($) {
     console.log(settings.type)
     console.log(settings.data) // post 才有 ，get 直接挂 url 上了
       // ApiCheckInput(settings.data)
-    settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+    if (feteApiUseMockData) {
+      settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+    }
   })
 
 
@@ -65,7 +66,10 @@ window.ApiCheckForJqueryAjax = function($) {
 }
 
 // vue-resource global interceptor
-window.ApiCheckVueResource = function(Vue) {
+function ApiCheckVueResource() {
+  if (!Vue.http) {
+    Vue.use(VueResource)
+  }
 
   Vue.http.interceptors.push({
 
@@ -76,7 +80,9 @@ window.ApiCheckVueResource = function(Vue) {
       console.log(req.url)
       console.log(req.method)
       console.log(req.data)
-      req.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + req.url;
+      if (feteApiUseMockData) {
+        req.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + req.url;
+      }
       return req
     },
 
@@ -95,4 +101,12 @@ window.ApiCheckVueResource = function(Vue) {
 
   })
 
+}
+
+// jquery 的还有问题，先注释掉
+// if ($) {
+//   ApiCheckForJqueryAjax()
+// }
+if (Vue && VueResource) {
+  ApiCheckVueResource()
 }

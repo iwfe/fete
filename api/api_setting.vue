@@ -181,7 +181,6 @@ export default {
      * @return {[type]} [description]
      */
     sendData() {
-      console.log(this.userName)
       this.sendLoad = true
       // 判断是否输入格式正确
       const validator = this.validate()
@@ -297,6 +296,9 @@ export default {
         obj = i > 0 ? this.list[--i] : this.list[this.list.length - 1]
       } else {
         obj = i < this.list.length - 1 ? this.list[++i] : this.list[0]
+      }
+      if (!obj.id) {
+        this.resetData()
       }
       this.tog(obj)
     }

@@ -63,7 +63,6 @@
 import tableItem from './table-item.vue'
 import util from '../common/util.js'
 require('./directive.js');
-require('./filter.js')
 const mock = require('mockjs');
 import { listActive } from './vuex/getters.js'
 

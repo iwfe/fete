@@ -23,19 +23,21 @@
       </div>
 
       <div class="ui form">
-          <div class="field">
+          <!-- <div class="field">
               <label><i class="red">*</i>输入数据格式</label>
               <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea>
-          </div>
+          </div> -->
 
       <!-- </div> -->
 
       <!-- <div class="ui form backData"> -->
-          <div class="field">
-              <label><i class="red">*</i>返回数据格式</label>
+        <!--   <div class="field">
+            <label><i class="red">*</i>返回数据格式</label> -->
               <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
-              <editor-frame :output-model.sync="apiData.output" :show-mock='true'></editor-frame>
-          </div>
+              <editor-frame :output-model.sync="apiData.output"
+                            :output-json.sync="apiData.outputJson"
+                            :input-json.sync="apiData.input"></editor-frame>
+          <!-- </div> -->
           <div class="field">
               <label><i class="red">*</i>修改说明</label>
               <input type="text" class="input-revise" placeholder="接口修改说明" v-model="updateDesc">
@@ -105,6 +107,7 @@ export default {
         method: 'GET',
         input: '',
         url: '',
+        outputJson: {},
         output: []
       },
       codemirrorReady: false
@@ -247,7 +250,9 @@ export default {
     },
     closeSlide() {
       // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
-      this.$dispatch('slide-menu-close')
+      this.$dispatch('slide-menu-close', () => {
+        this.$dispatch('remove-code-mirror-all')
+      })
       this.resetData()
     },
     resetData() {

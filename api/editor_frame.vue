@@ -1,8 +1,42 @@
 <template>
     <div class='editor-wrap'>
-      <div class='input-frame' >
+      <div class="field">
+          <label><i class="red">*</i>输入数据格式</label>
+          <!-- <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea> -->
+          <textarea v-el:inputeditor ></textarea>
+      </div>
+      <div class="field">
+          <label><i class="red">*</i>返回数据格式</label>
+          <div class='input-frame'>
+            <form>
+              <!-- <textarea v-codemirror='inputData'></textarea> -->
+              <textarea v-el:outputeditor ></textarea>
+            </form>
+          </div>
+          <div class='save-button' @click='revertMock'>
+            保存
+          </div>
+          <div class='mock-frame'>
+            <!-- <textarea v-codemirror:readonly='mockData'></textarea> -->
+            <textarea v-el:mockeditor ></textarea>
+          </div>
+          <div class='' v-if='outputModel.length'>
+            <div class='table-tr table-head'>
+              <ul class='clearfix-sp'>]
+                <li class='td-key' style='text-align:center'>属性</li>
+                <li class='td-datatype'>数据类型</li>
+                <li class='td-remark'>含义</li>
+                <li class='td-mock'>mock规则</li>
+              </ul>
+            </div>
+            <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
+          </div>
+          <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
+      </div>
+      <!-- <div class='input-frame'>
         <form>
           <textarea v-codemirror='inputData'></textarea>
+          <textarea v-el:output-editor></textarea>
         </form>
       </div>
       <div class='save-button' @click='revertMock'>
@@ -21,7 +55,7 @@
           </ul>
         </div>
         <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
-      </div>
+      </div> -->
     </div>
 </template>
 
@@ -29,7 +63,9 @@
 import tableItem from './table-item.vue'
 import util from '../common/util.js'
 require('./directive.js');
+require('./filter.js')
 const mock = require('mockjs');
+import { listActive } from './vuex/getters.js'
 
 const o = [
   {
@@ -107,25 +143,54 @@ const i = {
 }
 
 export default {
+  vuex: {
+    getters: {
+      list_active: listActive,
+    }
+  },
   components: {
     tableItem
   },
   props: {
     outputModel: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
       twoWay: true
     },
     showMock: {
       type: Boolean,
       default: false
+    },
+    isAdd: {
+      type: Boolean,
+      default: true
+    },
+    outputJson: {
+      type: Object,
+      default() {
+        return {}
+      },
+      twoWay: true
     }
+
   },
   data() {
     return {
+      /*
+      输入数据模型
+       */
+      inputEditor: {},
       inputData: '',
       inputModel: '',
-      inputEditor: {},
+      /**
+       * outputEditor 返回数据编辑框对象
+       * outputJson 返回数据编辑框取到的值
+       *
+       */
+      outputEditor: {},
+      outputData: '',
       mockEditor: {},
       testModel: {
         a: '1',
@@ -136,16 +201,17 @@ export default {
       },
       testData: '',
       mockData: 'lalla',
-      parants: ''
+      parants: '',
+      editorReady: false
     }
   },
   watch: {
-    inputData(val) {
+    outputData(val) {
       const self = this;
       if (val && self.isJson(val)) {
         console.log('yes, is json');
-        self.inputModel = JSON.parse(val.replace(/[\s\r\n]/, ''));
-        self.outputModel = self.revertFormat(self.inputModel, []);
+        self.outputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
+        self.outputModel = self.revertFormat(self.outputJson, []);
         console.log(JSON.stringify(self.outputModel));
       } else {
         console.log('no, is not json');
@@ -154,6 +220,16 @@ export default {
       if (!val) {
         self.inputModel = '';
       }
+    },
+    list_active(v) {
+      const self = this;
+      // if (!v.id) {
+      //   self.outputJson = {};
+      //   self.outputModel = [];
+      //   console.log('hehe');
+      // } else {
+      //   console.log(self.outputEditor);
+      // }
     }
   },
   filters: {
@@ -163,13 +239,63 @@ export default {
   },
   ready() {
     const self = this;
-    // const a = self.revertFormat(i, []);
-    // console.log(JSON.stringify(a));
-    // console.log(_.extend(a, o));
-    // console.log(_.keys(i));
+    // if (self.outputJson) {
+    //   console.log(self.outputJson);
+    //   self.inputData = JSON.stringify(self.outputJson, null, 2);
+    // }
+    // if (self.isAdd) {
+    //   self.outputJson = {};
+    //   self.outputModel = [];
+    // }
+    // self.outputEditor.setValue(111);
+  },
+  events: {
+    'init-code-mirror-all'() {
+      const self = this;
+      if (self.editorReady) {
+        return;
+      }
+      const inputEditorDom = self.$els.inputeditor;
+      const outputEditorDom = self.$els.outputeditor;
+      const mockEditorDom = self.$els.mockeditor;
+      self.inputEditor = self.initEditor(inputEditorDom);
+      self.outputEditor = self.initEditor(outputEditorDom);
+      self.outputEditor.on('change', (cm, obj) => {
+        self.outputData = $.trim(self.getEditorData('output'))
+      });
+      self.mockEditor = self.initEditor(mockEditorDom);
+      self.editorReady = true;
+      if (!self.list_active.id) {
+        self.outputJson = {};
+        self.outputModel = [];
+      }
+      self.setEditorData('output', self.outputJson);
+    },
+    'remove-code-mirror-all'() {
+      self.editorReady = false;
+    }
   },
   methods: {
+    initEditor(dom, readOnly) {
+      const editor = CodeMirror.fromTextArea(dom, {
+        lineNumbers: true,
+        mode: 'application/json',
+        gutters: ['CodeMirror-lint-markers'],
+        lint: true,
+        readOnly: readOnly ? 'nocursor' : false
+      });
 
+      return editor;
+    },
+    getEditorData(editor) {
+      const self = this;
+      return self[`${editor}Editor`].getValue();
+    },
+    setEditorData(editor, value) {
+      const self = this;
+      const jsonStr = JSON.stringify(value, null, 2);
+      self[`${editor}Editor`].setValue(jsonStr);
+    },
     /**
      * 校验输入数据是否为json
      * @param str
@@ -204,7 +330,6 @@ export default {
       let dataType = '';
       let mockModel = '';
       let child = '';
-      // let initParents = parents;
       _.each(inputModel, (value, key) => {
         const _dataType = util.getDataType(value);
         switch (_dataType) {
@@ -227,7 +352,6 @@ export default {
             parents.pop();
             break;
           default:
-            console.log(parents);
             if (o.length > 0) {
               child = self.comparison(key, parents, self.outputModel, 0)
               comment = child.comment || '';
@@ -250,7 +374,6 @@ export default {
           mock: mockModel,
           children: children
         }
-        // console.log(tmp);
         output.push(tmp);
       })
       return output;
@@ -270,21 +393,17 @@ export default {
     },
     revertMock() {
       const self = this;
-      // this.$parent.$parent.$parent.$broadcast('sub-slide-menu-open')
       const mockModel = util.mockTree2MockTemplate(self.outputModel);
       const mockData = mock.mock(mockModel);
-      self.mockData = JSON.stringify(mockData, null, 2);
+      self.setEditorData('mock', mockData);
+      // self.mockData = JSON.stringify(mockData, null, 2);
     },
     comparison(key, parents, output, loop) {
-      // console.log(key, parents);
       const self = this;
       let child = '';
       const parentKey = parents[loop];
       if (parentKey) {
-        // console.log(parentKey);
-        // console.log('before', output);
         output = self.findChild(parentKey, output).children;
-        // console.log('after', output);
         loop++;
         child = self.comparison(key, parents, output, loop);
       } else {

@@ -57,11 +57,11 @@
       </div>
 
     <div class="detail-bottom">
-      <button class="positive mini ui button" @click="pageList">上一条</button>
+      <button class="primary mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
       <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
-      <button class="positive mini ui button" @click="pageList('')">下一条</button>
+      <button class="primary mini ui button" @click="pageList('')">下一条</button>
     </div>
 
 </div>
@@ -105,7 +105,7 @@ export default {
         method: 'GET',
         input: '',
         url: '',
-        output: ['']
+        output: []
       },
       codemirrorReady: false
     }
@@ -134,6 +134,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * 校验输入数据是否为json
+     * @param str
+     * @returns {boolean}
+       */
+    isJson(str) {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     validate() {
       if (!this.apiData.title) {
         // 未输入标题
@@ -145,12 +158,18 @@ export default {
         toastr.error('请输入URL地址！')
         this.sendLoad = false
         return true
-      } else if (!this.updateDesc) {
-        toastr.error('请输入接口修改说明！')
-        this.sendLoad = false
-        return true
       } else if (this.apiData.url[0] !== '/') {
         toastr.error('URL必须以"/"开头')
+        this.sendLoad = false
+        return true
+      } else if (this.apiData.input) {
+        const isJ = this.isJson(this.apiData.input)
+        if (!isJ) {
+          toastr.error('传入参数格式必须为JSON！')
+          return true
+        }
+      } else if (!this.updateDesc) {
+        toastr.error('请输入接口修改说明！')
         this.sendLoad = false
         return true
       }
@@ -167,6 +186,7 @@ export default {
       // 判断是否输入格式正确
       const validator = this.validate()
       if (validator) {
+        this.sendLoad = false
         return
       }
       // 判断是新增还是修改接口
@@ -239,7 +259,7 @@ export default {
           method: 'GET',
           input: '',
           url: '',
-          output: ['']
+          output: []
         }
       });
     },

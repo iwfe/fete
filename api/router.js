@@ -157,7 +157,7 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
     filter.prdId = this.parse.prdId
   }
 
-  let apiItem = yield apiDao.findOne(filter, , { sort: { createTime: -1 } })
+  let apiItem = yield apiDao.findOne(filter, { sort: { createTime: -1 } })
   if (apiItem) {
     let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
       // let data = Mock.mock({

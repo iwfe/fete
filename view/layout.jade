@@ -8,12 +8,8 @@ html
         meta(name='Description' content='FETE')
         meta(name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
         //- link(rel='shortcut icon' type='image/x-icon' href='/static/images/favicon.ico')
-        -if(commonTag=='vue_')
-          link(rel='stylesheet', href='http://localhost:3811/static/#{commonTag}common.css')
-          link(rel='stylesheet', href='http://localhost:3811/static/#{staticTag}.css')
-        -else
-          link(rel='stylesheet', href='/static/#{commonTag}common.css')
-          link(rel='stylesheet', href='/static/#{staticTag}.css')
+        link(rel='stylesheet', href='/static/#{commonTag}common.css')
+        link(rel='stylesheet', href='/static/#{staticTag}.css')
         //- link(rel='stylesheet', href='#{staticFilter("/static/css/common/module.common.css")}')
         //- link(rel='stylesheet', href='/static/layout.css')
         block css
@@ -36,11 +32,6 @@ html
                 host: '#{host}',
                 #{staticTag}: !{staticTagMapJson}
             };
-        -if(commonTag=='vue_')
-          script(src='http://localhost:3811/webpack-dev-server.js')
-          script(src='http://localhost:3811/static/#{commonTag}common.js')
-          script(src='http://localhost:3811/static/#{staticTag}.js')
-        -else
-          script(src='/static/#{commonTag}common.js')
-          script(src='/static/#{staticTag}.js')
+        script(src='/static/#{commonTag}common.js')
+        script(src='/static/#{staticTag}.js')
 

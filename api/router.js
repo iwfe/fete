@@ -44,22 +44,6 @@ router.get('/', sutil.prdLogin, function*(next) {
   });
 });
 
-// api 列表页，获取 团队，产品，prd 下拉列表的数据
-router.get('/dropdown', sutil.login, function*(next) {
-  let teams = yield teamDao.find({}, { fields: { _id: 0, id: 1, name: 1 } })
-  let projects = yield projectDao.find({}, { fields: { _id: 0, id: 1, name: 1, teamId: 1 } })
-  let prds = yield prdDao.find({}, { fields: { _id: 0, id: 1, name: 1, projectId: 1 } })
-
-  _.each(teams, function(item) {
-    item.projects = _.where(projects, { teamId: item.id })
-    _.each(item.projects, pItem => {
-      pItem.prds = _.where(prds, { projectId: pItem.id })
-    })
-  })
-
-  sutil.success(this, teams)
-});
-
 // CURD for api
 // api 列表
 router.get('/apis', sutil.login, function*(next) {
@@ -173,7 +157,7 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
     filter.prdId = this.parse.prdId
   }
 
-  let apiItem = yield apiDao.findOne(filter)
+  let apiItem = yield apiDao.findOne(filter, , { sort: { createTime: -1 } })
   if (apiItem) {
     let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
       // let data = Mock.mock({

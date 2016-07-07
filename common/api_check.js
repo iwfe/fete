@@ -2,16 +2,10 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-07 13:11:19
+ * @Last Modified time: 2016-07-07 18:42:29
  */
 
-
-
-// load mock.js in front end
-var mockScript = document.createElement('script')
-mockScript.src = feteApiHost + '/static/mock-min.js'
-document.body.appendChild(mockScript)
-
+var Mock = require('mockjs')
 
 // check input
 function ApiCheckInput(input) {
@@ -33,36 +27,60 @@ function ApiCheckOutput(output) {
 // jquery ajax global interceptor
 function ApiCheckForJqueryAjax() {
   // to get ajaxSend and ajaxSend work
-  $.ajaxSetup({
-    global: true
-  })
+  if ($.ajaxSetup) {
+    // jquery
+    $.ajaxSetup({
+        global: true
+      })
+      // check input
+    $(document).ajaxSend(function(event, jqxhr, settings) {
+        console.log('-------- from api_check.js jquery ajax before send')
+          // console.log(settings)
+        console.log(settings.url)
+        console.log(settings.type)
+        console.log(settings.data) // post 才有 ，get 直接挂 url 上了
+          // ApiCheckInput(settings.data)
+        if (feteApiUseMockData) {
+          settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+        }
+      })
+      // check output
+    $(document).ajaxSuccess(function(event, jqxhr, settings) {
+      console.log('-------- from api_check.js jquery ajax after success')
+        // console.log(jqxhr)
+      console.log(settings.url)
+      console.log(settings.type)
+      console.log(jqxhr.responseJSON) // 还有一个 responseText
+      console.log('----- check output result:')
+      var checkResult = ApiCheckOutput(jqxhr.responseJSON)
+      console.log(checkResult)
+    })
+  } else if ($.ajaxSettings) {
+    // zepto
+    $.ajaxSettings.global = true
 
-  // check input
-  $(document).ajaxSend(function(event, jqxhr, settings) {
-    console.log('-------- from api_check.js jquery ajax before send')
-      // console.log(settings)
-    console.log(settings.url)
-    console.log(settings.type)
-    console.log(settings.data) // post 才有 ，get 直接挂 url 上了
-      // ApiCheckInput(settings.data)
-    if (feteApiUseMockData) {
-      settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
-    }
-  })
-
-
-  // check output
-  $(document).ajaxSuccess(function(event, jqxhr, settings) {
-    console.log('-------- from api_check.js jquery ajax after success')
-      // console.log(jqxhr)
-    console.log(settings.url)
-    console.log(settings.type)
-    console.log(jqxhr.responseJSON) // 还有一个 responseText
-    console.log('----- check output result:')
-    var checkResult = ApiCheckOutput(jqxhr.responseJSON)
-    console.log(checkResult)
-  })
-
+    $(document).on('ajaxBeforeSend', function(e, xhr, settings) {
+      console.log('-------- from api_check.js zepto ajax before send')
+        // console.log(settings)
+      console.log(settings.url)
+      console.log(settings.type)
+      console.log(settings.data) // post 才有 ，get 直接挂 url 上了
+        // ApiCheckInput(settings.data)
+      if (feteApiUseMockData) {
+        settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+      }
+    })
+    $(document).on('ajaxSuccess', function(e, xhr, settings) {
+      console.log('-------- from api_check.js zepto ajax after success')
+        // console.log(jqxhr)
+      console.log(settings.url)
+      console.log(settings.type)
+      console.log(xhr.responseJSON) // 还有一个 responseText
+      console.log('----- check output result:')
+      var checkResult = ApiCheckOutput(xhr.responseJSON)
+      console.log(checkResult)
+    })
+  }
 }
 
 // vue-resource global interceptor
@@ -104,9 +122,18 @@ function ApiCheckVueResource() {
 }
 
 // jquery 的还有问题，先注释掉
-// if ($) {
-//   ApiCheckForJqueryAjax()
-// }
-if (Vue && VueResource) {
-  ApiCheckVueResource()
+try {
+  if ($) {
+    ApiCheckForJqueryAjax()
+  }
+} catch (e) {
+  console.log(e)
+}
+
+try {
+  if (Vue && VueResource) {
+    ApiCheckVueResource()
+  }
+} catch (e) {
+  console.log(e)
 }

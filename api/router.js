@@ -194,7 +194,7 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
 })
 
 // mock_check.js file
-// must with projectId as query, like: /api/mock_check.js?projectId=123
+// must with projectId as query, like: /api/mock_check.js?useMockData=true&projectId=123
 router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
   if (!this.parse.projectId) {
     this.type = 'js'
@@ -202,7 +202,8 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
   } else {
     let jsContent = `
                     var feteApiProductId = '${this.parse.projectId}';
-                    var feteApiHost = '${config.host}'
+                    var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
+                    var feteApiHost = '${config.host}';
                     `;
     jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
     this.type = 'js'

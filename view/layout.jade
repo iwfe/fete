@@ -30,8 +30,8 @@ html
                 me: !{user} || {},
                 staticTag: '#{staticTag}',
                 host: '#{host}',
+                socketConnection: '#{socketConnection}',
                 #{staticTag}: !{staticTagMapJson}
             };
         script(src='/static/#{commonTag}common.js')
         script(src='/static/#{staticTag}.js')
-

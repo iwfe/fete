@@ -1,4 +1,14 @@
 /**
+* @Author: lancui
+* @Date:   2016-06-29 17:06:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-08 15:07:02
+*/
+
+
+
+/**
  * Created by zyy on 15/6/26.
  * zhangyuyu@superjia.com
  */
@@ -8,6 +18,8 @@ module.exports = {
     authKey: 'fete',
     host: 'http://localhost:3810',
     mongodbConnection: '192.168.1.46/fete',
+    host: 'localhost',
+    socketPort: 3000,
     // redis: {
     //     host: "localhost",
     //     //pass: '',

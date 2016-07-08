@@ -3,9 +3,9 @@
 * @Date:   2016-06-27 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 16:07:70
+* @Last modified time: 2016-07-08 15:07:93
 */
-const socket = require('socket.io-client')('http://localhost:3000');
+const socket = require('socket.io-client')(pageConfig.socketConnection);
 
 socket.on('getUserId', (data) => {
   socket.emit('addToUserSocketMap', pageConfig.me.username);

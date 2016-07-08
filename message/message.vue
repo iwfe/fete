@@ -11,7 +11,7 @@
                     <th width="10%">操作</th>
                     <th>描述</th>
                     <th style="width: 16%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
-                    <button class="ui basic button all-read" @click="addMsg">add</button></th>
+                    <!-- <button class="ui basic button all-read" @click="addMsg">add</button></th> -->
                 </tr>
             </thead>
             <tbody>
@@ -20,15 +20,16 @@
                     <td>{{item.userName}}</td>
                     <td>{{item.platform}}</td>
                     <td>{{item.action}}</td>
-                    <td>{{item.actionDetail}}</td>
+                    <td>{{item.actionDetail.message}}</td>
                     <td>
-                      <span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
-                      <span v-if="item.actionDetail.btns" v-for="btn in item.actionDetail.btns" class='read-status read mbtn' :class="btn.style ? btn.style : ''"
-                        click="if(btn.type === 'ajax') doAjax(btn.ajax)"
+                      <span v-if="item.actionDetail.btns && item.status===0" v-for="btn in item.actionDetail.btns" class='read-status read mbtn' :class="btn.style ? btn.style : ''"
+                          @click="doAjax(btn.ajax, item.id, index)"
                         >
                         <a v-if="btn.type === 'link'" href="{{btn.linkUrl}}">{{btn.text}}</a>
                         <em v-else>{{btn.text}}</em>
                       </span>
+                      <span v-if="!item.actionDetail.btns || item.status===1" class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
+
                     </td>
                 </tr>
             </tbody>
@@ -92,55 +93,59 @@
        * @param type 1:接受，2，拒绝
        * @param actionDetail 对象：{ team: { id:'xxx', name: 'xxx' } }
        */
-      doAjax(ajaxInfo) {
+      doAjax(ajaxInfo, msgId, i) {
+        const self = this;
+        if (!ajaxInfo || !ajaxInfo.url) return;
+        console.log(JSON.stringify(ajaxInfo));
         fetch(ajaxInfo.url, {
           method: ajaxInfo.method ? ajaxInfo.method : 'GET',
           body: ajaxInfo.body ? ajaxInfo.body : {}
         }).then(res => {
-        });
-      },
-      addMsg() {
-        let msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
-        msg = {
-          userName: '',   // 操作人姓名
-          msgType: '0',   // 消息类型：系统(0)，提醒(1)
-          platform: 'team',    // 平台类型(team, project, prd, api)
-          platformId: '4dOaCN',   // 平台Id
-          action: 'invited', // 操作 (如：add, update, delete,invited)
-          actionDetail: {
-            team: {
-              id: '4dOaCN',
-              name: 'xxx'
-            },
-            btns: [{
-              text: '接受',
-              type: 'ajax',
-              ajax: {
-                url: '/team/member/invited',
-                method: 'get',
-                body: {
-                  teamId: '4dOaCN',
-                }
-              }
-            }, {
-              text: '拒绝',
-              type: 'link',
-              linkUrl: 'www.baidu.com'
-            }]
-          }, // 操作描述
-          createTime: new Date, // 创建时间
-          toUsers: [{
-            userId: 'lancui', // 提醒用户ID
-            status: 0 // 0未读, 1已读
-          }]
-        };
-        fetch('/message/messages', {
-          method: 'POST',
-          body: JSON.stringify({ msgData: msg })
-        }).then(res => {
-          this.getMsgList();
+          self.updateStatus(msgId, i, 0)
         });
       }
+      // ,
+      // addMsg() {
+      //   let msg = { userName: 'jade', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: { message: '新增消息接口' } };
+      //   msg = {
+      //     userName: 'jade',   // 操作人姓名
+      //     msgType: '0',   // 消息类型：系统(0)，提醒(1)
+      //     platform: 'team',    // 平台类型(team, project, prd, api)
+      //     platformId: '4dOaCN',   // 平台Id
+      //     action: 'invited', // 操作 (如：add, update, delete,invited)
+      //     actionDetail: {
+      //       message: 'lancui, 邀请你加入全新项目组',
+      //       btns: [{
+      //         text: '接受',
+      //         type: 'ajax',
+      //         style: 'primary',
+      //         ajax: {
+      //           url: '/team/member/invited/accept',
+      //           method: 'post',
+      //           body: {
+      //             teamId: '4dOaCN',
+      //           }
+      //         }
+      //       }, {
+      //         text: '拒绝',
+      //         type: 'link',
+      //         style: 'danger',
+      //         linkUrl: 'http://www.baidu.com'
+      //       }]
+      //     }, // 操作描述
+      //     // createTime: new Date, // 创建时间
+      //     // toUsers: [{
+      //     //   userId: 'lancui', // 提醒用户ID
+      //     //   status: 0 // 0未读, 1已读
+      //     // }]
+      //   };
+      //   fetch('/message/messages', {
+      //     method: 'POST',
+      //     body: JSON.stringify({ msgData: msg })
+      //   }).then(res => {
+      //     this.getMsgList();
+      //   });
+      // }
 
     }
   }
@@ -168,6 +173,18 @@
         .mbtn {
            cursor: pointer;
            margin-right: 5px;
+        }
+        .primary {
+          border: solid 1px #21BA45;
+          background: #21BA45;
+        }
+        .warning {
+          border: solid 1px #ff7701;
+          background: #ff7701;
+        }
+        .danger {
+          border: solid 1px #DB2828;
+          background: #DB2828;
         }
         .all-read {
             margin-left: 10px;

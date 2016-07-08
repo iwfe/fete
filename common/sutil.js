@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 11:07:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-07 11:07:81
+* @Last modified time: 2016-07-08 15:07:74
 */
 
 
@@ -408,7 +408,34 @@ var sutil = {
   /**
    * 添加消息并发送提醒
    * @param msgData 消息对象，toUsers为空
-   * @param toUsers 可选
+   * {
+       userName: 'jade',   // 操作人姓名
+       msgType: '0',   // 消息类型：系统(0)，提醒(1)
+       platform: 'team',    // 平台类型(team, project, prd, api)
+       platformId: '4dOaCN',   // 平台Id
+       action: 'invited', // 操作 (如：add, update, delete,invited)
+       actionDetail: {
+         message: 'lancui, 邀请你加入全新项目组',
+         btns: [{
+           text: '接受',
+           type: 'ajax',
+           style: 'primary',
+           ajax: {
+             url: '/team/member/invited/accept',
+             method: 'post',
+             body: {
+               teamId: '4dOaCN',
+             }
+           }
+         }, {
+           text: '拒绝',
+           type: 'link',
+           style: 'danger',
+           linkUrl: 'http://www.baidu.com'
+         }]
+       }
+   * @param teamId 可选  teamId, toUser为此team的所有组员
+   * @param toUsers 可选 如果teamId为null，则toUsers为此参数
    */
   * addMessage (msgData, teamId, toUsers) {
     //获取team里的所有user
@@ -429,6 +456,7 @@ var sutil = {
     let res = yield msgDao.insert(
       _.extend(msgData, {
         id: yield sutil.genId(msgDao, 10),
+        createTime: new Date,
         toUsers: addToUsers
     }));
 

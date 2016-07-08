@@ -16,7 +16,20 @@ const message = {
   platform: '',    // 平台类型(team, project, prd, api)
   platformId: '',   // 平台Id
   action: '', // 操作 (如：add, update, delete)
-  actionDetail: {}, // 操作描述
+  actionDetail: {
+    btns: [{
+      text: '',
+      type: 'link|ajax', //link:在新窗口打开的链接,ajax,发送ajax接口
+      ajax: {
+        url: '',
+        method: '',
+        body: {
+
+        }
+      }, //ajax参数
+      linkUrl: ''
+    }]
+  }, // 操作描述
   createTime: '', // 创建时间
   toUsers: [{
     userId: '', // 提醒用户ID
@@ -38,12 +51,23 @@ const invited ={
   msgType: '0',   // 消息类型：系统(0)，提醒(1)
   platform: 'team',    // 平台类型(team, project, prd, api)
   platformId: 'xxx',   // 平台Id
-  action: 'invited', // 操作 (如：add, update, delete)
+  action: 'invited', // 操作 (如：add, update, delete,invited)
   actionDetail: {
     team: {
       id:'xxx',
       name: 'xxx'
-    }
+    },
+    btns: [{
+      text: '接受',
+      type: 'ajax',
+      ajax: {
+        url: '/team/member/invited',
+        method: 'get',
+        body: {
+          teamId: 'xxx',
+        }
+      }
+    }]
   }, // 操作描述
   createTime: '', // 创建时间
   toUsers: [{

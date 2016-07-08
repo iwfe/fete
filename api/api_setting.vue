@@ -64,7 +64,7 @@
 
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, productId, teamId, listIndex } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex } from './vuex/getters.js'
 require('./directive.js');
 export default {
   vuex: {
@@ -72,7 +72,7 @@ export default {
       list,
       list_active: listActive,
       userId, prdId,
-      productId,
+      projectId,
       teamId,
       listIndex
     },
@@ -95,7 +95,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         outputJson: {},
         output: []
       },
@@ -112,22 +112,6 @@ export default {
       } else {
         this.resetData();
       }
-    }
-  },
-  computed: {
-    last() {
-      const index = this.getIndex();
-      const last = this.list.length - 1;
-      return index !== last;
-    },
-    first() {
-      const index = this.getIndex();
-      return index
-    }
-  },
-  events: {
-    'init-code-mirror'() {
-      // this.codemirrorReady = true;
     }
   },
   methods: {
@@ -192,7 +176,7 @@ export default {
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
-        productId: this.productId,
+        projectId: this.projectId,
         teamId: this.teamId
       });
       // 如果是新增接口
@@ -254,7 +238,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         output: []
       }
     },

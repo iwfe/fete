@@ -265,11 +265,22 @@ var util = {
         if (data.dataType === 'boolean') {
           value = (mockArr[1] === 'true')
         } else if (data.dataType === 'number') {
-          value = parseFloat(mockArr[1])
+          // if is array
+          if (value[0] === '[') {
+            value = eval(mockArr[1])
+          } else {
+            value = parseFloat(mockArr[1])
+          }
         } else if (!mockArr[0] && value[0] === '/') {
           // regexp
           let regArr = mockArr[1].split('/')
           value = new RegExp(regArr[1], regArr[2])
+        } else {
+          // string
+          // if is array
+          if (value[0] === '[') {
+            value = eval(mockArr[1])
+          }
         }
         result[`${data.key}${mockArr[0]}`] = value
       }

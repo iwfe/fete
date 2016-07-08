@@ -166,8 +166,106 @@ router.post('/member/invited', sutil.teamLogin(), function*(next) {
       }
     });
     member.team = team;
+    const teamDetail = yield teamDao.findOne({
+      id: teamId
+    })
+    //发送邀请消息
+    const invitedMsg ={
+      userName: user.username,   // 操作人姓名
+      msgType: '0',   // 消息类型：系统(0)，提醒(1)
+      platform: 'team',    // 平台类型(team, project, prd, api)
+      platformId: teamId,   // 平台Id
+      action: 'invited', // 操作 (如：add, update, delete,invited)
+      actionDetail: {
+        message: `${user.username}邀请你加入"${teamDetail.name}"`,
+        btns: [{
+          text: '接受',
+          style: 'primary',
+          type: 'ajax',
+          ajax: {
+            url: '/team/member/invited/accept',
+            method: 'post',
+            body: {
+              teamId: teamId,
+            }
+          }
+        },{
+          text: '拒绝',
+          type: 'ajax',
+          style: 'danger',
+          ajax: {
+            url: '/team/member/invited/reject',
+            method: 'post',
+            body: {
+              teamId: teamId,
+            }
+          }
+        }]
+      }
+    }
+
+    yield sutil.addMessage(invitedMsg, null, [username]);
   }
+
   sutil.success(this, member);
+});
+
+router.post('/member/invited/accept', sutil.login(), function*(next) {
+  const user = this.locals._user;
+  const {teamId} = this.parse;
+
+  let teams = user.teams;
+
+  let userTeam = _.find(teams, function (item) {
+    return item.id === teamId;
+  });
+
+  if(!userTeam) {
+    return yield sutil.result(this, {
+      code: 11001,
+      redirect: redirect
+    });
+  }
+
+  userTeam.status = 'normal';
+
+  yield userDao.update({
+    username: user.username
+  }, {
+    $set: {
+      teams: teams
+    }
+  });
+
+  sutil.success(this, {});
+});
+
+router.post('/member/invited/reject', sutil.teamLogin(), function*(next) {
+  const user = this.locals._user;
+  const {teamId} = this.parse;
+
+  let teams = user.teams;
+
+  let userTeam = _.find(teams, item => item.id === teamId);
+
+  if(!userTeam) {
+    return yield sutil.result(this, {
+      code: 11001,
+      redirect: redirect
+    });
+  }
+
+  teams = _.filter(teams, item => item.id !== teamId);
+
+  yield userDao.update({
+    username: user.username
+  }, {
+    $set: {
+      teams: teams
+    }
+  });
+
+  sutil.success(this, {});
 });
 
 router.del('/member', sutil.teamLogin('owner'), function*(next) {

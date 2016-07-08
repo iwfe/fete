@@ -21,7 +21,13 @@
                     <td>{{item.platform}}</td>
                     <td>{{item.action}}</td>
                     <td>{{item.actionDetail}}</td>
-                    <td><span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span></td>
+                    <td>
+                      <span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
+                      <div v-if="item.action === 'invited'">
+                        <span class='read-status read' @click="doInvited(1, item.actionDetail)">接受</span>
+                        <span class='read-status' @click="doInvited(2, item.actionDetail)">拒绝</span>
+                      </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -79,15 +85,28 @@
           });
         }
       },
-      addMsg() {
-        const msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
-        fetch('/message/messages', {
-          method: 'POST',
-          body: JSON.stringify({ msgData: msg })
-        }).then(res => {
-          this.getMsgList();
-        });
+      /**
+       * 处理邀请信息
+       * @param type 1:接受，2，拒绝
+       * @param actionDetail 对象：{ team: { id:'xxx', name: 'xxx' } }
+       */
+      doInvited(type, actionDetail) {
+        if (type === 1) {
+          // TODO
+        } else {
+          // TODO
+        }
       }
+      // ,
+      // addMsg() {
+      //   const msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
+      //   fetch('/message/messages', {
+      //     method: 'POST',
+      //     body: JSON.stringify({ msgData: msg })
+      //   }).then(res => {
+      //     this.getMsgList();
+      //   });
+      // }
 
     }
   }

@@ -289,7 +289,8 @@ export default {
         mode: 'application/json',
         gutters: ['CodeMirror-lint-markers'],
         lint: true,
-        readOnly: readOnly ? 'nocursor' : false
+        readOnly: readOnly ? 'nocursor' : false,
+        tabSize: 2
       });
 
       return editor;

@@ -26,7 +26,8 @@
           <editor-frame :output-model.sync="apiData.output"
                         :output-json.sync="apiData.outputJson"
                         :input-json.sync="apiData.input"
-                        :is-add.sync="isAdd"></editor-frame>
+                        :is-add.sync="isAdd"
+                        :editor-error.sync="editorError"></editor-frame>
           <div class="field">
               <label><i class="red">*</i>修改说明</label>
               <input type="text" class="input-revise" placeholder="接口修改说明" v-model="updateDesc">
@@ -99,7 +100,8 @@ export default {
         output: []
       },
       codemirrorReady: false,
-      isAdd: true
+      isAdd: true,
+      editorError: {}
     }
   },
   watch: {
@@ -157,12 +159,9 @@ export default {
         toastr.error('URL必须以"/"开头')
         this.sendLoad = false
         return true
-      } else if (this.apiData.input) {
-        const isJ = this.isJson(this.apiData.input)
-        if (!isJ) {
-          toastr.error('传入参数格式必须为JSON！')
-          return true
-        }
+      } else if (this.editorError.status !== 1) {
+        toastr.error(this.editorError.msg)
+        return true
       } else if (!this.updateDesc) {
         toastr.error('请输入接口修改说明！')
         this.sendLoad = false

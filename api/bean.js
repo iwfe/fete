@@ -43,7 +43,7 @@ const api = {
 		updateDesc: '' // 更新说明
 	}],
 	prdId: '', // PrdID
-	productId: '', // 项目Id
+	projectId: '', // 项目Id
 	teamId: '', // 项目组Id
 	updateTime:'', // 更新时间
 	createTime:'' // 创建时间

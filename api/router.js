@@ -189,10 +189,22 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.type = 'js'
     this.body = `console.log('no projectId');`;
   } else {
+    let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
+      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1 },
+      sort: { createAt: 1 }
+    })
+    let allApiFormMock = {}
+    _.each(apiItems, item => {
+      allApiFormMock[item.method + item.url] = {
+        input: item.input,
+        output: item.output
+      }
+    })
     let jsContent = `
                     var feteApiProductId = '${this.parse.projectId}';
                     var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
                     var feteApiHost = '${config.host}';
+                    var feteApiForMock = ${JSON.stringify(allApiFormMock)};
                     `;
     jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
     this.type = 'js'

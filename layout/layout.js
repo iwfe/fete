@@ -1,8 +1,8 @@
 /*
  * @Author: jade
  * @Date:   2016-05-31 14:07:40
- * @Last Modified by:   jade
- * @Last Modified time: 2016-06-15 18:23:45
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-08 17:07:86
  */
 
 'use strict';
@@ -59,6 +59,9 @@ class Header extends React.Component {
                                 </Menu.Item>)
                         }
                     </Menu>
+                </div>
+                <div className="pull-right">
+                    <a className="item msg-span ant-menu" href="/message">消息 (<span className="msg-count">0</span>)</a>
                 </div>
             </div>
         );

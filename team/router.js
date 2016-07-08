@@ -210,7 +210,7 @@ router.post('/member/invited', sutil.teamLogin(), function*(next) {
   sutil.success(this, member);
 });
 
-router.post('/member/invited/accept', sutil.login(), function*(next) {
+router.post('/member/invited/accept', sutil.login, function*(next) {
   const user = this.locals._user;
   const {teamId} = this.parse;
 
@@ -240,7 +240,7 @@ router.post('/member/invited/accept', sutil.login(), function*(next) {
   sutil.success(this, {});
 });
 
-router.post('/member/invited/reject', sutil.teamLogin(), function*(next) {
+router.post('/member/invited/reject', sutil.login, function*(next) {
   const user = this.locals._user;
   const {teamId} = this.parse;
 

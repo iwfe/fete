@@ -95,7 +95,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         outputJson: {},
         output: []
       },
@@ -112,22 +112,6 @@ export default {
       } else {
         this.resetData();
       }
-    }
-  },
-  computed: {
-    last() {
-      const index = this.getIndex();
-      const last = this.list.length - 1;
-      return index !== last;
-    },
-    first() {
-      const index = this.getIndex();
-      return index
-    }
-  },
-  events: {
-    'init-code-mirror'() {
-      // this.codemirrorReady = true;
     }
   },
   methods: {
@@ -254,7 +238,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         output: []
       }
     },

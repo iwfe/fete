@@ -61,8 +61,18 @@ const invited ={
       text: '接受',
       type: 'ajax',
       ajax: {
-        url: '/team/member/invited',
-        method: 'get',
+        url: '/team/member/invited/accept',
+        method: 'post',
+        body: {
+          teamId: 'xxx',
+        }
+      }
+    },{
+      text: '拒绝',
+      type: 'ajax',
+      ajax: {
+        url: '/team/member/invited/reject',
+        method: 'post',
         body: {
           teamId: 'xxx',
         }

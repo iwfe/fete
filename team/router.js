@@ -142,7 +142,7 @@ router.get('/member', sutil.teamLogin(), function*(next) {
   sutil.success(this, users);
 });
 
-router.post('/member/invite', sutil.teamLogin(), function*(next) {
+router.post('/member/invited', sutil.teamLogin(), function*(next) {
   const user = this.locals._user;
   const {teamId, username} = this.parse;
   const member = sutil.wrapUser(yield userDao.findOne({

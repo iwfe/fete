@@ -4,7 +4,7 @@
           <label><i class="red">*</i>输入数据格式</label>
           <textarea v-el:inputeditor ></textarea>
       </div>
-      <div class="field output-field">
+      <div class="field output-field clearfix-sp">
           <label><i class="red">*</i>返回数据格式</label>
           <div class="output-editor">
             <div class='input-frame'>
@@ -19,19 +19,19 @@
               <textarea v-el:mockeditor ></textarea>
             </div>
           </div>
+        </div>
 
-          <div class='' v-if='outputModel.length'>
-            <div class='table-tr table-head'>
-              <ul class='clearfix-sp'>]
-                <li class='td-key' style='text-align:center'>属性</li>
-                <li class='td-datatype'>数据类型</li>
-                <li class='td-remark'>含义</li>
-                <li class='td-mock'>mock规则</li>
-              </ul>
-            </div>
-            <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
+        <div class='' v-if='outputModel.length'>
+          <div class='table-tr table-head'>
+            <ul class='clearfix-sp'>]
+              <li class='td-key' style='text-align:center'>属性</li>
+              <li class='td-datatype'>数据类型</li>
+              <li class='td-remark'>含义</li>
+              <li class='td-mock'>mock规则</li>
+            </ul>
           </div>
-      </div>
+          <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
+        </div>
     </div>
 </template>
 

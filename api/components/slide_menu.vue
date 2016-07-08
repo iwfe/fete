@@ -18,9 +18,9 @@
       }
     },
     ready() {
-      $('html').click(() => {
-        this.$emit('slide-menu-close');
-      });
+      // $('html').click(() => {
+      //   this.$emit('slide-menu-close');
+      // });
       $('.slide-menu').click((e) => {
         e.stopPropagation();
       });

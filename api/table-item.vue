@@ -189,7 +189,6 @@
 
     .clearfix-sp {
       *zoom: 1;
-      &:before,
       &:after {
         display: table;
         content: "";

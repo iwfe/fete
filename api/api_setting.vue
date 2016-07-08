@@ -94,7 +94,7 @@ export default {
       apiData: {
         title: '',
         method: 'GET',
-        input: '',
+        input: {},
         url: '/',
         outputJson: {},
         output: []

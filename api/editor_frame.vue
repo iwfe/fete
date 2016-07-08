@@ -145,12 +145,17 @@ export default {
     outputJson: {
       type: Object,
       default() {
-        return {}
+        return {
+          status: 1,
+          data: {
+            test: ''
+          }
+        }
       },
       twoWay: true
     },
     inputJson: {
-      type: String,
+      type: Object,
       default() {
         return {}
       },
@@ -215,7 +220,7 @@ export default {
       const self = this;
       if (val && self.isJson(val)) {
         console.log('yes, is json');
-        self.inputJson = val.replace(/[\s\r\n]/, '');
+        self.inputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
         if (!self.isJson(self.outputData)) {
           return self.setError(3);
         }
@@ -224,20 +229,18 @@ export default {
       console.log('no, is not json');
       return self.setError(2);
     },
-    list_active(v) {
-      const self = this;
-      // if (!v.id) {
-      //   self.outputJson = {};
-      //   self.outputModel = [];
-      // } else {
-      //   self.$emit('init-code-mirror-all')
-      // }
-    },
     isAdd(v) {
       const self = this;
       if (v) {
-        self.inputJson = '';
-        self.outputJson = {};
+        self.inputJson = {
+          id: 123
+        };
+        self.outputJson = {
+          status: 1,
+          data: {
+            test: 'test'
+          }
+        };
         self.outputModel = [];
       }
       self.$emit('init-code-mirror-all');
@@ -271,7 +274,15 @@ export default {
       self.mockEditor = self.initEditor(mockEditorDom, true);
       self.editorReady = true;
       if (!self.list_active.id) {
-        self.outputJson = {};
+        self.inputJson = {
+          id: 123
+        };
+        self.outputJson = {
+          status: 1,
+          data: {
+            test: 'test'
+          }
+        };
         self.outputModel = [];
       }
       self.setEditorData('input', self.inputJson);

@@ -2,7 +2,6 @@
     <div class='editor-wrap'>
       <div class="field">
           <label><i class="red">*</i>输入数据格式</label>
-          <!-- <textarea class="input-param" placeholder="输入数据格式" v-codemirror="apiData.input"></textarea> -->
           <textarea v-el:inputeditor ></textarea>
       </div>
       <div class="field output-field">
@@ -10,7 +9,6 @@
           <div class="output-editor">
             <div class='input-frame'>
               <form>
-                <!-- <textarea v-codemirror='inputData'></textarea> -->
                 <textarea v-el:outputeditor ></textarea>
               </form>
             </div>
@@ -18,7 +16,6 @@
               mock->
             </div>
             <div class='mock-frame'>
-              <!-- <textarea v-codemirror:readonly='mockData'></textarea> -->
               <textarea v-el:mockeditor ></textarea>
             </div>
           </div>
@@ -34,31 +31,7 @@
             </div>
             <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
           </div>
-          <!-- <textarea class="output-param" placeholder="返回数据格式" v-model="apiData.output[0]"></textarea> -->
       </div>
-      <!-- <div class='input-frame'>
-        <form>
-          <textarea v-codemirror='inputData'></textarea>
-          <textarea v-el:output-editor></textarea>
-        </form>
-      </div>
-      <div class='save-button' @click='revertMock'>
-        保存
-      </div>
-      <div class='mock-frame'>
-        <textarea v-codemirror:readonly='mockData'></textarea>
-      </div>
-      <div class='' v-if='inputModel'>
-        <div class='table-tr table-head'>
-          <ul class='clearfix-sp'>]
-            <li class='td-key' style='text-align:center'>属性</li>
-            <li class='td-datatype'>数据类型</li>
-            <li class='td-remark'>含义</li>
-            <li class='td-mock'>mock规则</li>
-          </ul>
-        </div>
-        <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
-      </div> -->
     </div>
 </template>
 

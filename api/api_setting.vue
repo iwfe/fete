@@ -107,6 +107,7 @@ export default {
   watch: {
     list_active(v) {
       this.isAdd = true;
+      $('#api-detail .body').scrollTop(0)
       if (v.id) {
         this.getdata();
       } else {
@@ -256,19 +257,21 @@ export default {
       })
     },
     delList() {
-      this.delLoad = true;
-      fetch(`/api/apis/${this.list_active.id}`, {
-        method: 'DELETE'
-      }).then(res => {
-        if (res.code === 200) {
-          toastr.success('成功删除API！');
-          this.del();
-        } else {
-          toastr.error('删除API失败，请重试！');
-        }
-        this.delLoad = false;
-      });
-      window.setTimeout(this.closeSlide, 300);
+      if (confirm('确定要删除此API？')) {
+        this.delLoad = true;
+        fetch(`/api/apis/${this.list_active.id}`, {
+          method: 'DELETE'
+        }).then(res => {
+          if (res.code === 200) {
+            toastr.success('成功删除API！');
+            this.del();
+          } else {
+            toastr.error('删除API失败，请重试！');
+          }
+          this.delLoad = false;
+        });
+        window.setTimeout(this.closeSlide, 300);
+      }
     },
     pageList(leo) {
       let i = this.listIndex

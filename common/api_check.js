@@ -24,7 +24,7 @@ function ApiCheckMockTree2MockTemplate(data, result) {
     // if has children
     if (data.children) {
       let tmpChildren = null
-      if (data.dataType === 'object') {
+      if (data.dataType.toLowerCase() === 'object') {
         // object
         tmpChildren = {}
         for (var i = data.children.length - 1; i >= 0; i--) {
@@ -41,9 +41,9 @@ function ApiCheckMockTree2MockTemplate(data, result) {
     } else {
       // has no children
       let value = mockArr[1]
-      if (data.dataType === 'boolean') {
+      if (data.dataType.toLowerCase() === 'boolean') {
         value = (mockArr[1] === 'true')
-      } else if (data.dataType === 'number') {
+      } else if (data.dataType.toLowerCase() === 'number') {
         // if is array
         if (value[0] === '[') {
           value = eval(mockArr[1])

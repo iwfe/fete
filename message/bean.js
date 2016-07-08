@@ -2,8 +2,8 @@
  * @Author: lancui
  * @Date:   2016-07-01 11:07:00
  * @Email:  lancui@superjia.com
- * @Last modified by:   lancui
- * @Last modified time: 2016-07-04 17:07:10
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-08 12:07:96
  */
 
 
@@ -37,14 +37,6 @@ const message = {
     userId: '', // 提醒用户ID
     status: 0 // 0未读, 1已读
   }]
-}
-
-
-const userMessage = {
-  _id: '',
-  msgId: '', // 消息ID
-  userId: '', // 提醒用户ID
-  status: 0 // 0未读, 1已读
 }
 
 //邀请成员相关消息

@@ -10,8 +10,8 @@
                     <th width="10%">平台</th>
                     <th width="10%">操作</th>
                     <th>描述</th>
-                    <th style="width: 14%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
-                    <!-- <button class="ui basic button all-read" @click="addMsg">add</button></th> -->
+                    <th style="width: 16%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
+                    <button class="ui basic button all-read" @click="addMsg">add</button></th>
                 </tr>
             </thead>
             <tbody>
@@ -23,10 +23,12 @@
                     <td>{{item.actionDetail}}</td>
                     <td>
                       <span class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
-                      <div v-if="item.action === 'invited'">
-                        <span class='read-status read' @click="doInvited(1, item.actionDetail)">接受</span>
-                        <span class='read-status' @click="doInvited(2, item.actionDetail)">拒绝</span>
-                      </div>
+                      <span v-if="item.actionDetail.btns" v-for="btn in item.actionDetail.btns" class='read-status read mbtn' :class="btn.style ? btn.style : ''"
+                        click="if(btn.type === 'ajax') doAjax(btn.ajax)"
+                        >
+                        <a v-if="btn.type === 'link'" href="{{btn.linkUrl}}">{{btn.text}}</a>
+                        <em v-else>{{btn.text}}</em>
+                      </span>
                     </td>
                 </tr>
             </tbody>
@@ -90,23 +92,55 @@
        * @param type 1:接受，2，拒绝
        * @param actionDetail 对象：{ team: { id:'xxx', name: 'xxx' } }
        */
-      doInvited(type, actionDetail) {
-        if (type === 1) {
-          // TODO
-        } else {
-          // TODO
-        }
+      doAjax(ajaxInfo) {
+        fetch(ajaxInfo.url, {
+          method: ajaxInfo.method ? ajaxInfo.method : 'GET',
+          body: ajaxInfo.body ? ajaxInfo.body : {}
+        }).then(res => {
+        });
+      },
+      addMsg() {
+        let msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
+        msg = {
+          userName: '',   // 操作人姓名
+          msgType: '0',   // 消息类型：系统(0)，提醒(1)
+          platform: 'team',    // 平台类型(team, project, prd, api)
+          platformId: '4dOaCN',   // 平台Id
+          action: 'invited', // 操作 (如：add, update, delete,invited)
+          actionDetail: {
+            team: {
+              id: '4dOaCN',
+              name: 'xxx'
+            },
+            btns: [{
+              text: '接受',
+              type: 'ajax',
+              ajax: {
+                url: '/team/member/invited',
+                method: 'get',
+                body: {
+                  teamId: '4dOaCN',
+                }
+              }
+            }, {
+              text: '拒绝',
+              type: 'link',
+              linkUrl: 'www.baidu.com'
+            }]
+          }, // 操作描述
+          createTime: new Date, // 创建时间
+          toUsers: [{
+            userId: 'lancui', // 提醒用户ID
+            status: 0 // 0未读, 1已读
+          }]
+        };
+        fetch('/message/messages', {
+          method: 'POST',
+          body: JSON.stringify({ msgData: msg })
+        }).then(res => {
+          this.getMsgList();
+        });
       }
-      // ,
-      // addMsg() {
-      //   const msg = { userName: 'lancui', msgType: '1', platform: 'api', platformId: '576b401056e121e6c9ef082b', action: 'add', actionDetail: '新增消息接口', createTime: new Date };
-      //   fetch('/message/messages', {
-      //     method: 'POST',
-      //     body: JSON.stringify({ msgData: msg })
-      //   }).then(res => {
-      //     this.getMsgList();
-      //   });
-      // }
 
     }
   }
@@ -131,10 +165,22 @@
             background: #1ABC9C;
             cursor: default;
         }
+        .mbtn {
+           cursor: pointer;
+           margin-right: 5px;
+        }
         .all-read {
             margin-left: 10px;
             font-size: 12px;
             padding: 5px 10px;
         }
+        em {
+          font-style: normal;
+        }
+        a:-webkit-any-link {
+          color: #fff;
+          text-decoration: initial;
+          cursor: auto;
+      }
     }
 </style>

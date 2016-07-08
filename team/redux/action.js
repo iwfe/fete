@@ -124,7 +124,7 @@ export function inviteMemberShow(show) {
 
 export function inviteMember(team, member) {
   return dispatch => {
-    return fetch('/team/member/invite', {
+    return fetch('/team/member/invited', {
       method: 'post',
       body: Object.assign({teamId: team.id}, member)
     })

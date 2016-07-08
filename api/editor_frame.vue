@@ -155,6 +155,15 @@ export default {
         return {}
       },
       twoWay: true
+    },
+    editorError: {
+      type: Object,
+      default() {
+        return {
+          status: 1,
+          msg: '正确'
+        }
+      }
     }
 
   },
@@ -194,18 +203,26 @@ export default {
         console.log('yes, is json');
         self.outputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
         self.outputModel = self.revertFormat(self.outputJson, []);
-      } else {
-        console.log('no, is not json');
+        if (!self.isJson(self.inputData)) {
+          return self.setError(2);
+        }
+        return self.setError(1);
       }
+      console.log('no, is not json');
+      return self.setError(3);
     },
     inputData(val) {
       const self = this;
       if (val && self.isJson(val)) {
         console.log('yes, is json');
         self.inputJson = val.replace(/[\s\r\n]/, '');
-      } else {
-        console.log('no, is not json');
+        if (!self.isJson(self.outputData)) {
+          return self.setError(3);
+        }
+        return self.setError(1);
       }
+      console.log('no, is not json');
+      return self.setError(2);
     },
     list_active(v) {
       const self = this;
@@ -411,6 +428,24 @@ export default {
         }
       });
       return v;
+    },
+    setError(status) {
+      const self = this;
+      const editorError = self.editorError;
+      editorError.status = status;
+      switch (status) {
+        case 1:
+          editorError.msg = '';
+          break;
+        case 2:
+          editorError.msg = '输入数据格式必须为json'
+          break;
+        case 3:
+          editorError.msg = '返回数据格式必须为json'
+          break;
+        default:
+          editorError.msg = '';
+      }
     }
   }
 }

@@ -17,8 +17,10 @@ const message = {
   platformId: '',   // 平台Id
   action: '', // 操作 (如：add, update, delete)
   actionDetail: {
+    message: '',
     btns: [{
       text: '',
+      style: '',//样式,primary|warning|danger
       type: 'link|ajax', //link:在新窗口打开的链接,ajax,发送ajax接口
       ajax: {
         url: '',
@@ -45,16 +47,25 @@ const invited ={
   platformId: 'xxx',   // 平台Id
   action: 'invited', // 操作 (如：add, update, delete,invited)
   actionDetail: {
-    team: {
-      id:'xxx',
-      name: 'xxx'
-    },
+    message: '',
     btns: [{
       text: '接受',
+      style: 'primary',
       type: 'ajax',
       ajax: {
-        url: '/team/member/invited',
-        method: 'get',
+        url: '/team/member/invited/accept',
+        method: 'post',
+        body: {
+          teamId: 'xxx',
+        }
+      }
+    },{
+      text: '拒绝',
+      type: 'ajax',
+      style: 'danger',
+      ajax: {
+        url: '/team/member/invited/reject',
+        method: 'post',
         body: {
           teamId: 'xxx',
         }

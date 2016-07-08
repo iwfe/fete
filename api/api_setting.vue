@@ -64,7 +64,7 @@
 
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, productId, teamId, listIndex } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex } from './vuex/getters.js'
 require('./directive.js');
 export default {
   vuex: {
@@ -72,7 +72,7 @@ export default {
       list,
       list_active: listActive,
       userId, prdId,
-      productId,
+      projectId,
       teamId,
       listIndex
     },
@@ -95,7 +95,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         outputJson: {},
         output: []
       },
@@ -107,27 +107,12 @@ export default {
   watch: {
     list_active(v) {
       this.isAdd = true;
+      $('#api-detail .body').scrollTop(0)
       if (v.id) {
         this.getdata();
       } else {
         this.resetData();
       }
-    }
-  },
-  computed: {
-    last() {
-      const index = this.getIndex();
-      const last = this.list.length - 1;
-      return index !== last;
-    },
-    first() {
-      const index = this.getIndex();
-      return index
-    }
-  },
-  events: {
-    'init-code-mirror'() {
-      // this.codemirrorReady = true;
     }
   },
   methods: {
@@ -192,7 +177,7 @@ export default {
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
-        productId: this.productId,
+        projectId: this.projectId,
         teamId: this.teamId
       });
       // 如果是新增接口
@@ -254,7 +239,7 @@ export default {
         title: '',
         method: 'GET',
         input: '',
-        url: '',
+        url: '/',
         output: []
       }
     },
@@ -272,19 +257,21 @@ export default {
       })
     },
     delList() {
-      this.delLoad = true;
-      fetch(`/api/apis/${this.list_active.id}`, {
-        method: 'DELETE'
-      }).then(res => {
-        if (res.code === 200) {
-          toastr.success('成功删除API！');
-          this.del();
-        } else {
-          toastr.error('删除API失败，请重试！');
-        }
-        this.delLoad = false;
-      });
-      window.setTimeout(this.closeSlide, 300);
+      if (confirm('确定要删除此API？')) {
+        this.delLoad = true;
+        fetch(`/api/apis/${this.list_active.id}`, {
+          method: 'DELETE'
+        }).then(res => {
+          if (res.code === 200) {
+            toastr.success('成功删除API！');
+            this.del();
+          } else {
+            toastr.error('删除API失败，请重试！');
+          }
+          this.delLoad = false;
+        });
+        window.setTimeout(this.closeSlide, 300);
+      }
     },
     pageList(leo) {
       let i = this.listIndex

@@ -3,9 +3,10 @@
 * @Date:   2016-06-27 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-05 16:07:36
+* @Last modified time: 2016-07-08 15:07:37
 */
 
+import config from '../config'
 /** 监听message **/
 const wrap = require('co-monk');
 const db = require('../common/db');
@@ -48,7 +49,7 @@ let serverSocket = {
       // 获得Socket用户的ID
       socket.emit('getUserId');
     });
-    server.listen(3000);
+    server.listen(config.socketPort);
   },
   /**
    * @param remindUsers 提醒的用户名数组

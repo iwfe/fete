@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 15:33:3
+* @Last modified time: 2016-07-08 16:53:17
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 15:33:3
+* @Last modified time: 2016-07-08 16:53:17
  */
 
 
@@ -74,7 +74,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (insertResult) {
       sutil.success(this, insertResult);
       // 添加消息，并提醒客户端
-      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: insertResult.id, action: 'add', actionDetail: apiData.updateDescList[0].updateDesc, createTime: new Date };
+      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: insertResult.id, action: 'add', actionDetail: { message: apiData.updateDescList[0].updateDesc}, createTime: new Date };
       yield sutil.addMessage(msg, apiData.teamId);
     } else {
       sutil.failed(this, 150001);
@@ -105,7 +105,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (updateResult) {
       sutil.success(this, updateResult);
       // 添加消息，并提醒客户端
-      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: updateResult.id, action: 'update', actionDetail: apiData.updateDescList[0].updateDesc, createTime: new Date };
+      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: updateResult.id, action: 'update', actionDetail: { message: apiData.updateDescList[0].updateDesc }, createTime: new Date };
       yield sutil.addMessage(msg, apiData.teamId);
     } else {
       sutil.failed(this, 150001);
@@ -134,9 +134,14 @@ router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
+    let api = yield apiDao.findOne({ id: this.parse.id });
     let deleteResult = yield apiDao.remove({ id: this.parse.id });
     if (deleteResult) {
       sutil.success(this, deleteResult);
+
+      // 添加消息，并提醒客户端
+      let msg = { userName: this.locals._user.username, msgType: '1', platform: 'api', platformId: this.parse.id, action: 'delete', actionDetail: { message: `删除API接口:${api.title}:${api.url}` }, createTime: new Date };
+      yield sutil.addMessage(msg, api.teamId);
     } else {
       sutil.failed(this, 150002);
     }
@@ -184,10 +189,22 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.type = 'js'
     this.body = `console.log('no projectId');`;
   } else {
+    let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
+      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1 },
+      sort: { createAt: 1 }
+    })
+    let allApiFormMock = {}
+    _.each(apiItems, item => {
+      allApiFormMock[item.method + item.url] = {
+        input: item.input,
+        output: item.output
+      }
+    })
     let jsContent = `
                     var feteApiProductId = '${this.parse.projectId}';
                     var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
                     var feteApiHost = '${config.host}';
+                    var feteApiForMock = ${JSON.stringify(allApiFormMock)};
                     `;
     jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
     this.type = 'js'

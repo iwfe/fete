@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 13:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-04 17:07:24
+* @Last modified time: 2016-07-08 16:07:76
 */
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
@@ -67,6 +67,7 @@ app.use(function*(next) {
   //sutil.getLoginUser(this);
 
   this.locals.host = config.host;
+  this.locals.socketConnection = `${config.hostIp}:${config.socketPort}`;
   this.locals._now = new Date().getTime();
   let p = this.query;
   try {

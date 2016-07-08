@@ -7,6 +7,69 @@
 
 var Mock = require('mockjs')
 
+function ApiCheckMockTree2MockTemplate(data, result) {
+  if (!result) {
+    result = {}
+  }
+
+  if (Array.isArray(data)) {
+    // data is array
+    for (let i = data.length - 1; i >= 0; i--) {
+      util.mockTree2MockTemplate(data[i], result)
+    }
+    return result
+  } else if (typeof data === 'object' && data.key && data.dataType && data.mock) {
+    let mockArr = data.mock.split(':')
+
+    // if has children
+    if (data.children) {
+      let tmpChildren = null
+      if (data.dataType === 'object') {
+        // object
+        tmpChildren = {}
+        for (var i = data.children.length - 1; i >= 0; i--) {
+          util.mockTree2MockTemplate(data.children[i], tmpChildren)
+        }
+      } else {
+        // array
+        tmpChildren = [{}]
+        for (var i = data.children.length - 1; i >= 0; i--) {
+          util.mockTree2MockTemplate(data.children[i], tmpChildren[0])
+        }
+      }
+      result[`${data.key}${mockArr[0]}`] = tmpChildren
+    } else {
+      // has no children
+      let value = mockArr[1]
+      if (data.dataType === 'boolean') {
+        value = (mockArr[1] === 'true')
+      } else if (data.dataType === 'number') {
+        // if is array
+        if (value[0] === '[') {
+          value = eval(mockArr[1])
+        } else {
+          value = parseFloat(mockArr[1])
+        }
+      } else if (!mockArr[0] && value[0] === '/') {
+        // regexp
+        let regArr = mockArr[1].split('/')
+        value = new RegExp(regArr[1], regArr[2])
+      } else {
+        // string
+        // if is array
+        if (value[0] === '[') {
+          value = eval(mockArr[1])
+        }
+      }
+      result[`${data.key}${mockArr[0]}`] = value
+    }
+
+    return result
+  } else {
+    console.log('mock tree data format error !')
+  }
+}
+
 // check input
 function ApiCheckInput(input) {
   // TODO: chenck input format
@@ -14,13 +77,12 @@ function ApiCheckInput(input) {
 }
 
 // check output
-function ApiCheckOutput(output) {
-  // TODO: chenck out format
-  return Mock.valid({
-    'list|1-10': [{
-      'id|+1': 1
-    }]
-  }, output)
+function ApiCheckOutput(key, output) {
+  if (!feteApiForMock[key]) {
+    return 'mock api not found: ' + key
+  }
+  var mockTemplate = ApiCheckMockTree2MockTemplate(feteApiForMock[key].output)
+  return Mock.valid(mockTemplate, output)
 }
 
 
@@ -48,11 +110,11 @@ function ApiCheckForJqueryAjax() {
     $(document).ajaxSuccess(function(event, jqxhr, settings) {
       console.log('-------- from api_check.js jquery ajax after success')
         // console.log(jqxhr)
-      console.log(settings.url)
-      console.log(settings.type)
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0]
+      console.log(mockKey)
       console.log(jqxhr.responseJSON) // 还有一个 responseText
       console.log('----- check output result:')
-      var checkResult = ApiCheckOutput(jqxhr.responseJSON)
+      var checkResult = ApiCheckOutput(mockKey, jqxhr.responseJSON)
       console.log(checkResult)
     })
   } else if ($.ajaxSettings) {
@@ -73,11 +135,11 @@ function ApiCheckForJqueryAjax() {
     $(document).on('ajaxSuccess', function(e, xhr, settings) {
       console.log('-------- from api_check.js zepto ajax after success')
         // console.log(jqxhr)
-      console.log(settings.url)
-      console.log(settings.type)
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0]
+      console.log(mockKey)
       console.log(xhr.responseJSON) // 还有一个 responseText
       console.log('----- check output result:')
-      var checkResult = ApiCheckOutput(xhr.responseJSON)
+      var checkResult = ApiCheckOutput(mockKey, xhr.responseJSON)
       console.log(checkResult)
     })
   }
@@ -95,9 +157,10 @@ function ApiCheckVueResource() {
     request: req => {
       // ApiCheckInput(req)
       console.log('-------- from api_check.js vue-resource before send')
-      console.log(req.url)
-      console.log(req.method)
-      console.log(req.data)
+      let mockKey = req.method.toUpperCase() + req.url
+      console.log(mockKey)
+      console.log(req.params); // get params
+      console.log(req.data) // post params
       if (feteApiUseMockData) {
         req.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + req.url;
       }
@@ -108,11 +171,11 @@ function ApiCheckVueResource() {
     response: res => {
       // ApiCheckOutput(res)
       console.log('-------- from api_check.js vue-resource after success')
-      console.log(res.request.url)
-      console.log(res.request.method)
+      let mockKey = res.request.method.toUpperCase() + res.request.url
+      console.log(mockKey)
       console.log(res.data)
       console.log('----- check output result:')
-      var checkResult = ApiCheckOutput(res.data)
+      var checkResult = ApiCheckOutput(mockKey, res.data)
       console.log(checkResult)
       return res
     }

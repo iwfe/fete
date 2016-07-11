@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-07 18:42:29
+ * @Last Modified time: 2016-07-11 12:33:18
  */
 
 var Mock = require('mockjs')
@@ -15,7 +15,7 @@ function ApiCheckMockTree2MockTemplate(data, result) {
   if (Array.isArray(data)) {
     // data is array
     for (let i = data.length - 1; i >= 0; i--) {
-      util.mockTree2MockTemplate(data[i], result)
+      ApiCheckMockTree2MockTemplate(data[i], result)
     }
     return result
   } else if (typeof data === 'object' && data.key && data.dataType && data.mock) {
@@ -28,13 +28,13 @@ function ApiCheckMockTree2MockTemplate(data, result) {
         // object
         tmpChildren = {}
         for (var i = data.children.length - 1; i >= 0; i--) {
-          util.mockTree2MockTemplate(data.children[i], tmpChildren)
+          ApiCheckMockTree2MockTemplate(data.children[i], tmpChildren)
         }
       } else {
         // array
         tmpChildren = [{}]
         for (var i = data.children.length - 1; i >= 0; i--) {
-          util.mockTree2MockTemplate(data.children[i], tmpChildren[0])
+          ApiCheckMockTree2MockTemplate(data.children[i], tmpChildren[0])
         }
       }
       result[`${data.key}${mockArr[0]}`] = tmpChildren
@@ -110,7 +110,7 @@ function ApiCheckForJqueryAjax() {
     $(document).ajaxSuccess(function(event, jqxhr, settings) {
       console.log('-------- from api_check.js jquery ajax after success')
         // console.log(jqxhr)
-      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0]
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
       console.log(mockKey)
       console.log(jqxhr.responseJSON) // 还有一个 responseText
       console.log('----- check output result:')
@@ -135,7 +135,7 @@ function ApiCheckForJqueryAjax() {
     $(document).on('ajaxSuccess', function(e, xhr, settings) {
       console.log('-------- from api_check.js zepto ajax after success')
         // console.log(jqxhr)
-      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0]
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
       console.log(mockKey)
       console.log(xhr.responseJSON) // 还有一个 responseText
       console.log('----- check output result:')
@@ -171,7 +171,7 @@ function ApiCheckVueResource() {
     response: res => {
       // ApiCheckOutput(res)
       console.log('-------- from api_check.js vue-resource after success')
-      let mockKey = res.request.method.toUpperCase() + res.request.url
+      let mockKey = res.request.method.toUpperCase() + res.request.url.replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
       console.log(mockKey)
       console.log(res.data)
       console.log('----- check output result:')

@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 15:29:42
+* @Last modified time: 2016-07-11 17:16:1
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 15:29:42
+* @Last modified time: 2016-07-11 17:16:1
  */
 
 
@@ -179,7 +179,6 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
-    url: realUrl,
     method: this.method.toUpperCase(),
     projectId: this.parse.projectId
   }
@@ -187,24 +186,24 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
     filter.prdId = this.parse.prdId
   }
 
-  let apiItem = yield apiDao.findOne(filter, { sort: { createTime: -1 } })
-  if (apiItem) {
-    let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
-      // let data = Mock.mock({
-      //     "data|1-10":[
-      //         {
-      //             "isActive|1":true,
-      //             "name|3-5":/\w/,
-      //             "id|+1":1
-      //         }
-      //     ],
-      //     "status|":1
-      // });
-    this.body = data // 这里就不要用 sutil 的 success 方法了
-    return false
-  } else {
-    sutil.failed(this, 150003)
+  let apiItems = yield apiDao.find(filter, {
+    fields: { _id: 0, id: 1, url: 1, root: 1 },
+    sort: { createTime: -1 }
+  })
+
+  if (apiItems && apiItems.length > 0) {
+    let apiItem = _.find(apiItems, item => {
+      return item.root + item.url === realUrl
+    })
+    if (apiItem && apiItem.id) {
+      apiItem = yield apiDao.findOne({ id: apiItem.id })
+      let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
+      this.body = data // 这里就不要用 sutil 的 success 方法了
+      return false
+    }
   }
+
+  sutil.failed(this, 150003)
 })
 
 // mock_check.js file
@@ -215,12 +214,12 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.body = `console.log('no projectId');`;
   } else {
     let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
-      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1 },
+      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1, root: 1 },
       sort: { createAt: 1 }
     })
     let allApiFormMock = {}
     _.each(apiItems, item => {
-      allApiFormMock[item.method + item.url] = {
+      allApiFormMock[item.method + item.root + item.url] = {
         input: item.input,
         output: item.output
       }

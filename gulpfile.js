@@ -31,7 +31,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 
 var isWatch = true;
 var isProduct = false;
-var project = '';
+var project = 'dist';
 
 var entry = null;
 

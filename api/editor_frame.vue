@@ -368,7 +368,11 @@ export default {
           case 'Array':
             child = self.comparison(key, parents, self.outputModel, 0)
             parents.push(key);
-            children = self.revertFormat(value[0], parents);
+            if (typeof value[0] === 'object') {
+              children = self.revertFormat(value[0], parents);
+            } else {
+              children = null;
+            }
             comment = child.comment;
             dataType = 'Array';
             mockModel = child.mock;

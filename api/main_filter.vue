@@ -174,6 +174,10 @@ export default {
   }
   .url-info {
     margin-bottom: 10px;
+    input {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
   }
   .add-btn {
     color: #fff;

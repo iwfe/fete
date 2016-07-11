@@ -38,7 +38,7 @@
 <script type='text/babel'>
 import tableItem from './table-item.vue'
 import util from '../common/util.js'
-require('./directive.js');
+require('./codemirror_alias.js');
 const mock = require('mockjs');
 import { listActive } from './vuex/getters.js'
 
@@ -255,7 +255,7 @@ export default {
       if (self.editorReady) {
         self.setEditorData('input', self.inputJson);
         self.setEditorData('output', self.outputJson);
-        self.setEditorData('mock', {});
+        self.$emit('revertMock');
         return;
       }
       const inputEditorDom = self.$els.inputeditor;
@@ -287,21 +287,23 @@ export default {
       }
       self.setEditorData('input', self.inputJson);
       self.setEditorData('output', self.outputJson);
-      self.setEditorData('mock', {});
+      self.$emit('revertMock');
     },
     'remove-code-mirror-all'() {
       self.editorReady = false;
-    }
+    },
+    revertMock: 'revertMock'
   },
   methods: {
     initEditor(dom, readOnly) {
       const editor = CodeMirror.fromTextArea(dom, {
         lineNumbers: true,
         mode: 'application/json',
-        gutters: ['CodeMirror-lint-markers'],
         lint: true,
+        gutters: ['CodeMirror-lint-markers'],
         readOnly: readOnly ? 'nocursor' : false,
-        tabSize: 2
+        tabSize: 2,
+        styleActiveLine: true
       });
 
       return editor;
@@ -367,7 +369,11 @@ export default {
           case 'Array':
             child = self.comparison(key, parents, self.outputModel, 0)
             parents.push(key);
-            children = self.revertFormat(value[0], parents);
+            if (typeof value[0] === 'object') {
+              children = self.revertFormat(value[0], parents);
+            } else {
+              children = null;
+            }
             comment = child.comment;
             dataType = 'Array';
             mockModel = child.mock;

@@ -238,7 +238,7 @@ export default {
         id: '',
         title: '',
         method: 'GET',
-        input: '',
+        input: {},
         url: '/',
         output: []
       }

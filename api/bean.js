@@ -2,8 +2,8 @@
 * @Author: lancui
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
-* @Last modified by:   lancui
-* @Last modified time: 2016-07-05 15:07:59
+* @Last modified by:   geyuanjun
+* @Last modified time: 2016-07-11 14:38:11
 */
 
 
@@ -44,6 +44,7 @@ const api = {
 	}],
 	prdId: '', // PrdID
 	projectId: '', // 项目Id
+	root: '', // 如 weixinEnt
 	teamId: '', // 项目组Id
 	updateTime:'', // 更新时间
 	createTime:'' // 创建时间

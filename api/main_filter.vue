@@ -54,6 +54,10 @@
         当前PRD URL：
         <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/fete_api/{{currentProject.id}}/{{currentPrd.id}}</span>
       </div>
+      <div class="url-info">
+        工程名：
+        <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot">
+      </div>
     </div>
   </div>
 </template>
@@ -76,7 +80,8 @@ export default {
       currentTeam: pageConfig.me.team,
       currentProject: pageConfig.me.project,
       currentPrd: pageConfig.me.prd,
-      host: pageConfig.host
+      host: pageConfig.host,
+      apiRoot: ''
     }
   },
   attached() {
@@ -123,11 +128,31 @@ export default {
         this.prdData = res.data
       }
     })
+
+    // get apiRoot from an api record, by prdId
+    fetch('/api/getLatestApi', {
+      body: {
+        prdId: pageConfig.me.prd.id
+      }
+    }).then(res => {
+      this.apiRoot = res.data.root
+    })
   },
   methods: {
     changePrdApi(pid) {
       this.changeFilter({ prdId: pid })
       this.$parent.$emit('reloadApiList', pid)
+    },
+    changeApiRoot() {
+      fetch('/api/apiRoot', {
+        method: 'PATCH',
+        body: {
+          prdId: pageConfig.me.prd.id,
+          apiRoot: this.apiRoot
+        }
+      }).then(res => {
+        toastr.success('change apiRoot success')
+      })
     }
   }
 };
@@ -149,6 +174,10 @@ export default {
   }
   .url-info {
     margin-bottom: 10px;
+    input {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
   }
   .add-btn {
     color: #fff;

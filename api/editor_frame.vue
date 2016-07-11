@@ -255,7 +255,7 @@ export default {
       if (self.editorReady) {
         self.setEditorData('input', self.inputJson);
         self.setEditorData('output', self.outputJson);
-        self.setEditorData('mock', {});
+        self.$emit('revertMock');
         return;
       }
       const inputEditorDom = self.$els.inputeditor;
@@ -287,11 +287,12 @@ export default {
       }
       self.setEditorData('input', self.inputJson);
       self.setEditorData('output', self.outputJson);
-      self.setEditorData('mock', {});
+      self.$emit('revertMock');
     },
     'remove-code-mirror-all'() {
       self.editorReady = false;
-    }
+    },
+    revertMock: 'revertMock'
   },
   methods: {
     initEditor(dom, readOnly) {

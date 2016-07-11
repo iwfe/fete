@@ -33,7 +33,7 @@
         <li class="td-key"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{model.key}}</li>
         <li class="td-datatype">{{model.dataType}}</li>
         <li class="td-remark" @click="toggleInput"><input class="mock-input comment-input" v-model="model.comment"></li>
-        <li class="td-mock"><input class="mock-input" v-model="model.mock"></li>
+        <li class="td-mock"><input class="mock-input" v-model="model.mock" @keyup="revertMock | debounce 500"></li>
       </ul>
       <div v-if="model.children && showChild" class="children">
         <table-item :model="model" :is-child=true :loop='loop+1' v-for="model in model.children"></table-item>
@@ -115,6 +115,10 @@
       getLoopClass(loop) {
         const self = this;
         return `table-loop-${self.loop}`
+      },
+      revertMock() {
+        const self = this;
+        self.$dispatch('revertMock');
       }
     }
   }

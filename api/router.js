@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-08 16:53:17
+* @Last modified time: 2016-07-11 15:29:42
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-08 16:53:17
+* @Last modified time: 2016-07-11 15:29:42
  */
 
 
@@ -147,6 +147,31 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
 
+  // 根据prdId获取最新的API
+  .get('/getLatestApi', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.prdId) {
+      sutil.failed(this, 1003)
+    }
+    let api = yield apiDao.findOne({ prdId: this.parse.prdId }, { sort: { createTime: -1 } })
+    if (api) {
+      sutil.success(this, api)
+    } else {
+      sutil.failed(this, 150003)
+    }
+  })
+
+  // 更新最新的API root 字段
+  .patch('/apiRoot', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.prdId && !this.parse.apiRoot) {
+      sutil.failed(this, 1003)
+    }
+    let updateResult = yield apiDao.update({ prdId: this.parse.prdId }, {
+      $set: { root: this.parse.apiRoot }
+    },  { multi: true })
+    if (updateResult) {
+      sutil.success(this, '假装成功了')
+    }
+  })
 
 // api for mock
 router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {

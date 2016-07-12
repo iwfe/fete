@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 17:16:1
+* @Last modified time: 2016-07-12 11:11:35
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 17:16:1
+* @Last modified time: 2016-07-12 11:11:35
  */
 
 
@@ -168,9 +168,7 @@ router.get('/apis', sutil.login, function*(next) {
     let updateResult = yield apiDao.update({ prdId: this.parse.prdId }, {
       $set: { root: this.parse.apiRoot }
     },  { multi: true })
-    if (updateResult) {
-      sutil.success(this, '假装成功了')
-    }
+    sutil.success(this, 'API ROOT 更新成功！')
   })
 
 // api for mock

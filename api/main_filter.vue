@@ -48,11 +48,11 @@
       <button class="mini ui right floated button add-btn" @click="add">新建API</button>
       <div class="url-info">
         当前项目URL：
-        <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/fete_api/{{currentProject.id}}</span>
+        <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/api/fete_api/{{currentProject.id}}/mock/</span>
       </div>
       <div class="url-info">
         当前PRD URL：
-        <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/fete_api/{{currentProject.id}}/{{currentPrd.id}}</span>
+        <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/api/fete_api/{{currentProject.id}}/{{currentPrd.id}}/mock/</span>
       </div>
       <div class="url-info">
         工程名：

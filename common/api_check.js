@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-12 11:41:00
+ * @Last Modified time: 2016-07-12 12:26:56
  */
 
 var Mock = require('mockjs')
@@ -73,6 +73,7 @@ function ApiCheckMockTree2MockTemplate(data, result) {
 function GetApiMockByPjId() {
   if ($) {
     $.ajax({
+      async: false,
       url: feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId,
       success: function(res) {
         feteApiForMock = res.data

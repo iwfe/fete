@@ -248,9 +248,9 @@ router.post('/member/invited/reject', sutil.login, function*(next) {
 
   let userTeam = _.find(teams, item => item.id === teamId);
 
-  if(!userTeam) {
+  if(userTeam) {
     return yield sutil.result(this, {
-      code: 11001,
+      code: 1004,
       redirect: redirect
     });
   }

@@ -3,7 +3,7 @@
 * @Date:   2016-06-29 11:33:13
 * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-05 15:44:9
+* @Last modified time: 2016-07-12 10:46:48
 */
 import Vuex from 'vuex'
 import mutations from './mutations'
@@ -14,7 +14,8 @@ const state = {
   userId: '123',
   prdId: '',
   teamId: '',
-  projectId: ''
+  projectId: '',
+  apiRoot: ''
 }
 const outputModel = [
   {

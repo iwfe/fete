@@ -64,7 +64,7 @@
 
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
 require('./directive.js');
 export default {
   vuex: {
@@ -74,7 +74,8 @@ export default {
       userId, prdId,
       projectId,
       teamId,
-      listIndex
+      listIndex,
+      apiRoot
     },
     actions: {
       add, del, tog
@@ -101,7 +102,8 @@ export default {
       },
       codemirrorReady: false,
       isAdd: true,
-      editorError: {}
+      editorError: {},
+      root: ''
     }
   },
   watch: {
@@ -178,7 +180,8 @@ export default {
         status: status,
         prdId: this.prdId,
         projectId: this.projectId,
-        teamId: this.teamId
+        teamId: this.teamId,
+        root: this.apiRoot
       });
       // 如果是新增接口
       if (status === 1) {

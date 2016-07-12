@@ -56,7 +56,7 @@
       </div>
       <div class="url-info">
         工程名：
-        <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot">
+        <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot" @blur="changeApiRoot">
       </div>
     </div>
   </div>
@@ -136,6 +136,7 @@ export default {
       }
     }).then(res => {
       this.apiRoot = res.data.root
+      this.changeFilter({ apiRoot: this.apiRoot })
     })
   },
   methods: {
@@ -151,8 +152,9 @@ export default {
           apiRoot: this.apiRoot
         }
       }).then(res => {
-        toastr.success('change apiRoot success')
+        toastr.success(res.data)
       })
+      this.changeFilter({ apiRoot: this.apiRoot })
     }
   }
 };

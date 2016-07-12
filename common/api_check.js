@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-11 19:13:31
+ * @Last Modified time: 2016-07-12 11:29:06
  */
 
 var Mock = require('mockjs')
@@ -76,6 +76,7 @@ function GetApiMockByPjId() {
       url: feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId,
       success: function(res) {
         feteApiForMock = res.data
+        initFeteApiCheck()
       }
     })
   } else if (Vue && VueResource) {
@@ -83,6 +84,7 @@ function GetApiMockByPjId() {
     vm.$http.get(feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId).then(function(res) {
       res = res.data
       feteApiForMock = res.data
+      initFeteApiCheck()
     })
   }
 }
@@ -114,24 +116,27 @@ function ApiCheckForJqueryAjax() {
       })
       // check input
     $(document).ajaxSend(function(event, jqxhr, settings) {
-        console.log('-------- from api_check.js jquery ajax before send')
-          // console.log(settings)
-        console.log(settings.url)
-        console.log(settings.type)
+        console.log('-------- from api_check.js jquery ajax before send --------')
+        console.log('AJAX URL:')
+        console.log(settings.type.toUpperCase() + settings.url)
+        console.log('Request params:')
         console.log(settings.data) // post 才有 ，get 直接挂 url 上了
-          // ApiCheckInput(settings.data)
+        // ApiCheckInput(settings.data)
         if (feteApiUseMockData) {
           settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
+          console.log('Redirect to: ' + settings.url)
         }
       })
       // check output
     $(document).ajaxSuccess(function(event, jqxhr, settings) {
-      console.log('-------- from api_check.js jquery ajax after success')
+      console.log('-------- from api_check.js jquery ajax after success --------')
         // console.log(jqxhr)
       let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      console.log('AJAX URL:')
       console.log(mockKey)
+      console.log('Response data:')
       console.log(jqxhr.responseJSON) // 还有一个 responseText
-      console.log('----- check output result:')
+      console.log('Mockjs check output result:')
       var checkResult = ApiCheckOutput(mockKey, jqxhr.responseJSON)
       console.log(checkResult)
     })
@@ -140,23 +145,25 @@ function ApiCheckForJqueryAjax() {
     $.ajaxSettings.global = true
 
     $(document).on('ajaxBeforeSend', function(e, xhr, settings) {
-      console.log('-------- from api_check.js zepto ajax before send')
-        // console.log(settings)
-      console.log(settings.url)
-      console.log(settings.type)
+      console.log('-------- from api_check.js zepto ajax before send --------')
+      console.log('AJAX URL:')
+      console.log(settings.type.toUpperCase() + settings.url)
+      console.log('Request params:')
       console.log(settings.data) // post 才有 ，get 直接挂 url 上了
-        // ApiCheckInput(settings.data)
+      // ApiCheckInput(settings.data)
       if (feteApiUseMockData) {
         settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
+        console.log('Redirect to: ' + settings.url)
       }
     })
     $(document).on('ajaxSuccess', function(e, xhr, settings) {
-      console.log('-------- from api_check.js zepto ajax after success')
-        // console.log(jqxhr)
+      console.log('-------- from api_check.js zepto ajax after success --------')
       let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      console.log('AJAX URL:')
       console.log(mockKey)
+      console.log('Response data:')
       console.log(xhr.responseJSON) // 还有一个 responseText
-      console.log('----- check output result:')
+      console.log('Mockjs check output result:')
       var checkResult = ApiCheckOutput(mockKey, xhr.responseJSON)
       console.log(checkResult)
     })
@@ -173,14 +180,16 @@ function ApiCheckVueResource() {
 
     // check input
     request: req => {
-      // ApiCheckInput(req)
-      console.log('-------- from api_check.js vue-resource before send')
+      console.log('-------- from api_check.js vue-resource before send --------')
       let mockKey = req.method.toUpperCase() + req.url
+      console.log('AJAX URL:')
       console.log(mockKey)
-      console.log(req.params); // get params
-      console.log(req.data) // post params
+      console.log('Request params:')
+      console.log(req.method.toUpperCase() === 'GET' ? req.params : req.data); // req.params: get params ; req.data: post params
+      // ApiCheckInput(req)
       if (feteApiUseMockData) {
         req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
+        console.log('Redirect to: ' + req.url)
       }
       return req
     },
@@ -188,11 +197,13 @@ function ApiCheckVueResource() {
     // check output
     response: res => {
       // ApiCheckOutput(res)
-      console.log('-------- from api_check.js vue-resource after success')
+      console.log('-------- from api_check.js vue-resource after success --------')
       let mockKey = res.request.method.toUpperCase() + res.request.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      console.log('AJAX URL:')
       console.log(mockKey)
+      console.log('Response data:')
       console.log(res.data)
-      console.log('----- check output result:')
+      console.log('Mockjs check output result:')
       var checkResult = ApiCheckOutput(mockKey, res.data)
       console.log(checkResult)
       return res
@@ -202,19 +213,22 @@ function ApiCheckVueResource() {
 
 }
 
-// jquery 的还有问题，先注释掉
-try {
-  if ($) {
-    ApiCheckForJqueryAjax()
+// call init after mock data come back from ajax
+function initFeteApiCheck() {
+  try {
+    if ($) {
+      ApiCheckForJqueryAjax()
+    }
+  } catch (e) {
+    console.log(e)
   }
-} catch (e) {
-  console.log(e)
+
+  try {
+    if (Vue && VueResource) {
+      ApiCheckVueResource()
+    }
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-try {
-  if (Vue && VueResource) {
-    ApiCheckVueResource()
-  }
-} catch (e) {
-  console.log(e)
-}

@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-12 11:29:06
+ * @Last Modified time: 2016-07-12 11:41:00
  */
 
 var Mock = require('mockjs')
@@ -76,7 +76,6 @@ function GetApiMockByPjId() {
       url: feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId,
       success: function(res) {
         feteApiForMock = res.data
-        initFeteApiCheck()
       }
     })
   } else if (Vue && VueResource) {
@@ -84,7 +83,6 @@ function GetApiMockByPjId() {
     vm.$http.get(feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId).then(function(res) {
       res = res.data
       feteApiForMock = res.data
-      initFeteApiCheck()
     })
   }
 }
@@ -213,7 +211,6 @@ function ApiCheckVueResource() {
 
 }
 
-// call init after mock data come back from ajax
 function initFeteApiCheck() {
   try {
     if ($) {
@@ -231,4 +228,6 @@ function initFeteApiCheck() {
     console.log(e)
   }
 }
-
+// should call init after mock data come back from ajax, but got error, so call it here
+// TODO: init after mock data come back but get error
+initFeteApiCheck()

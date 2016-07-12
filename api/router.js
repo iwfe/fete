@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-08 16:53:17
+* @Last modified time: 2016-07-11 17:16:1
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-08 16:53:17
+* @Last modified time: 2016-07-11 17:16:1
  */
 
 
@@ -147,6 +147,31 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
 
+  // 根据prdId获取最新的API
+  .get('/getLatestApi', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.prdId) {
+      sutil.failed(this, 1003)
+    }
+    let api = yield apiDao.findOne({ prdId: this.parse.prdId }, { sort: { createTime: -1 } })
+    if (api) {
+      sutil.success(this, api)
+    } else {
+      sutil.failed(this, 150003)
+    }
+  })
+
+  // 更新最新的API root 字段
+  .patch('/apiRoot', sutil.login, sutil.setRouterParams, function*(next) {
+    if (!this.parse.prdId && !this.parse.apiRoot) {
+      sutil.failed(this, 1003)
+    }
+    let updateResult = yield apiDao.update({ prdId: this.parse.prdId }, {
+      $set: { root: this.parse.apiRoot }
+    },  { multi: true })
+    if (updateResult) {
+      sutil.success(this, '假装成功了')
+    }
+  })
 
 // api for mock
 router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
@@ -154,7 +179,6 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
   let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
 
   let filter = {
-    url: realUrl,
     method: this.method.toUpperCase(),
     projectId: this.parse.projectId
   }
@@ -162,24 +186,24 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
     filter.prdId = this.parse.prdId
   }
 
-  let apiItem = yield apiDao.findOne(filter, { sort: { createTime: -1 } })
-  if (apiItem) {
-    let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
-      // let data = Mock.mock({
-      //     "data|1-10":[
-      //         {
-      //             "isActive|1":true,
-      //             "name|3-5":/\w/,
-      //             "id|+1":1
-      //         }
-      //     ],
-      //     "status|":1
-      // });
-    this.body = data // 这里就不要用 sutil 的 success 方法了
-    return false
-  } else {
-    sutil.failed(this, 150003)
+  let apiItems = yield apiDao.find(filter, {
+    fields: { _id: 0, id: 1, url: 1, root: 1 },
+    sort: { createTime: -1 }
+  })
+
+  if (apiItems && apiItems.length > 0) {
+    let apiItem = _.find(apiItems, item => {
+      return item.root + item.url === realUrl
+    })
+    if (apiItem && apiItem.id) {
+      apiItem = yield apiDao.findOne({ id: apiItem.id })
+      let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
+      this.body = data // 这里就不要用 sutil 的 success 方法了
+      return false
+    }
   }
+
+  sutil.failed(this, 150003)
 })
 
 // mock_check.js file
@@ -189,29 +213,36 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.type = 'js'
     this.body = `console.log('no projectId');`;
   } else {
+
+    let jsContent = `
+                    var feteApiProjectId = '${this.parse.projectId}';
+                    var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
+                    var feteApiHost = '${config.host}';
+                    var feteApiForMock = {};
+                    `;
+    jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8')
+    this.type = 'js'
+    this.body = jsContent
+  }
+  return false
+})
+router.get('/api_mock_data', sutil.setRouterParams, sutil.allowCORS, function*(next) {
+  if (!this.parse.projectId) {
+    sutil.failed(this, 1003)
+  } else {
     let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
-      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1 },
+      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1, root: 1 },
       sort: { createAt: 1 }
     })
-    let allApiFormMock = {}
+    let allApiForMock = {}
     _.each(apiItems, item => {
-      allApiFormMock[item.method + item.url] = {
+      allApiForMock[item.method + item.root + item.url] = {
         input: item.input,
         output: item.output
       }
     })
-    let jsContent = `
-                    var feteApiProductId = '${this.parse.projectId}';
-                    var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
-                    var feteApiHost = '${config.host}';
-                    var feteApiForMock = ${JSON.stringify(allApiFormMock)};
-                    `;
-    jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
-    this.type = 'js'
-    this.body = jsContent;
+    sutil.success(this, allApiForMock)
   }
-  return false;
-});
-
+})
 
 export default router;

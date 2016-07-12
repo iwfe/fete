@@ -8,6 +8,7 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,7 @@
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
+                <td><span class="view" @click="viewData">查看</span></td>
             </tr>
         </tbody>
     </table>
@@ -66,36 +68,18 @@ export default {
     },
     showDetail(item, e) {
       this.$parent.$broadcast('slide-menu-open', () => {
-        this.$parent.$broadcast('init-code-mirror-all')
+        this.$parent.$broadcast('init-code-mirror')
       });
       this.tog(item);
       e.stopPropagation();
     },
-    methods: {
-      getList(prdId) {
-        this.emptyList()  // empty list first
-        fetch('/api/apis', {
-          body: { prdId: prdId }
-        }).then(res => {
-          res.data.forEach(v => {
-            this.add(v);
-          });
-        });
-      },
-      showJSON(e) {
-        this.lockScreen(e);
-      },
-      showDetail(item, e) {
-        this.$parent.$broadcast('slide-menu-open', () => {
-          this.$parent.$broadcast('init-code-mirror')
-        });
-        this.tog(item);
-        e.stopPropagation();
-      },
-      lockScreen(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    viewData(e) {
+
+      this.lockScreen(e)
+    },
+    lockScreen(e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 }
@@ -134,5 +118,9 @@ export default {
 .ui.table tbody tr:hover,
 .ui.table tbody tr.active {
   background-color: #eaf8fe !important;
+}
+.view:hover{
+  color: #2DB7F5;
+  cursor: pointer;
 }
 </style>

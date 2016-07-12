@@ -31,7 +31,6 @@ export default {
   // change prdId, projectId, teamId, apiRoot
   CHANGE_FILTER(state, params) {
     state = _.extend(state, params)
-    console.log(state.apiRoot);
   },
   EMPTY_LIST(state) {
     state.list = []

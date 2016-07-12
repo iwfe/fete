@@ -137,6 +137,8 @@ export default {
     }).then(res => {
       this.apiRoot = res.data.root
       this.changeFilter({ apiRoot: this.apiRoot })
+    }).catch(err => {
+      // console.log(err.response.message)
     })
   },
   methods: {

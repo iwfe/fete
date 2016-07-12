@@ -8,7 +8,7 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <th></th>
+                <!-- <th></th> -->
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
-                <td><span class="view" @click="viewData">查看</span></td>
+                <!-- <td><span class="view" @click="viewData">查看</span></td> -->
             </tr>
         </tbody>
     </table>

@@ -68,7 +68,7 @@ export default {
     },
     showDetail(item, e) {
       this.$parent.$broadcast('slide-menu-open', () => {
-        this.$parent.$broadcast('init-code-mirror')
+        this.$parent.$broadcast('init-code-mirror-all')
       });
       this.tog(item);
       e.stopPropagation();

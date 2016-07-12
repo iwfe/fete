@@ -159,60 +159,61 @@ router.post('/member/invited', sutil.teamLogin(), function*(next) {
     //没有加入该团队
     if (!_.find(teams, item => item.id === teamId)) {
       teams.push(team);
-      yield userDao.update({
-        username: username
-      }, {
-        $set: {
-          teams: teams
-        }
-      });
-      member.team = team;
-      const teamDetail = yield teamDao.findOne({
-        id: teamId
-      })
-      //发送邀请消息
-      const invitedMsg = {
-        userName: user.username,   // 操作人姓名
-        msgType: '0',   // 消息类型：系统(0)，提醒(1)
-        platform: 'team',    // 平台类型(team, project, prd, api)
-        platformId: teamId,   // 平台Id
-        action: 'invited', // 操作 (如：add, update, delete,invited)
-        actionDetail: {
-          message: `${user.username}邀请你加入"${teamDetail.name}"`,
-          btns: [{
-            text: '接受',
-            style: 'primary',
-            type: 'ajax',
-            ajax: {
-              url: '/team/member/invited/accept',
-              method: 'post',
-              body: {
-                teamId: teamId,
-              }
-            }
-          }, {
-            text: '拒绝',
-            type: 'ajax',
-            style: 'danger',
-            ajax: {
-              url: '/team/member/invited/reject',
-              method: 'post',
-              body: {
-                teamId: teamId,
-              }
-            }
-          }]
-        }
-      }
-      yield sutil.addMessage(invitedMsg, null, [username]);
+
     }
+    yield userDao.update({
+      username: username
+    }, {
+      $set: {
+        teams: teams
+      }
+    });
+    member.team = team;
+    const teamDetail = yield teamDao.findOne({
+      id: teamId
+    })
+    //发送邀请消息
+    const invitedMsg = {
+      userName: user.username,   // 操作人姓名
+      msgType: '0',   // 消息类型：系统(0)，提醒(1)
+      platform: 'team',    // 平台类型(team, project, prd, api)
+      platformId: teamId,   // 平台Id
+      action: 'invited', // 操作 (如：add, update, delete,invited)
+      actionDetail: {
+        message: `${user.username}邀请你加入"${teamDetail.name}"`,
+        btns: [{
+          text: '接受',
+          style: 'primary',
+          type: 'ajax',
+          ajax: {
+            url: '/team/member/invited/accept',
+            method: 'post',
+            body: {
+              teamId: teamId,
+            }
+          }
+        }, {
+          text: '拒绝',
+          type: 'ajax',
+          style: 'danger',
+          ajax: {
+            url: '/team/member/invited/reject',
+            method: 'post',
+            body: {
+              teamId: teamId,
+            }
+          }
+        }]
+      }
+    }
+    yield sutil.addMessage(invitedMsg, null, [username]);
   }
 
   sutil.success(this, member);
 });
 
 router.post('/member/invited/accept', sutil.login, function*(next) {
-  const user = this.locals._user;
+  let user = this.locals._user;
   const {teamId} = this.parse;
 
   let teams = user.teams;
@@ -223,8 +224,7 @@ router.post('/member/invited/accept', sutil.login, function*(next) {
 
   if (!userTeam) {
     return yield sutil.result(this, {
-      code: 11001,
-      redirect: redirect
+      code: 11001
     });
   }
 

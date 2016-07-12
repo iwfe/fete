@@ -10,7 +10,6 @@ import React, {Component, PropTypes} from 'react';
 import Modal from 'antd/lib/modal';
 import Form from 'antd/lib/form';
 import Input from 'antd/lib/input';
-import Alert from 'antd/lib/Alert';
 
 const FormItem = Form.Item;
 

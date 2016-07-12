@@ -48,6 +48,9 @@ class Header extends React.Component {
                 </div>
                 <div className="pull-right">
                     <Menu onClick={this.handleClick} mode="horizontal" selectedKeys={[this.props.current]}>
+                        <Menu.Item key="message">
+                          <a className="msg-span" href="/message">消息 (<span className="msg-count">0</span>)</a>
+                        </Menu.Item>
                         {
                             util.showIf(user.username,
                                 <SubMenu title={user.username}>
@@ -59,9 +62,6 @@ class Header extends React.Component {
                                 </Menu.Item>)
                         }
                     </Menu>
-                </div>
-                <div className="pull-right">
-                    <a className="item msg-span ant-menu" href="/message">消息 (<span className="msg-count">0</span>)</a>
                 </div>
             </div>
         );

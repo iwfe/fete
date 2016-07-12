@@ -74,7 +74,6 @@ export default {
       e.stopPropagation();
     },
     viewData(e) {
-
       this.lockScreen(e)
     },
     lockScreen(e) {

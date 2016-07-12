@@ -154,7 +154,7 @@ router.all('/upload', sutil.login, function *() {
     }
     var zip = new AdmZip(filePath);
     zip.extractAllTo(/*target path*/path.join(__dirname, '../'), /*overwrite*/true);
-    fs.removeSync(path.join(__dirname, '../dist.zip'))
+    fse.removeSync(path.join(__dirname, '../static.zip'))
     sutil.success(this, 'done')
 
   }

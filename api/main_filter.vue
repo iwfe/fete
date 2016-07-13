@@ -46,6 +46,7 @@
     </div>
     <div>
       <button class="mini ui right floated button add-btn" @click="add">新建API</button>
+      <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
         当前项目URL：
         <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/fete_api/{{currentProject.id}}</span>
@@ -187,6 +188,21 @@ export default {
       background-color: #57c5f7;
       border-color: #57c5f7;
       color: #fff;
+    }
+  }
+  .user-help {
+    display: inline-block;
+    float: right;
+    line-height: 1rem;
+    .icon {
+      text-decoration: blink;
+      color: rgba(45,183,245,0.6);
+      line-height: 2rem;
+      font-size: 1.2rem;
+    }
+
+    .icon:hover {
+      color: rgba(45,183,245,0.4);
     }
   }
 </style>

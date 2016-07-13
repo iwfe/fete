@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-12 11:11:35
+* @Last modified time: 2016-07-13 18:05:41
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-12 11:11:35
+* @Last modified time: 2016-07-13 18:05:41
  */
 
 
@@ -156,7 +156,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (api) {
       sutil.success(this, api)
     } else {
-      sutil.failed(this, 150003)
+      sutil.success(this, {}) // 防止页面报“API不存在”这个错误 
     }
   })
 

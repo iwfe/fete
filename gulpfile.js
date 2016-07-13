@@ -3,7 +3,7 @@
  * @Date:   2016-06-24 17:09:44
  * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-29 16:06:88
+* @Last modified time: 2016-07-13 15:07:19
  */
 
 
@@ -54,6 +54,8 @@ gulp.task('default', function() {
   fse.emptydirSync('./dist');
 
   // gulp.start('img');
+
+  gulp.start('document');
 
   gulp.start('webpack');
 
@@ -114,6 +116,10 @@ gulp.task('img', function() {
     .pipe(gulp.dest('./dist/img/common'));
 
 });
+
+gulp.task('document', function() {
+  gulp.src('./document/*.pdf').pipe(gulp.dest('./dist/document'));
+})
 
 gulp.task('sham', function() {
   gulp.src('./global/lib/es5-shim-sham.js').pipe(gulp.dest('./dist'));

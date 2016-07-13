@@ -49,15 +49,15 @@
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
         当前项目URL：
-        <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/fete_api/{{currentProject.id}}</span>
+        <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/api/fete_api/{{currentProject.id}}/mock/</span>
       </div>
       <div class="url-info">
         当前PRD URL：
-        <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/fete_api/{{currentProject.id}}/{{currentPrd.id}}</span>
+        <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/api/fete_api/{{currentProject.id}}/{{currentPrd.id}}/mock/</span>
       </div>
       <div class="url-info">
         工程名：
-        <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot">
+        <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot" @blur="changeApiRoot">
       </div>
     </div>
   </div>
@@ -137,6 +137,9 @@ export default {
       }
     }).then(res => {
       this.apiRoot = res.data.root
+      this.changeFilter({ apiRoot: this.apiRoot })
+    }).catch(err => {
+      // console.log(err.response.message)
     })
   },
   methods: {
@@ -152,8 +155,9 @@ export default {
           apiRoot: this.apiRoot
         }
       }).then(res => {
-        toastr.success('change apiRoot success')
+        toastr.success(res.data)
       })
+      this.changeFilter({ apiRoot: this.apiRoot })
     }
   }
 };

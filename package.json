@@ -93,7 +93,8 @@
     "vuex": "^0.8.0",
     "webpack": "~1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "whatwg-fetch": "*"
+    "whatwg-fetch": "*",
+    "adm-zip": "*"
   },
   "devDependencies": {
     "eslint": "^2.13.1",

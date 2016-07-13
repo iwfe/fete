@@ -38,7 +38,7 @@
 <script type='text/babel'>
 import tableItem from './table-item.vue'
 import util from '../common/util.js'
-require('./directive.js');
+require('./codemirror_alias.js');
 const mock = require('mockjs');
 import { listActive } from './vuex/getters.js'
 
@@ -299,10 +299,11 @@ export default {
       const editor = CodeMirror.fromTextArea(dom, {
         lineNumbers: true,
         mode: 'application/json',
-        gutters: ['CodeMirror-lint-markers'],
         lint: true,
+        gutters: ['CodeMirror-lint-markers'],
         readOnly: readOnly ? 'nocursor' : false,
-        tabSize: 2
+        tabSize: 2,
+        styleActiveLine: true
       });
 
       return editor;

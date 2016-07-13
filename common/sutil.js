@@ -36,6 +36,7 @@ var teamDao = wrap(db.get('team'));
 var projectDao = wrap(db.get('project'));
 var prdDao = wrap(db.get('prd'));
 var msgDao = wrap(db.get('message'));
+var apiDao = wrap(db.get('api'));
 var loginUserStore = new Map();
 
 var sutil = {
@@ -469,6 +470,26 @@ var sutil = {
   // 更新客户端的提醒个数
   updateClientMsg (toUsers) {
     serverSocket.sendMsg(toUsers, false);
+  },
+
+  // copy apis by prd
+  * copyApisByPrd (oldPrdId, newPrdId) {
+    let copyCount = 0
+    let apis = yield apiDao.find({prdId: oldPrdId})
+    for (var i = apis.length - 1; i >= 0; i--) {
+      apis[i] = _.extend(apis[i], {
+        id: yield sutil.genId(apiDao, 8),
+        prdId: newPrdId,
+        createTime: new Date,
+        updateTime: new Date
+      })
+      delete apis[i]._id
+      try {
+        let result = yield apiDao.insert(item)
+        copyCount++
+      } catch(e) {}
+    }
+    return copyCount
   }
 
   // sendMail: function(name, title){

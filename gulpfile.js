@@ -31,7 +31,7 @@ var WebpackNotifierPlugin = require('webpack-notifier');
 
 var isWatch = true;
 var isProduct = false;
-var project = '';
+var project = 'dist';
 
 var entry = null;
 
@@ -99,6 +99,9 @@ gulp.task('webpack', function(callback) {
 
   webpack(config, function(err, stats) {
     console.log(stats.toString());
+    if (!err && isProduct) {
+      gulp.start('vue');
+    }
   });
 });
 

@@ -24,6 +24,7 @@ module.exports = {
     team: './team',
     project: './project',
     prd: './prd',
+    upload: './main/upload.jsx',
     react_common: [
       'react',
       'react-dom',

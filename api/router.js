@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 17:16:1
+* @Last modified time: 2016-07-12 11:11:35
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 17:16:1
+* @Last modified time: 2016-07-12 11:11:35
  */
 
 
@@ -168,9 +168,7 @@ router.get('/apis', sutil.login, function*(next) {
     let updateResult = yield apiDao.update({ prdId: this.parse.prdId }, {
       $set: { root: this.parse.apiRoot }
     },  { multi: true })
-    if (updateResult) {
-      sutil.success(this, '假装成功了')
-    }
+    sutil.success(this, 'API ROOT 更新成功！')
   })
 
 // api for mock
@@ -213,29 +211,36 @@ router.get('/mock_check.js', sutil.setRouterParams, function*(next) {
     this.type = 'js'
     this.body = `console.log('no projectId');`;
   } else {
+
+    let jsContent = `
+                    var feteApiProjectId = '${this.parse.projectId}';
+                    var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
+                    var feteApiHost = '${config.host}';
+                    var feteApiForMock = {};
+                    `;
+    jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8')
+    this.type = 'js'
+    this.body = jsContent
+  }
+  return false
+})
+router.get('/api_mock_data', sutil.setRouterParams, sutil.allowCORS, function*(next) {
+  if (!this.parse.projectId) {
+    sutil.failed(this, 1003)
+  } else {
     let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
       fields: { _id: 0, url: 1, method: 1, input: 1, output: 1, root: 1 },
       sort: { createAt: 1 }
     })
-    let allApiFormMock = {}
+    let allApiForMock = {}
     _.each(apiItems, item => {
-      allApiFormMock[item.method + item.root + item.url] = {
+      allApiForMock[item.method + item.root + item.url] = {
         input: item.input,
         output: item.output
       }
     })
-    let jsContent = `
-                    var feteApiProductId = '${this.parse.projectId}';
-                    var feteApiUseMockData = ${this.parse.useMockData === 'true' ? true : false};
-                    var feteApiHost = '${config.host}';
-                    var feteApiForMock = ${JSON.stringify(allApiFormMock)};
-                    `;
-    jsContent += fs.readFileSync(path.resolve('common/api_check.js'), 'utf8');
-    this.type = 'js'
-    this.body = jsContent;
+    sutil.success(this, allApiForMock)
   }
-  return false;
-});
-
+})
 
 export default router;

@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
  * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-11 12:33:18
+ * @Last Modified time: 2016-07-12 14:45:50
  */
 
 var Mock = require('mockjs')
@@ -70,6 +70,46 @@ function ApiCheckMockTree2MockTemplate(data, result) {
   }
 }
 
+var ApiCheckLog = {
+  title: function(str) {
+    console.log('%c' + str, 'background: #222; color: #bada55')
+  },
+  title2: function(str) {
+    console.log('%c' + str, 'background: green; color: white')
+  },
+  success: function(str, value) {
+    console.log('%c' + str, 'color: #4fc174',  value)
+  },
+  error: function(str, value) {
+    console.log('%c' + str, 'color: red', value)
+  },
+  warn: function(str, value) {
+    console.log('%c' + str, 'color: #ea8311', value)
+  },
+  info: function(str, value) {
+    console.log('%c' + str, 'color: #2db7f5', value)
+  }
+}
+
+function GetApiMockByPjId() {
+  if ($) {
+    $.ajax({
+      async: false,
+      url: feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId,
+      success: function(res) {
+        feteApiForMock = res.data
+      }
+    })
+  } else if (Vue && VueResource) {
+    var vm = new Vue()
+    vm.$http.get(feteApiHost + '/api/api_mock_data?projectId=' + feteApiProjectId).then(function(res) {
+      res = res.data
+      feteApiForMock = res.data
+    })
+  }
+}
+GetApiMockByPjId()  // get mock data by ajax
+
 // check input
 function ApiCheckInput(input) {
   // TODO: chenck input format
@@ -96,51 +136,45 @@ function ApiCheckForJqueryAjax() {
       })
       // check input
     $(document).ajaxSend(function(event, jqxhr, settings) {
-        console.log('-------- from api_check.js jquery ajax before send')
-          // console.log(settings)
-        console.log(settings.url)
-        console.log(settings.type)
-        console.log(settings.data) // post 才有 ，get 直接挂 url 上了
-          // ApiCheckInput(settings.data)
+        ApiCheckLog.title('-------- [FROM api_check.js] jquery ajax before send --------')
+        ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
+        ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
+        // ApiCheckInput(settings.data)
         if (feteApiUseMockData) {
-          settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+          settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
+          ApiCheckLog.info('Redirect to: ', settings.url)
         }
       })
       // check output
     $(document).ajaxSuccess(function(event, jqxhr, settings) {
-      console.log('-------- from api_check.js jquery ajax after success')
-        // console.log(jqxhr)
-      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
-      console.log(mockKey)
-      console.log(jqxhr.responseJSON) // 还有一个 responseText
-      console.log('----- check output result:')
+      ApiCheckLog.title2('-------- [FROM api_check.js] jquery ajax after success --------')
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      ApiCheckLog.info('AJAX URL: ', mockKey)
+      ApiCheckLog.success('Response data: ', jqxhr.responseJSON) // 还有一个 responseText
       var checkResult = ApiCheckOutput(mockKey, jqxhr.responseJSON)
-      console.log(checkResult)
+      ApiCheckLog.info('Mockjs check output result: ', checkResult)
     })
   } else if ($.ajaxSettings) {
     // zepto
     $.ajaxSettings.global = true
 
     $(document).on('ajaxBeforeSend', function(e, xhr, settings) {
-      console.log('-------- from api_check.js zepto ajax before send')
-        // console.log(settings)
-      console.log(settings.url)
-      console.log(settings.type)
-      console.log(settings.data) // post 才有 ，get 直接挂 url 上了
-        // ApiCheckInput(settings.data)
+      ApiCheckLog.title('-------- [FROM api_check.js] zepto ajax before send --------')
+      ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
+      ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
+      // ApiCheckInput(settings.data)
       if (feteApiUseMockData) {
-        settings.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + settings.url;
+        settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
+        ApiCheckLog.info('Redirect to: ', settings.url)
       }
     })
     $(document).on('ajaxSuccess', function(e, xhr, settings) {
-      console.log('-------- from api_check.js zepto ajax after success')
-        // console.log(jqxhr)
-      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
-      console.log(mockKey)
-      console.log(xhr.responseJSON) // 还有一个 responseText
-      console.log('----- check output result:')
+      ApiCheckLog.title2('-------- [FROM api_check.js] zepto ajax after success --------')
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      ApiCheckLog.info('AJAX URL: ', mockKey)
+      ApiCheckLog.success('Response data: ', xhr.responseJSON) // 还有一个 responseText
       var checkResult = ApiCheckOutput(mockKey, xhr.responseJSON)
-      console.log(checkResult)
+      ApiCheckLog.info('Mockjs check output result: ', checkResult)
     })
   }
 }
@@ -155,28 +189,26 @@ function ApiCheckVueResource() {
 
     // check input
     request: req => {
-      // ApiCheckInput(req)
-      console.log('-------- from api_check.js vue-resource before send')
+      ApiCheckLog.title('-------- [FROM api_check.js] vue-resource before send --------')
       let mockKey = req.method.toUpperCase() + req.url
-      console.log(mockKey)
-      console.log(req.params); // get params
-      console.log(req.data) // post params
+      ApiCheckLog.info('AJAX URL: ', mockKey)
+      ApiCheckLog.warn('Request params: ', req.method.toUpperCase() === 'GET' ? req.params : req.data) // req.params: get params ; req.data: post params
+      // ApiCheckInput(req)
       if (feteApiUseMockData) {
-        req.url = feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock' + req.url;
+        req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
+        ApiCheckLog.info('Redirect to: ', req.url)
       }
       return req
     },
 
     // check output
     response: res => {
-      // ApiCheckOutput(res)
-      console.log('-------- from api_check.js vue-resource after success')
-      let mockKey = res.request.method.toUpperCase() + res.request.url.replace(feteApiHost + '/api/fete_api/' + feteApiProductId + '/mock', '')
-      console.log(mockKey)
-      console.log(res.data)
-      console.log('----- check output result:')
+      ApiCheckLog.title2('-------- [FROM api_check.js] vue-resource after success --------')
+      let mockKey = res.request.method.toUpperCase() + res.request.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      ApiCheckLog.info('AJAX URL: ', mockKey)
+      ApiCheckLog.success('Response data: ', res.data)
       var checkResult = ApiCheckOutput(mockKey, res.data)
-      console.log(checkResult)
+      ApiCheckLog.info('Mockjs check output result: ', checkResult)
       return res
     }
 
@@ -184,19 +216,23 @@ function ApiCheckVueResource() {
 
 }
 
-// jquery 的还有问题，先注释掉
-try {
-  if ($) {
-    ApiCheckForJqueryAjax()
+function initFeteApiCheck() {
+  try {
+    if ($) {
+      ApiCheckForJqueryAjax()
+    }
+  } catch (e) {
+    console.log(e)
   }
-} catch (e) {
-  console.log(e)
-}
 
-try {
-  if (Vue && VueResource) {
-    ApiCheckVueResource()
+  try {
+    if (Vue && VueResource) {
+      ApiCheckVueResource()
+    }
+  } catch (e) {
+    console.log(e)
   }
-} catch (e) {
-  console.log(e)
 }
+// should call init after mock data come back from ajax, but got error, so call it here
+// TODO: init after mock data come back but get error
+initFeteApiCheck()

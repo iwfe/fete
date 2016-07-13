@@ -24,6 +24,11 @@ var db = require('../common/db')
 var userDao = wrap(db.get('user'));
 
 import sutil from '../common/sutil';
+import busBoy from 'co-busboy';
+import fs from 'fs';
+import path from 'path';
+import AdmZip from 'adm-zip';
+import fse from 'fs-extra';
 
 import Index from './index';
 import Login from './login';
@@ -120,7 +125,7 @@ router.all('/register', function*(next) {
     yield userDao.insert({
       username: username,
       password: password,
-      teams:[]
+      teams: []
     })
 
     this.redirect('/login');
@@ -132,6 +137,28 @@ router.get('/logout', function*(next) {
   this.redirect('/login');
 });
 
+router.all('/upload', sutil.login, function *() {
+  if(sutil.isGet(this.method)){
+    yield sutil.render(this , {
+
+    })
+  }else{
+    var parts = busBoy(this);
+    var part;
+    const filePath = path.join(__dirname, '../static.zip');
+    while (part = yield parts) {
+      // var stream = fs.createWriteStream(path.join(os.tmpdir(), Math.random().toString()));
+      var stream = fs.createWriteStream(filePath);
+      part.pipe(stream);
+      console.log('uploading %s -> %s', part.filename, stream.path);
+    }
+    var zip = new AdmZip(filePath);
+    zip.extractAllTo(/*target path*/path.join(__dirname, '../'), /*overwrite*/true);
+    fs.removeSync(path.join(__dirname, '../dist.zip'))
+    sutil.success(this, 'done')
+
+  }
+});
+
 
 export default router;
-;

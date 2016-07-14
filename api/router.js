@@ -161,7 +161,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (api) {
       sutil.success(this, api)
     } else {
-      sutil.success(this, {}) // 防止页面报“API不存在”这个错误 
+      sutil.success(this, {}) // 防止页面报“API不存在”这个错误
     }
   })
 
@@ -196,8 +196,9 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
 
   if (apiItems && apiItems.length > 0) {
     let apiItem = _.find(apiItems, item => {
-      return item.root + item.url === realUrl
+      return (item.root ? item.root : '') + item.url === realUrl
     })
+
     if (apiItem && apiItem.id) {
       apiItem = yield apiDao.findOne({ id: apiItem.id })
       let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))

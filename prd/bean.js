@@ -15,10 +15,14 @@ const prd = {
   type: '', //prd类型
   selfTest: false,//是否自测
   jira: '',//jira地址
+  svn: '',//svn地址
   comment: '',//备注
+  mrdTime: '',//mrd时间
+  prdTime: '',//prd时间
   devTime: '', //开发时间
   apiTime: '', //联调时间
   testTime: '', //提测时间
+  betaTime: '', //beta环境时间
   onlineTime: '', //上线时间
   projectId: '',//项目id
   teamId: '',   //团队id

@@ -23,6 +23,7 @@ import {
   INVITE_MEMBER_SHOW,
   DELETE_MEMBER,
   DELETE_MEMBER_SHOW,
+  GET_PRD,
 } from './action';
 
 function teams(state = [], action) {
@@ -108,6 +109,13 @@ function deleteMemberShow(state = {show: false, member: {}}, action) {
   }
 }
 
+function prds(state = [], action) {
+  switch (action.type) {
+    case GET_RPD:
+      return action.prds
+      return state
+  }
+}
 
 const rootReducer = combineReducers({
   router: routerStateReducer,
@@ -117,7 +125,8 @@ const rootReducer = combineReducers({
   deleteShow,
   members,
   inviteMemberShow,
-  deleteMemberShow
+  deleteMemberShow,
+  prds,
 })
 
 export default rootReducer

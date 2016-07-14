@@ -43,18 +43,25 @@ class AddPrd extends Component {
             'type',
             'selfTest',
             'jira',
+            'svn',
             'comment',
+            'mrdTime',
+            'prdTime',
             'devTime',
             'apiTime',
             'testTime',
+            'betaTime',
             'onlineTime'
           ]),
           {
             id: prd && prd.id
           });
+        obj.mrdTime = new Date(obj.mrdTime).getTime();
+        obj.prdTime = new Date(obj.prdTime).getTime();
         obj.devTime = new Date(obj.devTime).getTime();
         obj.apiTime = new Date(obj.apiTime).getTime();
         obj.testTime = new Date(obj.testTime).getTime();
+        obj.betaTime = new Date(obj.betaTime).getTime();
         obj.onlineTime = new Date(obj.onlineTime).getTime();
         okCallback && okCallback(obj);
       }
@@ -98,8 +105,19 @@ class AddPrd extends Component {
     const jiraProps = getFieldProps('jira', {
       initialValue: prd && prd.jira
     });
+    const svnProps = getFieldProps('svn', {
+      initialValue: prd && prd.svn
+    });
     const commentProps = getFieldProps('comment', {
       initialValue: prd && prd.comment
+    });
+    const mrdTimeProps = getFieldProps('mrdTime', {
+      getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.mrdTime ? new Date(prd.mrdTime) : new Date()
+    });
+    const prdTimeProps = getFieldProps('prdTime', {
+      getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.prdTime ? new Date(prd.prdTime) : new Date()
     });
     const devTimeProps = getFieldProps('devTime', {
       getValueFromEvent: (value, timeString) => timeString,
@@ -112,6 +130,10 @@ class AddPrd extends Component {
     const testTimeProps = getFieldProps('testTime', {
       getValueFromEvent: (value, timeString) => timeString,
       initialValue: prd && prd.testTime ? new Date(prd.testTime) : new Date()
+    });
+    const betaTimeProps = getFieldProps('betaTime', {
+      getValueFromEvent: (value, timeString) => timeString,
+      initialValue: prd && prd.betaTime ? new Date(prd.betaTime) : new Date()
     });
     const onlineTimeProps = getFieldProps('onlineTime', {
       getValueFromEvent: (value, timeString) => timeString,
@@ -184,6 +206,25 @@ class AddPrd extends Component {
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="SVN地址： ">
+            <Input
+              name="svn"
+              {...svnProps}
+              placeholder="请输入SVN地址"
+            />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="mrd时间： ">
+            <DatePicker {...mrdTimeProps} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="prd时间： ">
+            <DatePicker {...prdTimeProps} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="开发时间： ">
             <DatePicker {...devTimeProps} />
           </FormItem>
@@ -196,6 +237,11 @@ class AddPrd extends Component {
             {...formItemLayout}
             label="提测时间： ">
             <DatePicker {...testTimeProps} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="beta测试： ">
+            <DatePicker {...betaTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}

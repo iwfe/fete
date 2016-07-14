@@ -21,7 +21,7 @@
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>{{item.lastModify}}</td>
-                <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
+                <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
             </tr>
         </tbody>
     </table>
@@ -32,7 +32,7 @@
 <script>
 import { tog, add, emptyList } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive } from './vuex/getters.js'
+import { list, listActive, apiRoot } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -40,7 +40,8 @@ export default {
   vuex: {
     getters: {
       list,
-      list_active: listActive
+      list_active: listActive,
+      apiRoot
     },
     actions: {
       tog, add, emptyList

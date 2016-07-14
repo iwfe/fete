@@ -32,6 +32,14 @@ router.post('/data', sutil.projectLogin, function*(next) {
   const {project} = user;
   const id = yield sutil.genId(prdDao);
 
+  const oldPrd = yield prdDao.findOne({
+    projectId: project.id
+  },{
+    sort: {createTime: -1}
+  });
+
+  console.log(oldPrd)
+
   const prd = yield prdDao.insert(Object.assign({}, {
     id: id,
     teamId: project.teamId,
@@ -40,6 +48,7 @@ router.post('/data', sutil.projectLogin, function*(next) {
     createTime: Date.now(),
     updateTime: Date.now()
   }, parse));
+  if(oldPrd) yield sutil.copyApisByPrd(oldPrd.id, prd.id);
   sutil.success(this, prd);
 });
 

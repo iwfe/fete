@@ -34,7 +34,7 @@
           </div>
           <div class="field">
               <label>接口修改日志</label>
-              <div class="api-log">
+              <div class="api-log" :class="{ 'api-log-more-show' : moreLog }">
                   <div class="ui list very relaxed">
                       <div class="item" v-for="list in updateDescList">
                           <i class="file icon"></i>
@@ -45,6 +45,7 @@
                       </div>
                   </div>
               </div>
+              <a class="api-log-more" @click="showMoreLog" v-show="updateDescList.length > 2">{{!moreLog ? '更多' : '收起'}}</a>
           </div>
       </div>
 
@@ -103,7 +104,8 @@ export default {
       codemirrorReady: false,
       isAdd: true,
       editorError: {},
-      root: ''
+      root: '',
+      moreLog: false
     }
   },
   watch: {
@@ -111,6 +113,7 @@ export default {
       this.isAdd = true;
       $('#api-detail .body').scrollTop(0)
       if (v.id) {
+        this.moreLog = false
         this.getdata();
       } else {
         this.resetData();
@@ -288,6 +291,9 @@ export default {
         this.resetData()
       }
       this.tog(obj)
+    },
+    showMoreLog() {
+      this.moreLog = !this.moreLog
     }
   }
 }
@@ -321,8 +327,15 @@ export default {
     }
     .api-log {
         width: 100%;
-        height: auto;
-        overflow: auto;
+        max-height: 72px;
+        overflow: hidden;
+    }
+    .api-log-more-show {
+      overflow: auto;
+      max-height: none;
+    }
+    .api-log-more {
+      font-size: 12px;
     }
     .detail-bottom {
         position: absolute;

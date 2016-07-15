@@ -18,7 +18,6 @@ module.exports = {
     authKey: 'fete',
     host: 'http://localhost:3810',
     mongodbConnection: '192.168.1.46/fete',
-    oldmongodbConnection: '192.168.1.46/iwfe',
     hostIp: 'localhost',
     socketPort: 3000,
     // redis: {

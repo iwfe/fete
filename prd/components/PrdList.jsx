@@ -19,20 +19,9 @@ export default class PrdList extends Component {
   };
 
   render() {
-    const {prds, actions} = this.props;
+    const {prds, showProject, actions} = this.props;
     const columns = [
       {
-        title: '操作',
-        dataIndex: '',
-        key: 'opts', render: (text, prd) =>
-        <div>
-          <a href={"/api?prdId=" + prd.id}>api</a>&nbsp;
-          <a href={"/prd/" + prd.id}>详情</a>&nbsp;
-          <a onClick={() => actions.updateShow(true, prd)}>更新</a>&nbsp;
-          <a style={{color: 'red'}} onClick={() => actions.deleteShow(true, prd)}>删除</a>
-        </div>,
-        width: 120
-      }, {
         title: '版本号',
         dataIndex: 'name',
         key: 'name',
@@ -91,8 +80,32 @@ export default class PrdList extends Component {
         dataIndex: 'comment',
         key: 'comment',
       }];
-    if(!actions) {
-      columns.splice(0,1)
+    if (showProject) {
+      columns.splice(0, 0, {
+        title: '所属项目',
+        dataIndex: 'project',
+        key: 'project',
+        width: 70,
+        render: (text, prd) =>
+          <div>
+            <a target="_blank" href={`/prd?projectId=${prd.projectId}`}>{prd.project.name}</a>
+          </div>
+      })
+    }
+    if (actions) {
+      columns.splice(0, 0, {
+        title: '操作',
+        dataIndex: '',
+        key: 'opts',
+        render: (text, prd) =>
+          <div>
+            <a href={"/api?prdId=" + prd.id}>api</a>&nbsp;
+            <a href={"/prd/" + prd.id}>详情</a>&nbsp;
+            <a onClick={() => actions.updateShow(true, prd)}>更新</a>&nbsp;
+            <a style={{color: 'red'}} onClick={() => actions.deleteShow(true, prd)}>删除</a>
+          </div>,
+        width: 120
+      })
     }
     prds.map(item=> {
       const {mrdTime, prdTime, devTime, apiTime, testTime, betaTime, onlineTime} = item;

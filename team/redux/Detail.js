@@ -38,14 +38,19 @@ class Detail extends Component {
   componentDidMount() {
     const {team, actions} = this.props;
     actions.getMembers(team);
+    actions.getPrds(team, 'all');
   }
 
   render() {
     const {team, members, prds, actions, inviteMemberShow, deleteMemberShow} = this.props;
     const options = [
-      { label: '苹果', value: 'Apple' },
-      { label: '梨', value: 'Pear' },
-      { label: '橘', value: 'Orange' },
+      { label: 'mrd', value: 'mrd' },
+      { label: 'prd', value: 'prd' },
+      { label: '开发', value: 'dev' },
+      { label: '联调', value: 'api' },
+      { label: '提测', value: 'test' },
+      { label: 'beta', value: 'beta' },
+      { label: '上线', value: 'online' },
     ];
     return (
       <div className="mod-detail">
@@ -94,9 +99,10 @@ class Detail extends Component {
             }
           </TabPane>
           <TabPane tab="prd详情" key="prd">
-            <CheckboxGroup options={options} defaultValue={['Pear']} onChange={value => actions.getPrds(value)} />
+            <CheckboxGroup options={options} defaultValue={['mrd', 'prd', 'dev', 'api', 'test', 'beta', 'online']} onChange={value => actions.getPrds(team, value)} />
+            <br/>
             {
-              prds ? <PrdList prds={prds} /> : null
+              prds ? <PrdList prds={prds} showProject={true} /> : null
             }
           </TabPane>
         </Tabs>
@@ -116,6 +122,7 @@ export default connect(state=> {
   return {
     team: state.teams.find(item=>item.id == state.router.params.teamId) || pageConfig.team.team,
     members: state.members,
+    prds: state.prds,
     inviteMemberShow: state.inviteMemberShow,
     deleteMemberShow: state.deleteMemberShow,
   }

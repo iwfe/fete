@@ -7,19 +7,9 @@
 
 'use strict';
 import React, {Component, PropTypes} from 'react';
-import ReactDOM from 'react-dom';
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux';
 import * as actions from './action'
-// import { getTeams, addTeam, updateTeam, deleteTeam } from './action';
-// import {
-//     Router,
-//     Route,
-//     IndexRoute,
-//     Link,
-//     browserHistory
-// } from 'react-router';
-import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
 import Card from 'antd/lib/card';
 import Col from 'antd/lib/col';

@@ -421,9 +421,13 @@ export default {
     },
     revertMock() {
       const self = this;
-      const mockModel = util.mockTree2MockTemplate(self.outputModel);
-      const mockData = mock.mock(mockModel);
-      self.setEditorData('mock', mockData);
+      try {
+        const mockModel = util.mockTree2MockTemplate(self.outputModel);
+        const mockData = mock.mock(mockModel);
+        self.setEditorData('mock', mockData);
+      } catch (e) {
+        toastr.error('请输入正确mock规则')
+      }
     },
     comparison(key, parents, output, loop) {
       const self = this;

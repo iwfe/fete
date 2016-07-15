@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-15 14:07:03
+* @Last modified time: 2016-07-15 15:07:09
 */
 
 // old database
@@ -55,7 +55,7 @@ router.put('/importdata', sutil.login, function* (next) {
         title: oldApi.desc, // 标题
         url: oldApi.url, // 请求url
         method: oldApi.method.toLocaleUpperCase(), //提交方式 (get post)
-        input: oldApi.input, // 入参
+        input: JSON.parse(oldApi.input), // 入参
         output: new_output,
         outputJson: old_output,
       	status: 1,	// 1 新建， 2 修改

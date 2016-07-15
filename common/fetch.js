@@ -23,9 +23,9 @@ let self = function fetch(url, options = {}) {
     }, options);
     if (opt.method.toLowerCase() === 'get' && opt.body) {
         const body = opt.body;
-        const query = Object.keys(body).map(key => {
-            return `${key}=${body[key]}`;
-        });
+        const query = _.filter(Object.keys(body).map(key => {
+            return body[key] ? `${key}=${body[key]}` : null;
+        }), item => item !== null);
         if (url.indexOf('?') != -1) {
             url += '&';
         } else {

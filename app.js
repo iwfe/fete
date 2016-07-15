@@ -99,6 +99,7 @@ app.use(function*(next) {
 
   } catch (error) {
     this.status = error.status || 500;
+    console.log(error.stack);
     if (this.status === 404) {
       yield this.render('error', {
         error

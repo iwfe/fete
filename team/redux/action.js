@@ -172,7 +172,7 @@ export function getPrds(team, filter) {
         }
       })
       .then(json => dispatch({
-        type: GET_MEMBER,
+        type: GET_PRD,
         prds: json.data
       }))
   }

@@ -113,6 +113,7 @@ function prds(state = [], action) {
   switch (action.type) {
     case GET_PRD:
       return action.prds
+    default:
       return state
   }
 }
@@ -126,7 +127,7 @@ const rootReducer = combineReducers({
   members,
   inviteMemberShow,
   deleteMemberShow,
-  // prds,
+  prds
 })
 
 export default rootReducer

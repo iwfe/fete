@@ -11,6 +11,8 @@ const wrap = require('co-monk');
 const db = require('../common/db');
 const userDao = wrap(db.get('user'));
 const teamDao = wrap(db.get('team'));
+const projectDao = wrap(db.get('project'));
+const prdDao = wrap(db.get('prd'));
 
 import sutil from '../common/sutil';
 
@@ -300,32 +302,99 @@ router.del('/member', sutil.teamLogin('owner'), function*(next) {
 router.get('/prd', sutil.teamLogin(), function*(next) {
   const user = this.locals._user;
   const {teamId, filter} = this.parse;
-
-  let filterMap = {};
+  const filterArr = filter ? filter.split(',') : [];
+  let query = [];
   const now = Date.now();
-  let time = '';
-  if (now >= onlineTime) {
-    phase = '已上线';
-  } else if (now >= betaTime) {
-    phase = 'beta测试';
-  } else if (now >= testTime) {
-    phase = 'test测试';
-  } else if (now >= apiTime) {
-    phase = '联调';
-  } else if (now >= devTime) {
-    phase = '开发'
-  } else if (now >= prdTime) {
-    phase = 'prd阶段'
-  } else if (now >= mrdTime) {
-    phase = 'mrd阶段'
+  if (filter === 'all') {
+    query = null;
+  } else {
+    filterArr.map(item => {
+      switch (item) {
+        case 'mrd':
+          query.push({
+            mrdTime: {
+              $lte: now,
+            },
+            prdTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'prd':
+          query.push({
+            prdTime: {
+              $lte: now,
+            },
+            devTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'dev':
+          query.push({
+            devTime: {
+              $lte: now,
+            },
+            apiTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'api':
+          query.push({
+            apiTime: {
+              $lte: now,
+            },
+            testTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'test':
+          query.push({
+            testTime: {
+              $lte: now,
+            },
+            betaTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'beta':
+          query.push({
+            betaTime: {
+              $lte: now,
+            },
+            onlineTime: {
+              $gt: now,
+            }
+          });
+          break;
+        case 'online':
+          query.push({
+            onlineTime: {
+              $lte: now,
+            }
+          });
+          break;
+      }
+    });
   }
-  const prds = yield prdDao.find({
+  let findQuery = {
     teamId: teamId,
-    [time]: {
-      '$lt': now
-    }
-  })
-  sutil.success(this, users);
+  }
+  if(query && query.length) {
+    findQuery['$or'] = query;
+  }
+  const prds = yield prdDao.find(findQuery);
+  const projects = yield projectDao.find({
+    teamId: teamId
+  });
+  let projectMap = {}
+  _.map(projects, item => projectMap[item.id] = item);
+  _.map(prds, item => item.project = projectMap[item.projectId]);
+  console.log(prds)
+  sutil.success(this, prds);
 });
 
 

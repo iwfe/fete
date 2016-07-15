@@ -21,9 +21,10 @@ const RANDOMARRAY = [
 var util = {
   genId(len = 6) {
     let result = '';
-    const arrLen = RANDOMARRAY.length;
+    const arrLen = RANDOMARRAY.length - 1;
     while (len--) {
-      result += RANDOMARRAY[_.random(0, arrLen)];
+      const rand = _.random(0, arrLen)
+      result += RANDOMARRAY[rand];
     }
     return result;
   },

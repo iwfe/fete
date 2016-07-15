@@ -305,16 +305,23 @@ var sutil = {
     let ip = ctx.ip;
     if (!auth[2] || auth[2] != ip) return null;
 
-    let user = loginUserStore.get(username);
-    if (!user) {
-      user = yield userDao.findOne({
-        username: username,
-        password: password
-      });
-      return user;
-    } else {
-      return (user.username === username && user.password === password) ? user : null;
-    }
+    let user = yield userDao.findOne({
+      username: username,
+      password: password
+    });
+    return user;
+
+    //登录用户缓存后会产生邀请用户接受的BUG,没有做缓存更新机制,导致内存数据和数据库数据不一致情况
+    // let user = loginUserStore.get(username);
+    // if (!user) {
+    //   user = yield userDao.findOne({
+    //     username: username,
+    //     password: password
+    //   });
+    //   return user;
+    // } else {
+    //   return (user.username === username && user.password === password) ? user : null;
+    // }
   },
 
   //设置登录用户
@@ -338,7 +345,7 @@ var sutil = {
     encrypted += cip.final('hex');
     ctx.cookies.set('feteauth', encrypted);
 
-    loginUserStore.set(username, user);
+    // loginUserStore.set(username, user);
   },
 
   wrapUserPass(password) {
@@ -387,12 +394,10 @@ var sutil = {
 
   * genId(dao, len = 6) {
     let id = util.genId(len);
-    console.log(`s:${id}`);
     while (yield dao.findOne({
       id: id
     })) {
       id = util.genId(len);
-      console.log(`s1:${id}`);
     }
     return id;
   },

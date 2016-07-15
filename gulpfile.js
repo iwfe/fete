@@ -53,15 +53,15 @@ gulp.task('default', function() {
 
   fse.emptydirSync('./dist');
 
-  gulp.start('img');
+  // gulp.start('img');
 
   gulp.start('document');
 
   gulp.start('webpack');
 
-  gulp.start('sham');
+  // gulp.start('sham');
 
-  gulp.start('html');
+  // gulp.start('html');
 });
 
 //webpack静态处理
@@ -80,7 +80,7 @@ gulp.task('webpack', function(callback) {
   var config = require('./build/webpack.react.config.js')
   config.watch =isWatch
   config.devtool = isProduct ? false : 'source-map'
-  config.plugins.concat(minfy)
+  config.plugins = config.plugins.concat(minfy)
 
   if (entry) {
     console.log('您需要编译的模块有：' + entry);
@@ -213,7 +213,7 @@ gulp.task('vue', function(callback) {
   var vue_config = require('./build/webpack.vue.config.js')
   vue_config.watch =isWatch
   vue_config.devtool = isProduct ? false : 'source-map'
-  vue_config.plugins.concat(minfy)
+  vue_config.plugins = vue_config.plugins.concat(minfy)
 
   webpack(vue_config, function(err, stats) {
     console.log(stats.toString());

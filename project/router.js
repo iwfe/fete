@@ -19,6 +19,15 @@ router.get('/', sutil.teamLogin(), function*(next) {
     yield sutil.render(this, {});
 });
 
+//项目详情
+router.get('/:projectId', sutil.setRouterParams, sutil.projectLogin, function*(next) {
+  yield sutil.render(this, {
+    project: yield projectDao.findOne({
+      id: this.parse.projectId
+    })
+  });
+});
+
 router.get('/data', sutil.teamLogin(), function*(next) {
     sutil.success(this, yield projectDao.find({
       teamId: this.parse.teamId

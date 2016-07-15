@@ -20,6 +20,7 @@ export const INVITE_MEMBER= 'INVITE_MEMBER';
 export const INVITE_MEMBER_SHOW= 'INVITE_MEMBER_SHOW';
 export const DELETE_MEMBER= 'DELETE_MEMBER';
 export const DELETE_MEMBER_SHOW= 'DELETE_MEMBER_SHOW';
+export const GET_PRD = 'GET_PRD';
 
 export function getTeams() {
     return dispatch => {
@@ -157,5 +158,23 @@ export function deleteMemberShow(show, member) {
     type: DELETE_MEMBER_SHOW,
     show: show,
     member: member
+  }
+}
+
+/**********prd相关**************/
+export function getPrds(team, filter) {
+  return dispatch => {
+    // dispatch(request())
+    return fetch('/team/prd',
+      {
+        body: {
+          teamId: team.id,
+          filter: filter
+        }
+      })
+      .then(json => dispatch({
+        type: GET_MEMBER,
+        prds: json.data
+      }))
   }
 }

@@ -8,7 +8,8 @@
                 <th>描述</th>
                 <th>链接</th>
                 <th>方法</th>
-                <!-- <th></th> -->
+                <th>最后修改</th>
+                <th>返回数据预览</th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +20,8 @@
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
-                <!-- <td><span class="view" @click="viewData">查看</span></td> -->
+                <td>{{item.lastModify}}</td>
+                <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
             </tr>
         </tbody>
     </table>
@@ -27,10 +29,10 @@
 </div>
 </template>
 
-<script type="text/babel">
+<script>
 import { tog, add, emptyList } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive } from './vuex/getters.js'
+import { list, listActive, apiRoot } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -38,25 +40,32 @@ export default {
   vuex: {
     getters: {
       list,
-      list_active: listActive
+      list_active: listActive,
+      apiRoot
     },
     actions: {
       tog, add, emptyList
+    }
+  },
+  data() {
+    return {
+      host: pageConfig.host,
+      currentProjectId: pageConfig.me.project.id
     }
   },
   ready() {
     this.getList(this.$route.query.prdId);
   },
   events: {
-    reloadApiList(prdId) {
-      this.getList(prdId)
+    reloadApiList(pid) {
+      this.getList(pid)
     }
   },
   methods: {
-    getList(prdId) {
+    getList(pid) {
       this.emptyList()  // empty list first
       fetch('/api/apis', {
-        body: { prdId: prdId }
+        body: { prdId: pid }
       }).then(res => {
         res.data.forEach(v => {
           this.add(v);
@@ -71,13 +80,6 @@ export default {
         this.$parent.$broadcast('init-code-mirror-all')
       });
       this.tog(item);
-      e.stopPropagation();
-    },
-    viewData(e) {
-      this.lockScreen(e)
-    },
-    lockScreen(e) {
-      e.preventDefault();
       e.stopPropagation();
     }
   }

@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-12 11:11:35
+* @Last modified time: 2016-07-13 18:05:41
 * @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-12 11:11:35
+* @Last modified time: 2016-07-13 18:05:41
  */
 
 
@@ -48,13 +48,18 @@ router.get('/', sutil.prdLogin, function*(next) {
 // api 列表
 router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.prdId) {
-      sutil.failed(this, 1003);
+      sutil.failed(this, 1003)
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1 },
       sort: { createAt: -1 }
-    });
-    sutil.success(this, data);
+    })
+    _.each(data, item => {
+      let last = item.updateDescList[0] // last one is at 0, not .length-1
+      item.lastModify = `${util.formateDate(last.updateTime, '%F %T')} ${last.userName} ${last.updateDesc}`
+      delete item.updateDescList
+    })
+    sutil.success(this, data)
   })
   // 新建一个 api
   .post('/apis', sutil.login, function*(next) {
@@ -156,7 +161,7 @@ router.get('/apis', sutil.login, function*(next) {
     if (api) {
       sutil.success(this, api)
     } else {
-      sutil.failed(this, 150003)
+      sutil.success(this, {}) // 防止页面报“API不存在”这个错误
     }
   })
 
@@ -191,12 +196,18 @@ router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.a
 
   if (apiItems && apiItems.length > 0) {
     let apiItem = _.find(apiItems, item => {
-      return item.root + item.url === realUrl
+      return (item.root ? item.root : '') + item.url === realUrl
     })
     if (apiItem && apiItem.id) {
       apiItem = yield apiDao.findOne({ id: apiItem.id })
       let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
-      this.body = data // 这里就不要用 sutil 的 success 方法了
+      // 这里就不要用 sutil 的 success 方法了
+      // jquery jsonp has callback&_ but vue-resource just have callback
+      if (this.parse.callback) {
+        this.body = `${this.parse.callback}(${JSON.stringify(data)})` // for jsonp
+      } else {
+        this.body = data  // for json
+      }
       return false
     }
   }

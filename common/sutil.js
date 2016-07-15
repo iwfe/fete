@@ -485,7 +485,7 @@ var sutil = {
       })
       delete apis[i]._id
       try {
-        let result = yield apiDao.insert(item)
+        let result = yield apiDao.insert(apis[i])
         copyCount++
       } catch(e) {}
     }

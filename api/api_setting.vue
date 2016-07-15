@@ -230,7 +230,6 @@ export default {
       }
     },
     closeSlide() {
-      // 关闭弹窗之后清空list_active并将id设置为1，解决下一次点击本次修改的弹出窗没有数据
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })

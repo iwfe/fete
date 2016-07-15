@@ -2,8 +2,8 @@
 * @Author: lancui
 * @Date:   2016-06-23 17:06:00
 * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-11 14:38:11
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-15 10:07:34
 */
 
 
@@ -35,7 +35,7 @@ const api = {
             ]
 		}
 	],
-	// outputMock:{}, //保存生成的mock格式  // 不要这个字段了
+	outputJson:{}, //保存outputJson格式
 	status: 1,	// 1 新建， 2 修改
 	updateDescList: [{ // 修改说明list
 		updateTime: '', // 更新时间

@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-15 13:07:16
+* @Last modified time: 2016-07-15 13:07:20
 */
 
 // old database
@@ -41,14 +41,10 @@ router.put('/importdata', sutil.login, function* (next) {
         sutil.failed(this, 1003);
     }
 
-    console.log(111);
     function* initApi(oldApi, root, teamId, projectId, prdId) {
       let old_output = JSON.parse(oldApi.output),
           new_output = util.Json2MockTree(old_output);
-      console.log(`${old_output}`);
-      console.log(`===new_output===${JSON.stringify(new_output)}`);
 
-      console.log(`-----${self.locals}`);
       let newApi = {
         id: yield sutil.genId(apiDao, 8),
         createTime: new Date(),
@@ -73,7 +69,6 @@ router.put('/importdata', sutil.login, function* (next) {
       	projectId: projectId, // 项目Id
       	teamId: teamId // 项目组Id
       };
-      console.log(`====${JSON.stringify(newApi)}`);
       return newApi;
     }
 

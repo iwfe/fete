@@ -111,7 +111,7 @@
           alert('请先填写数据');
           return;
         }
-        fetch('importdata', {
+        fetch('/importdb/importdata', {
           method: 'PUT',
           body: { root: self.root, teamId: self.teamId, projectId: self.projectId, prdId: self.prdId, oldPrdId: self.oldPrdId }
         }).then((res) => {

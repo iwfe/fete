@@ -164,7 +164,6 @@ export function deleteMemberShow(show, member) {
 /**********prd相关**************/
 export function getPrds(team, filter) {
   return dispatch => {
-    // dispatch(request())
     return fetch('/team/prd',
       {
         body: {

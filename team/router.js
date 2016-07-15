@@ -296,6 +296,16 @@ router.del('/member', sutil.teamLogin('owner'), function*(next) {
   sutil.success(this, member);
 });
 
+/********prd**********/
+router.get('/prd', sutil.teamLogin(), function*(next) {
+  const user = this.locals._user;
+  const {teamId, filter} = this.parse;
+  const prds = yield prdDao.find({
+    teamId: teamId
+  })
+  sutil.success(this, users);
+});
+
 
 // 团队
 router.get('/', sutil.login, function*(next) {

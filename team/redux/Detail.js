@@ -99,7 +99,7 @@ class Detail extends Component {
             }
           </TabPane>
           <TabPane tab="prd详情" key="prd">
-            <CheckboxGroup options={options} defaultValue={['mrd', 'prd', 'dev', 'api', 'test', 'beta', 'online']} onChange={value => actions.getPrds(team, value)} />
+            <CheckboxGroup options={options} defaultValue={[]} onChange={value => actions.getPrds(team, value)} />
             <br/>
             {
               prds ? <PrdList prds={prds} showProject={true} /> : null

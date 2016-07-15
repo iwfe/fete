@@ -234,7 +234,7 @@ export default {
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
-      this.resetData()
+      // this.resetData()
     },
     resetData() {
       this.apiName = ''

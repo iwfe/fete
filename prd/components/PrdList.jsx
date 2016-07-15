@@ -41,6 +41,7 @@ export default class PrdList extends Component {
         dataIndex: 'phase',
         key: 'phase',
         width: 65,
+        sorter: (a, b) => a.phaseOrder - b.phaseOrder,
       }, {
         title: '提测时间',
         dataIndex: 'testTimeUI',
@@ -113,22 +114,31 @@ export default class PrdList extends Component {
       item.onlineTimeUI = onlineTime && util.formateDate(onlineTime, '%F');
       const now = Date.now();
       let phase = '未开始';
+      let phaseOrder = 0;
       if (now >= onlineTime) {
         phase = '已上线';
+        phaseOrder = 7;
       } else if (now >= betaTime) {
         phase = 'beta测试';
+        phaseOrder = 6;
       } else if (now >= testTime) {
         phase = 'test测试';
+        phaseOrder = 5;
       } else if (now >= apiTime) {
         phase = '联调';
+        phaseOrder = 4;
       } else if (now >= devTime) {
         phase = '开发'
+        phaseOrder = 3;
       } else if (now >= prdTime) {
         phase = 'prd阶段'
+        phaseOrder = 2;
       } else if (now >= mrdTime) {
         phase = 'mrd阶段'
+        phaseOrder = 1;
       }
       item.phase = phase;
+      item.phaseOrder = phaseOrder;
     })
     return (
       <Table dataSource={prds} columns={columns} useFixedHeader={true} rowKey={prd => prd.id}/>

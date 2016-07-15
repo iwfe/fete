@@ -46,7 +46,7 @@ router.get('/', sutil.prdLogin, function*(next) {
 
 // CURD for api
 // api 列表
-router.get('/apis', sutil.login, function*(next) {
+router.get('/apis', sutil.prdLogin, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003)
     }
@@ -62,7 +62,7 @@ router.get('/apis', sutil.login, function*(next) {
     sutil.success(this, data)
   })
   // 新建一个 api
-  .post('/apis', sutil.login, function*(next) {
+  .post('/apis', sutil.prdLogin, function*(next) {
     if (!this.parse.apiData) {
       sutil.failed(this, 1003)
     }
@@ -70,8 +70,8 @@ router.get('/apis', sutil.login, function*(next) {
     let insertResult = yield apiDao.insert(
       _.extend(apiData, {
         id: yield sutil.genId(apiDao, 8),
-        createTime: new Date(),
-        updateTime: new Date(),
+        createTime: Date.now(),
+        updateTime: Date.now(),
         userId: this.locals._user._id,
         userName: this.locals._user.username
       })
@@ -86,7 +86,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 获取某个api详细信息
-  .get('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+  .get('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -94,7 +94,7 @@ router.get('/apis', sutil.login, function*(next) {
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象
-  .put('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+  .put('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -102,7 +102,7 @@ router.get('/apis', sutil.login, function*(next) {
     delete(apiData._id)
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(apiData, {
-        updateTime: new Date(),
+        updateTime: Date.now(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })
@@ -117,13 +117,13 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 更新某个 api, 仅提供更新的字段
-  .patch('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+  .patch('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
     let updateResult = yield apiDao.update({ id: this.parse.id }, {
       $set: _.extend(this.parse.updateFields, {
-        updateTime: new Date(),
+        updateTime: Date.now(),
         operatorId: this.locals._user._id,
         operatorName: this.locals._user.username
       })
@@ -135,7 +135,7 @@ router.get('/apis', sutil.login, function*(next) {
     }
   })
   // 删除某个 api
-  .delete('/apis/:id', sutil.login, sutil.setRouterParams, function*(next) {
+  .delete('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -153,7 +153,7 @@ router.get('/apis', sutil.login, function*(next) {
   })
 
   // 根据prdId获取最新的API
-  .get('/getLatestApi', sutil.login, sutil.setRouterParams, function*(next) {
+  .get('/getLatestApi', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003)
     }
@@ -166,7 +166,7 @@ router.get('/apis', sutil.login, function*(next) {
   })
 
   // 更新最新的API root 字段
-  .patch('/apiRoot', sutil.login, sutil.setRouterParams, function*(next) {
+  .patch('/apiRoot', sutil.prdLogin, sutil.setRouterParams, function*(next) {
     if (!this.parse.prdId && !this.parse.apiRoot) {
       sutil.failed(this, 1003)
     }
@@ -177,10 +177,9 @@ router.get('/apis', sutil.login, function*(next) {
   })
 
 // api for mock
-router.all('/fete_api/:projectId/:prdId?/mock/*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
-  let tmpUrlArr = this.request.path.split('/mock')
-  let realUrl = tmpUrlArr[tmpUrlArr.length - 1]
-
+router.all('/fete_api/:projectId/:prdId?/mock*', sutil.setRouterParams, sutil.allowCORS, function*(next) {
+  let realUrl = this.parse['0']
+  console.log(realUrl)
   let filter = {
     method: this.method.toUpperCase(),
     projectId: this.parse.projectId

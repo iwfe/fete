@@ -111,7 +111,7 @@ function deleteMemberShow(state = {show: false, member: {}}, action) {
 
 function prds(state = [], action) {
   switch (action.type) {
-    case GET_RPD:
+    case GET_PRD:
       return action.prds
       return state
   }
@@ -126,7 +126,7 @@ const rootReducer = combineReducers({
   members,
   inviteMemberShow,
   deleteMemberShow,
-  prds,
+  // prds,
 })
 
 export default rootReducer

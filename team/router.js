@@ -300,8 +300,30 @@ router.del('/member', sutil.teamLogin('owner'), function*(next) {
 router.get('/prd', sutil.teamLogin(), function*(next) {
   const user = this.locals._user;
   const {teamId, filter} = this.parse;
+
+  let filterMap = {};
+  const now = Date.now();
+  let time = '';
+  if (now >= onlineTime) {
+    phase = '已上线';
+  } else if (now >= betaTime) {
+    phase = 'beta测试';
+  } else if (now >= testTime) {
+    phase = 'test测试';
+  } else if (now >= apiTime) {
+    phase = '联调';
+  } else if (now >= devTime) {
+    phase = '开发'
+  } else if (now >= prdTime) {
+    phase = 'prd阶段'
+  } else if (now >= mrdTime) {
+    phase = 'mrd阶段'
+  }
   const prds = yield prdDao.find({
-    teamId: teamId
+    teamId: teamId,
+    [time]: {
+      '$lt': now
+    }
   })
   sutil.success(this, users);
 });

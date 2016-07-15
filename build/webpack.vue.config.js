@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-30 18:48:33
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-13 11:07:68
+* @Last modified time: 2016-07-14 17:07:12
  */
 
 var path = require('path'),
@@ -15,6 +15,7 @@ module.exports = {
   entry: {
     api: './api/index.js',
     message: './message/index.js',
+    importdb: './importdb/index.js',
     vue_common: [
       'vue',
       'vue-router',

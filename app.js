@@ -3,7 +3,7 @@
 * @Date:   2016-06-27 13:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-08 16:07:76
+* @Last modified time: 2016-07-14 17:07:11
 */
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
@@ -118,6 +118,7 @@ import project from './project/router';
 import prd from './prd/router';
 import apiModule from './api/router';
 import msgModule from './message/router';
+import importdb from './importdb/router';
 app.use(main.routes());
 app.use(user.routes());
 app.use(team.routes());
@@ -125,6 +126,7 @@ app.use(project.routes());
 app.use(prd.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
+app.use(importdb.routes());
 
 app.on('error', function(err) {
     console.log('sent error %s to the cloud', err.message);

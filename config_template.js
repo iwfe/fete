@@ -3,7 +3,7 @@
 * @Date:   2016-06-29 17:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-15 13:07:39
+* @Last modified time: 2016-07-15 14:07:51
 */
 
 
@@ -18,7 +18,6 @@ module.exports = {
     authKey: 'fete',
     host: 'http://localhost:3810',
     mongodbConnection: '192.168.1.46/fete',
-    oldmongodbConnection: '192.168.1.46/iwfe',
     hostIp: 'localhost',
     socketPort: 3000,
     // redis: {

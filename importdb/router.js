@@ -3,13 +3,13 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-15 13:07:20
+* @Last modified time: 2016-07-15 14:07:03
 */
 
 // old database
 import config from '../config';
 var monk = require('monk');
-var old_db = monk(config.oldmongodbConnection);
+var old_db = monk('192.168.1.46/iwfe');
 
 const wrap = require('co-monk');
 const db = require('../common/db');

@@ -90,6 +90,7 @@
           if (res.code === 200) {
             self.projectData = res.data
             self.projectId = self.projectData.length > 0 ? self.projectData[0].id : ''
+            self.oldPrdId = ''
           }
         })
       },

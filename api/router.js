@@ -2,10 +2,10 @@
  * @Author: lancui
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-13 18:05:41
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-13 18:05:41
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-18 14:07:42
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-18 14:07:42
  */
 
 
@@ -86,7 +86,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 获取某个api详细信息
-  .get('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .get('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -94,7 +94,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象
-  .put('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .put('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -117,7 +117,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 更新某个 api, 仅提供更新的字段
-  .patch('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .patch('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -135,7 +135,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 删除某个 api
-  .delete('/apis/:id', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .delete('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -153,7 +153,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
   })
 
   // 根据prdId获取最新的API
-  .get('/getLatestApi', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .get('/getLatestApi', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003)
     }
@@ -166,7 +166,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
   })
 
   // 更新最新的API root 字段
-  .patch('/apiRoot', sutil.prdLogin, sutil.setRouterParams, function*(next) {
+  .patch('/apiRoot', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.prdId && !this.parse.apiRoot) {
       sutil.failed(this, 1003)
     }

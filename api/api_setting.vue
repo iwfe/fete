@@ -193,7 +193,10 @@ export default {
           createTime: new Date(),
         });
         fetch('/api/apis', {
-          body: { apiData },
+          body: {
+            apiData,
+            prdId: this.prdId
+          },
           method: 'POST'
         }).then((res) => {
           if (res.code === 200) {
@@ -215,7 +218,10 @@ export default {
         apiData.updateTime = new Date();
         apiData.updateDescList.unshift({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
         fetch(`/api/apis/${this.list_active.id}`, {
-          body: { apiData },
+          body: {
+            apiData,
+            prdId: this.prdId
+          },
           method: 'PUT'
         }).then(res => {
           if (res.code === 200) {
@@ -250,7 +256,10 @@ export default {
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {
-        method: 'GET'
+        method: 'GET',
+        body: {
+          prdId: this.prdId
+        }
       }).then(res => {
         _.extend(this.apiData, res.data)
         this.apiName = res.data.title
@@ -265,7 +274,10 @@ export default {
       if (confirm('确定要删除此API？')) {
         this.delLoad = true;
         fetch(`/api/apis/${this.list_active.id}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          body: {
+            prdId: this.prdId
+          }
         }).then(res => {
           if (res.code === 200) {
             toastr.success('成功删除API！');

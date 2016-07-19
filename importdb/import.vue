@@ -103,6 +103,7 @@
           if (res.code === 200) {
             self.prdData = res.data
             self.prdId = self.prdData.length > 0 ? self.prdData[0].id : ''
+            self.oldPrdId = ''
           }
         })
       },

@@ -90,6 +90,7 @@
           if (res.code === 200) {
             self.projectData = res.data
             self.projectId = self.projectData.length > 0 ? self.projectData[0].id : ''
+            self.oldPrdId = ''
           }
         })
       },
@@ -102,6 +103,7 @@
           if (res.code === 200) {
             self.prdData = res.data
             self.prdId = self.prdData.length > 0 ? self.prdData[0].id : ''
+            self.oldPrdId = ''
           }
         })
       },

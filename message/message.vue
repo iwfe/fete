@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(index, item) in msgList" :class="item.status == 1 ? 'positive' : ''">
+                <tr v-for="(index, item) in msgList" :class="item.status !== 0 ? 'positive' : ''">
                     <td>{{item.createTime}}</td>
                     <td>{{item.userName}}</td>
                     <td>{{item.platform}}</td>
@@ -28,10 +28,10 @@
                         <a v-if="btn.type === 'link'" href="{{btn.linkUrl}}">{{btn.text}}</a>
                         <em v-else>{{btn.text}}</em>
                       </span>
+                      <!-- 未读 -->
+                      <span v-if="!item.actionDetail.btns && item.status === 0" class='read-status' @click="updateStatus(item.id, index, item.status)">{{item | msgStatus}}</span>
                       <!-- 已读 -->
-                      <span v-if="!item.actionDetail.btns && item.status === 0" class='read-status' @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
-
-                      <span v-if="item.status != 0" class='read-status read'>{{{item.status | msgStatus}}}</span>
+                      <span v-if="item.status != 0" class='read-status read' :class="{invited: item.action === 'invited'}" >{{item | msgStatus}}</span>
 
                     </td>
                 </tr>
@@ -46,9 +46,10 @@
 
 <script type="text/babel">
 
-  Vue.filter('msgStatus', (value) => {
-    const status = { 0: '未读', 1: '已读', 2: '已接受', 3: '已拒绝' };
-    return status[value];
+  Vue.filter('msgStatus', (message) => {
+    const { status, resultText } = message;
+    const statusMap = { 0: '未读', 1: '已读', 2: '已操作' };
+    return !resultText ? statusMap[status] : resultText;
   });
   const username = pageConfig.me.username;
   export default {
@@ -69,16 +70,19 @@
           this.msgList = res.data;
         });
       },
-      updateStatus(msgId, i, curStatus, newStatus) {
-        console.log(`222===${newStatus}`);
-
+      // newStatus: 0未读, 1已读, 2已操作
+      updateStatus(msgId, i, curStatus, newStatus, resultText) {
         if (curStatus !== 0) return; // 不是未读
+
         if (!newStatus) newStatus = 1;
+        if (resultText === 1 || !resultText) resultText = '已读';
+
         fetch('/message/messages', {
           method: 'PUT',
-          body: JSON.stringify({ userId: username, msgId: msgId, status: newStatus })
+          body: JSON.stringify({ userId: username, msgId: msgId, status: newStatus, resultText: resultText })
         }).then((res) => {
           this.msgList[i].status = 1;
+          this.msgList[i].resultText = resultText;
         });
       },
       updateStatusBatch() {
@@ -92,6 +96,7 @@
             this.msgList.forEach((item) => {
               if (item.action !== 'invited') {
                 item.status = 1;
+                item.resultText = '已读';
               }
             });
           });
@@ -105,14 +110,14 @@
       doAjax(btnInfo, msgId, i) {
         const self = this;
         const ajaxInfo = btnInfo.ajax;
-        const reStatus = btnInfo.reStatus;
+        const resultText = btnInfo.resultText;
         if (!ajaxInfo || !ajaxInfo.url) return;
         fetch(ajaxInfo.url, {
           method: ajaxInfo.method ? ajaxInfo.method : 'GET',
           body: ajaxInfo.body ? ajaxInfo.body : {}
         }).then(res => {
-          console.log(`===${reStatus}`);
-          self.updateStatus(msgId, i, 0, reStatus)
+          console.log(`===${resultText}`);
+          self.updateStatus(msgId, i, 0, 2, resultText)
         });
       }
       // ,
@@ -164,6 +169,7 @@
 
 <style lang="sass">
     .msg-list {
+        padding: 10px 15px;
         .read-status {
             display: inline-block;
             border: solid 1px #E74C3C;
@@ -196,6 +202,10 @@
         .danger {
           border: solid 1px #DB2828;
           background: #DB2828;
+        }
+        .invited {
+          border: solid 1px #81c784;
+          background: #81c784;
         }
         .all-read {
             margin-left: 10px;

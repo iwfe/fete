@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-19 19:07:36
+* @Last modified time: 2016-07-20 13:07:34
 */
 
 const wrap = require('co-monk');
@@ -40,6 +40,9 @@ router.get('/messages', sutil.login, function* (next) {
         let tu = toUsers[i];
         if(tu.userId === uid){
           msgs[j].status = tu.status;
+          const statusMap = { 0: '未读', 1: '已读', 2: (!tu.resultText ? '已操作' : tu.resultText) };
+          console.log(`tu.resultText===${tu.resultText}`);
+          msgs[j].resultText = statusMap[tu.status];
           break;
         }
       }
@@ -53,11 +56,11 @@ router.put('/messages', sutil.login, function* (next) {
     if (!_parse.userId) {
         sutil.failed(this, 1003);
     }
-    let {msgId, status} = _parse;
+    let {msgId, status, resultText} = _parse;
     // 如果msgId＝null，则只更新action不等于'invited'的状态为已读
     let query = !msgId ? {'toUsers.userId': uid, action: {$nin: ['invited']}} : {'toUsers.userId': uid, id: msgId};
     let multi = !msgId ? true : false; //批量修改
-    let updateRes = yield msgDao.update(query, { $set: {'toUsers.$.status': status}}, {multi: multi});
+    let updateRes = yield msgDao.update(query, { $set: {'toUsers.$.status': status, 'toUsers.$.resultText': resultText}}, {multi: multi});
 
     //更新消息
     sutil.updateClientMsg([uid]);

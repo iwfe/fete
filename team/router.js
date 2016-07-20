@@ -1,4 +1,14 @@
 /**
+* @Author: lancui
+* @Date:   2016-07-15 19:07:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-20 11:07:50
+*/
+
+
+
+/**
  * Created by zyy on 15/7/7.
  * zhangyuyu@superjia.com
  */
@@ -187,6 +197,7 @@ router.post('/member/invited', sutil.teamLogin(), function*(next) {
           text: '接受',
           style: 'primary',
           type: 'ajax',
+          resultText: '已接受',
           ajax: {
             url: '/team/member/invited/accept',
             method: 'post',
@@ -198,6 +209,7 @@ router.post('/member/invited', sutil.teamLogin(), function*(next) {
           text: '拒绝',
           type: 'ajax',
           style: 'danger',
+          resultText: '已拒绝',
           ajax: {
             url: '/team/member/invited/reject',
             method: 'post',
@@ -251,10 +263,9 @@ router.post('/member/invited/reject', sutil.login, function*(next) {
 
   let userTeam = _.find(teams, item => item.id === teamId);
 
-  if (userTeam) {
+  if (!userTeam) {
     return yield sutil.result(this, {
-      code: 1004,
-      redirect: redirect
+      code: 1004
     });
   }
 

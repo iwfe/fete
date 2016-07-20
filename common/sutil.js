@@ -3,7 +3,7 @@
 * @Date:   2016-07-04 11:07:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-08 15:07:74
+* @Last modified time: 2016-07-19 19:07:12
 */
 
 
@@ -426,6 +426,7 @@ var sutil = {
            text: '接受',
            type: 'ajax',
            style: 'primary',
+           resultText: '已接受',
            ajax: {
              url: '/team/member/invited/accept',
              method: 'post',

@@ -55,7 +55,7 @@
         teamData: [],
         projectData: [],
         prdData: [],
-        root: 'weixinEnt',
+        root: '',
         teamId: '',
         projectId: '',
         prdId: '',

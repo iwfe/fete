@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-08 12:07:52
+* @Last modified time: 2016-07-19 19:07:36
 */
 
 const wrap = require('co-monk');
@@ -53,10 +53,12 @@ router.put('/messages', sutil.login, function* (next) {
     if (!_parse.userId) {
         sutil.failed(this, 1003);
     }
-    let msgId = _parse.msgId;
-    let query = !msgId ? {'toUsers.userId': uid} : {'toUsers.userId': uid, id: msgId};
+    let {msgId, status} = _parse;
+    // 如果msgId＝null，则只更新action不等于'invited'的状态为已读
+    let query = !msgId ? {'toUsers.userId': uid, action: {$nin: ['invited']}} : {'toUsers.userId': uid, id: msgId};
     let multi = !msgId ? true : false; //批量修改
-    let updateRes = yield msgDao.update(query, { $set: {'toUsers.$.status': 1}}, {multi: multi});
+    let updateRes = yield msgDao.update(query, { $set: {'toUsers.$.status': status}}, {multi: multi});
+
     //更新消息
     sutil.updateClientMsg([uid]);
 

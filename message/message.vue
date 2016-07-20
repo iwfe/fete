@@ -23,12 +23,15 @@
                     <td>{{item.actionDetail.message}}</td>
                     <td>
                       <span v-if="item.actionDetail.btns && item.status===0" v-for="btn in item.actionDetail.btns" class='read-status read mbtn' :class="btn.style ? btn.style : ''"
-                          @click="doAjax(btn.ajax, item.id, index)"
+                          @click="doAjax(btn, item.id, index)"
                         >
                         <a v-if="btn.type === 'link'" href="{{btn.linkUrl}}">{{btn.text}}</a>
                         <em v-else>{{btn.text}}</em>
                       </span>
-                      <span v-if="!item.actionDetail.btns || item.status===1" class='read-status' :class="{'read':item.status===1}" @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
+                      <!-- 已读 -->
+                      <span v-if="!item.actionDetail.btns && item.status === 0" class='read-status' @click="updateStatus(item.id, index, item.status)">{{{item.status | msgStatus}}}</span>
+
+                      <span v-if="item.status != 0" class='read-status read'>{{{item.status | msgStatus}}}</span>
 
                     </td>
                 </tr>
@@ -44,7 +47,8 @@
 <script type="text/babel">
 
   Vue.filter('msgStatus', (value) => {
-    return value === 1 ? '已读' : '未读';
+    const status = { 0: '未读', 1: '已读', 2: '已接受', 3: '已拒绝' };
+    return status[value];
   });
   const username = pageConfig.me.username;
   export default {
@@ -65,11 +69,14 @@
           this.msgList = res.data;
         });
       },
-      updateStatus(msgId, i, status) {
-        if (status === 1) return;
+      updateStatus(msgId, i, curStatus, newStatus) {
+        console.log(`222===${newStatus}`);
+
+        if (curStatus !== 0) return; // 不是未读
+        if (!newStatus) newStatus = 1;
         fetch('/message/messages', {
           method: 'PUT',
-          body: JSON.stringify({ userId: username, msgId: msgId })
+          body: JSON.stringify({ userId: username, msgId: msgId, status: newStatus })
         }).then((res) => {
           this.msgList[i].status = 1;
         });
@@ -80,10 +87,12 @@
         if (confirm('确定要全部已读吗？')) {
           fetch('/message/messages', {
             method: 'PUT',
-            body: JSON.stringify({ userId: username, msgId: null })
+            body: JSON.stringify({ userId: username, msgId: null, status: 1 })
           }).then(res => {
             this.msgList.forEach((item) => {
-              item.status = 1;
+              if (item.action !== 'invited') {
+                item.status = 1;
+              }
             });
           });
         }
@@ -93,15 +102,17 @@
        * @param type 1:接受，2，拒绝
        * @param actionDetail 对象：{ team: { id:'xxx', name: 'xxx' } }
        */
-      doAjax(ajaxInfo, msgId, i) {
+      doAjax(btnInfo, msgId, i) {
         const self = this;
+        const ajaxInfo = btnInfo.ajax;
+        const reStatus = btnInfo.reStatus;
         if (!ajaxInfo || !ajaxInfo.url) return;
-        console.log(JSON.stringify(ajaxInfo));
         fetch(ajaxInfo.url, {
           method: ajaxInfo.method ? ajaxInfo.method : 'GET',
           body: ajaxInfo.body ? ajaxInfo.body : {}
         }).then(res => {
-          self.updateStatus(msgId, i, 0)
+          console.log(`===${reStatus}`);
+          self.updateStatus(msgId, i, 0, reStatus)
         });
       }
       // ,

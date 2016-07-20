@@ -3,7 +3,7 @@
  * @Date:   2016-07-01 11:07:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-08 12:07:96
+* @Last modified time: 2016-07-20 11:07:47
  */
 
 
@@ -15,13 +15,14 @@ const message = {
   msgType: '',   // 消息类型：系统(0)，提醒(1)
   platform: '',    // 平台类型(team, project, prd, api)
   platformId: '',   // 平台Id
-  action: '', // 操作 (如：add, update, delete)
+  action: '', // 操作 (如：add, update, delete,invited)
   actionDetail: {
     message: '',
     btns: [{
       text: '',
       style: '',//样式,primary|warning|danger
       type: 'link|ajax', //link:在新窗口打开的链接,ajax,发送ajax接口
+      resultText: '已接受', // 操作后返回的中文显示
       ajax: {
         url: '',
         method: '',
@@ -35,7 +36,8 @@ const message = {
   createTime: '', // 创建时间
   toUsers: [{
     userId: '', // 提醒用户ID
-    status: 0 // 0未读, 1已读
+    status: 0, // 0未读, 1已读, 2已操作
+    resultText: '' // 操作后返回的中文显示
   }]
 }
 

@@ -109,10 +109,12 @@ export default {
     }
   },
   watch: {
-    list_active(v) {
+    // 变量语义化
+    // ajax写在action
+    list_active(api) {
       this.isAdd = true;
       $('#api-detail .body').scrollTop(0)
-      if (v.id) {
+      if (api.id) {
         this.moreLog = false
         this.getdata();
       } else {
@@ -218,6 +220,7 @@ export default {
           body: { apiData },
           method: 'PUT'
         }).then(res => {
+          // 后台返回全局处理，返回的200
           if (res.code === 200) {
             toastr.success('修改API成功！')
             // 弹出层提示出现之后再关闭组件

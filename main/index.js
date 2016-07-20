@@ -1,8 +1,8 @@
 /*
 * @Author: jade
 * @Date:   2016-05-24 23:35:15
-* @Last Modified by:   jade
-* @Last Modified time: 2016-06-06 14:09:47
+* @Last modified by:   lancui
+* @Last modified time: 2016-07-20 11:07:27
 */
 
 'use strict';
@@ -55,14 +55,14 @@ var Index = React.createClass({
     render: function() {
         return (
             <div className="mod-index">
-                index
+                很遗憾让你看到这么丑的首页,请点击上面的团队开始使用吧^_^。
             </div>
         )
     }
 });
 
 if(typeof document != 'undefined'){
-    ReactDOM.render(<Index/>, document.getElementById('main'));    
+    ReactDOM.render(<Index/>, document.getElementById('main'));
 }
 
 export default Index;

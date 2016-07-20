@@ -55,14 +55,14 @@ var Index = React.createClass({
     render: function() {
         return (
             <div className="mod-index">
-                index
+                很遗憾让你看到这么丑的首页,请点击上面的团队可是使用吧。
             </div>
         )
     }
 });
 
 if(typeof document != 'undefined'){
-    ReactDOM.render(<Index/>, document.getElementById('main'));    
+    ReactDOM.render(<Index/>, document.getElementById('main'));
 }
 
 export default Index;

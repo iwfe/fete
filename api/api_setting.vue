@@ -105,7 +105,9 @@ export default {
       isAdd: true,
       editorError: {},
       root: '',
-      moreLog: false
+      moreLog: false,
+      importantDataHasModify: false,
+      apiDataCopy: {}
     }
   },
   watch: {
@@ -151,7 +153,7 @@ export default {
       } else if (this.editorError.status !== 1) {
         this.sendLoad = false
         toastr.error(this.editorError.msg)
-      } else if (!this.updateDesc) {
+      } else if (!this.verifyModifyImportant()) {
         toastr.error('请输入接口修改说明！')
         this.sendLoad = false
       }
@@ -160,6 +162,31 @@ export default {
         return true
       }
       return false
+    },
+    verifyModifyImportant() {
+      const copy = this.apiDataCopy
+      const api = this.apiData
+      if (api.title !== copy.title) {
+        return false
+      }
+
+      if (api.url !== copy.url) {
+        return false
+      }
+
+      if (api.method !== copy.method) {
+        return false
+      }
+
+      if (api.input.toString() !== copy.input.toString()) {
+        return false
+      }
+
+      if (api.outputJson.toString() !== copy.outputJson.toString()) {
+        return false
+      }
+
+      return true
     },
     /**
      * 发送数据
@@ -260,6 +287,13 @@ export default {
           v.updateTime = v.updateTime.substr(0, 10)
         })
         this.isAdd = false;
+        this.apiDataCopy = {
+          title: res.data.title,
+          url: res.data.url,
+          method: res.data.method,
+          input: res.data.input,
+          outputJson: res.data.outputJson
+        }
       })
     },
     delList() {

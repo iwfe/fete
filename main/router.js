@@ -24,6 +24,7 @@ var db = require('../common/db')
 var userDao = wrap(db.get('user'));
 
 import sutil from '../common/sutil';
+import util from '../common/util';
 import busBoy from 'co-busboy';
 import fs from 'fs';
 import path from 'path';
@@ -53,7 +54,7 @@ router.all('/login', function*(next) {
   //     username: 'jade'
   // })
   const parse = this.parse;
-  const username = parse.username;
+  const username = util.trim(parse.username);
   const html = sutil.reactRender(Login, {
     username: username
   });
@@ -93,7 +94,7 @@ router.all('/register', function*(next) {
   //     username: 'jade'
   // })
   const parse = this.parse;
-  const username = parse.username;
+  const username = util.trim(parse.username);
   const html = sutil.reactRender(Register, {
     username: username
   });

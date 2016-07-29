@@ -72,6 +72,15 @@ var util = {
     return new Date(now.getFullYear(), now.getMonth(), now.getDay()) - delta;
   },
 
+  trim(str) {
+    return str.replace(/(^\s*)|(\s*$)/g,'')
+  },
+  ltrim(str) {
+    return str.replace(/(^\s*)/g,'')
+  },
+  rtrim(str) {
+    return str.replace(/(\s*$)/g,'')
+  },
   formateDate(time, format) {
     var self = new Date(time);
 

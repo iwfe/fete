@@ -401,6 +401,15 @@ var sutil = {
     }
     return id;
   },
+
+  genPath(dep=3, len=2) {
+    let path = '';
+    while(dep >= 0){
+      path += `/${util.genId(len)}`;
+      dep--;
+    }
+  },
+
   * allowCORS (next) {
     this.set('Access-Control-Allow-Origin', '*')
     this.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')

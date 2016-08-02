@@ -305,18 +305,18 @@ export default {
             parents.pop();
             break;
           default:
-            if (inputModel.length > 0) {
-              child = self.comparison(key, parents, self.outputModel, 0)
-              comment = child.comment || '';
-              children = child.children || null;
-              mockModel = child.mock || self.defaultMock(key, _dataType);
-              dataType = _dataType;
-            } else {
-              comment = value;
-              children = null;
-              dataType = _dataType;
-              mockModel = self.defaultMock(key, _dataType);
-            }
+//            if (inputModel.length > 0) {
+            child = self.comparison(key, parents, self.outputModel, 0)
+            comment = child.comment || '';
+            children = child.children || null;
+            mockModel = child.mock || self.defaultMock(key, _dataType);
+            dataType = _dataType;
+//            } else {
+//              comment = value;
+//              children = null;
+//              dataType = _dataType;
+//              mockModel = self.defaultMock(key, _dataType);
+//            }
 
             break;
         }

@@ -153,7 +153,7 @@ export default {
       } else if (this.editorError.status !== 1) {
         this.sendLoad = false
         toastr.error(this.editorError.msg)
-      } else if (!this.verifyModifyImportant()) {
+      } else if (!this.verifyModifyImportant() || !this.updateDesc) {
         toastr.error('请输入接口修改说明！')
         this.sendLoad = false
       }

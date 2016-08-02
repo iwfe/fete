@@ -42,81 +42,6 @@ require('./codemirror_alias.js');
 const mock = require('mockjs');
 import { listActive } from './vuex/getters.js'
 
-const o = [
-  {
-    key: 'status',
-    comment: '状态位',
-    dataType: 'String',
-    mock: '1212',
-    children: null
-  },
-  {
-    key: 'msg',
-    comment: '提示信息',
-    dataType: 'String',
-    mock: '',
-    children: null
-  },
-  {
-    key: 'data',
-    comment: '数据',
-    dataType: 'Array',
-    mock: '',
-    children: [
-      {
-        key: 'c2',
-        comment: '啊哈哈',
-        dataType: 'Object',
-        mock: '',
-        children: [
-          {
-            key: 'vc',
-            comment: 'vc啊哈哈',
-            dataType: 'String',
-            mock: ''
-          }
-        ]
-      },
-      {
-        key: 'c3',
-        comment: 'hehe',
-        dataType: 'Array',
-        mock: '',
-        children: [
-          {
-            key: 'v1',
-            comment: 'v1hehe',
-            dataType: 'String',
-            mock: '',
-          },
-          {
-            key: 'v2',
-            comment: 'v2hehe',
-            dataType: 'String',
-            mock: '',
-          }
-        ]
-      }
-    ]
-  }
-];
-
-const i = {
-  status: '正确为1，错误非1',
-  msg: '报错报错报错',
-  data: [
-    {
-      c2: {
-        vc: '11'
-      },
-      c3: {
-        v1: '1',
-        v2: '2'
-      }
-    }
-  ]
-}
-
 export default {
   vuex: {
     getters: {
@@ -363,7 +288,7 @@ export default {
             children = self.revertFormat(value, parents);
             comment = child.comment;
             dataType = 'Object';
-            mockModel = child.mock;
+            mockModel = child.mock || self.defaultMock(key, _dataType);
             parents.pop();
             break;
           case 'Array':
@@ -376,21 +301,21 @@ export default {
             }
             comment = child.comment;
             dataType = 'Array';
-            mockModel = child.mock;
+            mockModel = child.mock || self.defaultMock(key, _dataType);
             parents.pop();
             break;
           default:
-            if (o.length > 0) {
+            if (inputModel.length > 0) {
               child = self.comparison(key, parents, self.outputModel, 0)
               comment = child.comment || '';
               children = child.children || null;
-              mockModel = child.mock || '';
+              mockModel = child.mock || self.defaultMock(key, _dataType);
               dataType = _dataType;
             } else {
               comment = value;
               children = null;
               dataType = _dataType;
-              mockModel = '';
+              mockModel = self.defaultMock(key, _dataType);
             }
 
             break;
@@ -467,6 +392,42 @@ export default {
           break;
         default:
           editorError.msg = '';
+      }
+    },
+    defaultMock(key, type) {
+      console.log(key, type)
+      switch (type) {
+        case 'Number':
+          if (key === 'status') {
+            return '|1:'
+          }
+
+          if (/mobile|phone/i.test(key)) {
+            return '|10000000000-19999999999:'
+          }
+          return '|1-100:'
+        case 'String':
+          // 带name的key
+          if (/name/i.test(key)) {
+            return ':@cname(1,6)'
+          }
+          // 带date的key
+          if (/date/i.test(key)) {
+            return ':@date("yyyy-MM-dd")'
+          }
+          // 带time的key
+          if (/time/i.test(key)) {
+            return ':@time()'
+          }
+          return ':@word(1,10)'
+        case 'Boolean':
+          return '|1:true'
+        case 'Array':
+          return '|1-10:'
+        case 'Object':
+          return '|:'
+        default:
+          return ':1'
       }
     }
   }

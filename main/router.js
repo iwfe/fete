@@ -54,6 +54,7 @@ router.all('/login', function*(next) {
   //     username: 'jade'
   // })
   const parse = this.parse;
+
   const username = util.trim(parse.username);
   const html = sutil.reactRender(Login, {
     username: username

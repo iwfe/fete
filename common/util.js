@@ -73,13 +73,13 @@ var util = {
   },
 
   trim(str) {
-    return str.replace(/(^\s*)|(\s*$)/g,'')
+    return str ? str.replace(/(^\s*)|(\s*$)/g,'') : str
   },
   ltrim(str) {
-    return str.replace(/(^\s*)/g,'')
+    return str ? str.replace(/(^\s*)/g,'') : str
   },
   rtrim(str) {
-    return str.replace(/(\s*$)/g,'')
+    return str ? str.replace(/(\s*$)/g,'') : str
   },
   formateDate(time, format) {
     var self = new Date(time);

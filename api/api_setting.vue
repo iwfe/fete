@@ -105,14 +105,18 @@ export default {
       isAdd: true,
       editorError: {},
       root: '',
-      moreLog: false
+      moreLog: false,
+      importantDataHasModify: false,
+      apiDataCopy: {}
     }
   },
   watch: {
-    list_active(v) {
+    // 变量语义化
+    // ajax写在action
+    list_active(api) {
       this.isAdd = true;
       $('#api-detail .body').scrollTop(0)
-      if (v.id) {
+      if (api.id) {
         this.moreLog = false
         this.getdata();
       } else {
@@ -139,25 +143,50 @@ export default {
         // 未输入标题
         toastr.error('请输入API标题！')
         this.sendLoad = false
-        return true
       } else if (!this.apiData.url) {
         // 未输入url地址
         toastr.error('请输入URL地址！')
         this.sendLoad = false
-        return true
       } else if (this.apiData.url[0] !== '/') {
         toastr.error('URL必须以"/"开头')
         this.sendLoad = false
-        return true
       } else if (this.editorError.status !== 1) {
+        this.sendLoad = false
         toastr.error(this.editorError.msg)
-        return true
-      } else if (!this.updateDesc) {
+      } else if (!this.verifyModifyImportant() || !this.updateDesc) {
         toastr.error('请输入接口修改说明！')
         this.sendLoad = false
+      }
+
+      if (this.sendLoad === false) {
         return true
       }
       return false
+    },
+    verifyModifyImportant() {
+      const copy = this.apiDataCopy
+      const api = this.apiData
+      if (api.title !== copy.title) {
+        return false
+      }
+
+      if (api.url !== copy.url) {
+        return false
+      }
+
+      if (api.method !== copy.method) {
+        return false
+      }
+
+      if (api.input.toString() !== copy.input.toString()) {
+        return false
+      }
+
+      if (api.outputJson.toString() !== copy.outputJson.toString()) {
+        return false
+      }
+
+      return true
     },
     /**
      * 发送数据
@@ -199,19 +228,12 @@ export default {
           },
           method: 'POST'
         }).then((res) => {
-          if (res.code === 200) {
-            if (this.list_active) {
-              _.extend(this.list_active, res.data)
-            }
-            toastr.success('新增API成功！')
-            window.setTimeout(this.closeSlide, 300)
-          } else {
-            toastr.error('新增API失败，请重试！');
+          if (this.list_active) {
+            _.extend(this.list_active, res.data)
           }
+          toastr.success('新增API成功！')
+          window.setTimeout(this.closeSlide, 300)
           this.sendLoad = false;
-        }, () => {
-          this.sendLoad = false;
-          toastr.warning('网络异常，请重试！');
         });
       } else {
         // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
@@ -224,13 +246,10 @@ export default {
           },
           method: 'PUT'
         }).then(res => {
-          if (res.code === 200) {
-            toastr.success('修改API成功！')
-            // 弹出层提示出现之后再关闭组件
-            window.setTimeout(this.closeSlide, 300)
-          } else {
-            toastr.error('API修改失败，请重试！')
-          }
+          // 后台返回全局处理，返回的200
+          toastr.success('修改API成功！')
+          // 弹出层提示出现之后再关闭组件
+          window.setTimeout(this.closeSlide, 300)
           this.sendLoad = false;
         })
       }
@@ -268,6 +287,13 @@ export default {
           v.updateTime = v.updateTime.substr(0, 10)
         })
         this.isAdd = false;
+        this.apiDataCopy = {
+          title: res.data.title,
+          url: res.data.url,
+          method: res.data.method,
+          input: res.data.input,
+          outputJson: res.data.outputJson
+        }
       })
     },
     delList() {
@@ -279,12 +305,8 @@ export default {
             prdId: this.prdId
           }
         }).then(res => {
-          if (res.code === 200) {
-            toastr.success('成功删除API！');
-            this.del();
-          } else {
-            toastr.error('删除API失败，请重试！');
-          }
+          toastr.success('成功删除API！');
+          this.del();
           this.delLoad = false;
         });
         window.setTimeout(this.closeSlide, 300);

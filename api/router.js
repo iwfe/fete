@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-18 14:07:42
+* @Last modified time: 2016-08-05 14:08:61
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-18 14:07:42
+* @Last modified time: 2016-08-05 14:08:61
  */
 
 
@@ -66,20 +66,24 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     if (!this.parse.apiData) {
       sutil.failed(this, 1003)
     }
-    let apiData = this.parse.apiData;
-    let insertResult = yield apiDao.insert(
-      _.extend(apiData, {
-        id: yield sutil.genId(apiDao, 8),
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        userId: this.locals._user._id,
-        userName: this.locals._user.username
-      })
-    );
+    let apiData = this.parse.apiData, _user = this.locals._user;
+
+    let _now = Date.now();
+    _.extend(apiData, {
+      id: yield sutil.genId(apiDao, 8),
+      createTime: _now,
+      updateTime: _now,
+      userId: _user._id,
+      userName: _user.username,
+      updateDescList: [{ updateTime: _now, userName: _user.username, updateDesc: apiData.updateDesc }]
+    });
+    delete apiData.updateDesc; // 不保存到数据库
+
+    let insertResult = yield apiDao.insert(apiData);
     if (insertResult) {
       sutil.success(this, insertResult);
       // 添加消息，并提醒客户端
-      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: insertResult.id, action: 'add', actionDetail: { message: apiData.updateDescList[0].updateDesc}, createTime: new Date };
+      let msg = { userName: _user.username, msgType: '1', platform: 'api', platformId: insertResult.id, action: 'add', actionDetail: { message: apiData.updateDescList[0].updateDesc}, createTime: _now };
       yield sutil.addMessage(msg, apiData.teamId);
     } else {
       sutil.failed(this, 150001);
@@ -95,23 +99,33 @@ router.get('/apis', sutil.prdLogin, function*(next) {
   })
   // 更新某个 api, 需要提供完整 api 对象
   .put('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
-    if (!this.parse.id) {
+    let param = this.parse;
+    if (!param.id) {
       sutil.failed(this, 1003);
     }
-    let apiData = this.parse.apiData;
+    let apiData = param.apiData, isAddMsg = !!apiData.updateDesc;
     delete(apiData._id)
-    let updateResult = yield apiDao.update({ id: this.parse.id }, {
+
+    let _now = Date.now(), _user = this.locals._user;
+    if (!!apiData.updateDesc) { // 如果没重要修改，updateDesc可以为空
+      apiData.updateDescList.unshift({ updateTime: _now, userName: _user.username, updateDesc: apiData.updateDesc })
+    }
+    delete apiData.updateDesc; // 不保存到数据库
+
+    let updateResult = yield apiDao.update({ id: param.id }, {
       $set: _.extend(apiData, {
-        updateTime: Date.now(),
-        operatorId: this.locals._user._id,
-        operatorName: this.locals._user.username
+        updateTime: _now,
+        operatorId: _user._id,
+        operatorName: _user.username
       })
     });
     if (updateResult) {
       sutil.success(this, updateResult);
       // 添加消息，并提醒客户端
-      let msg = { userName: apiData.userName, msgType: '1', platform: 'api', platformId: updateResult.id, action: 'update', actionDetail: { message: apiData.updateDescList[0].updateDesc }, createTime: new Date };
-      yield sutil.addMessage(msg, apiData.teamId);
+      if (isAddMsg) {
+        let msg = { userName: _user.username, msgType: '1', platform: 'api', platformId: updateResult.id, action: 'update', actionDetail: { message: apiData.updateDescList[0].updateDesc }, createTime: _now };
+        yield sutil.addMessage(msg, apiData.teamId);
+      }
     } else {
       sutil.failed(this, 150001);
     }
@@ -189,14 +203,16 @@ router.all('/fete_api/:projectId/:prdId?/mock*', sutil.setRouterParams, sutil.al
   }
 
   let apiItems = yield apiDao.find(filter, {
-    fields: { _id: 0, id: 1, url: 1, root: 1 },
+    fields: { _id: 0, id: 1, url: 1, root: 1, createTime: 1 },
     sort: { createTime: -1 }
   })
+  console.log(apiItems)
 
   if (apiItems && apiItems.length > 0) {
     let apiItem = _.find(apiItems, item => {
       return (item.root ? item.root : '') + item.url === realUrl
     })
+    console.log(apiItem);
     if (apiItem && apiItem.id) {
       apiItem = yield apiDao.findOne({ id: apiItem.id })
       let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))

@@ -63,6 +63,7 @@
 
 <script text="text/babel">
 
+import util from '../common/util.js'
 import { add, del, tog } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
@@ -179,11 +180,10 @@ export default {
         return false
       }
 
-      if (api.input.toString() !== copy.input.toString()) {
+      if (JSON.stringify(api.input) !== JSON.stringify(copy.input)) {
         return false
       }
-
-      if (api.outputJson.toString() !== copy.outputJson.toString()) {
+      if (JSON.stringify(api.outputJson) !== JSON.stringify(copy.outputJson)) {
         return false
       }
 
@@ -214,14 +214,11 @@ export default {
         prdId: this.prdId,
         projectId: this.projectId,
         teamId: this.teamId,
-        root: this.apiRoot
+        root: this.apiRoot,
+        updateDesc: this.updateDesc
       });
       // 如果是新增接口
       if (status === 1) {
-        _.extend(apiData, {
-          updateDescList: [{ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc }],
-          createTime: new Date(),
-        });
         fetch('/api/apis', {
           body: {
             apiData,
@@ -237,9 +234,6 @@ export default {
           this.sendLoad = false;
         });
       } else {
-        // 如果是修改结构，则修改原数据中的updateTime以及修改说明字段
-        apiData.updateTime = new Date();
-        apiData.updateDescList.unshift({ updateTime: new Date(), userName: this.userName, updateDesc: this.updateDesc })
         fetch(`/api/apis/${this.list_active.id}`, {
           body: {
             apiData,
@@ -285,7 +279,12 @@ export default {
         this.apiName = res.data.title
         this.updateDescList = res.data.updateDescList
         this.updateDescList.forEach(v => {
-          v.updateTime = v.updateTime.substr(0, 10)
+          const ut = v.updateTime;
+          if (typeof ut === 'string') {
+            v.updateTime = ut.substr(0, 10)
+          } else {
+            v.updateTime = util.formateDate(ut, '%F %T')
+          }
         })
         this.isAdd = false;
         this.apiDataCopy = {

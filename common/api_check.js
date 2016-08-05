@@ -1,11 +1,14 @@
 /*
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
- * @Last Modified by:   wjs
- * @Last Modified time: 2016-07-12 14:45:50
+* @Last modified by:   lancui
+* @Last modified time: 2016-08-04 15:08:66
  */
 
 var Mock = require('mockjs')
+
+// 企业号组自用，express server 的 index 里面有 pageConfig.pjid
+feteApiProjectId = pageConfig && pageConfig.pjid ? pageConfig.pjid : feteApiProjectId
 
 function ApiCheckMockTree2MockTemplate(data, result) {
   if (!result) {

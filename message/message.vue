@@ -5,17 +5,30 @@
         <table class="ui selectable celled table">
             <thead>
                 <tr>
+                  <th></th>
+                  <th colspan="6" class="buttons">
+                    <div class="ui right floated small labeled icon button" @click="delete"><i class="remove icon"></i>批量删除</div>
+                    <div class="ui right floated small labeled icon button" @click="updateStatusBatch()"><i class="user icon"></i>全部已读</div>
+                  </th>
+                </tr>
+                <tr>
+                    <th width="8%" class="ui checkbox" @click="checkedAll">
+                        <input type="checkbox" class="hidden check-all">
+                        <label>全选</label>
+                    </th>
                     <th width="20%">时间</th>
                     <th width="10%">用户名</th>
                     <th width="10%">平台</th>
                     <th width="10%">操作</th>
                     <th>描述</th>
-                    <th style="width: 16%;">状态<button class="ui basic button all-read" @click="updateStatusBatch()"><i class="icon user"></i>全部已读</button>
-                    <!-- <button class="ui basic button all-read" @click="addMsg">add</button></th> -->
+                    <th style="width: 12%;">状态</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(index, item) in msgList" :class="item.status !== 0 ? 'positive' : ''">
+                    <td class="ui checkbox">
+                        <input type="checkbox" value="{{item.id}}" class="hidden check-one">
+                    </td>
                     <td>{{item.createTime}}</td>
                     <td>{{item.userName}}</td>
                     <td>{{item.platform}}</td>
@@ -55,13 +68,37 @@
   export default {
     data() {
       return {
-        msgList: []
+        msgList: [],
+        userIds: ''
       }
     },
     ready() {
       this.getMsgList();
     },
     methods: {
+      checkedAll() {
+        $('.check-one', '#main').prop('checked', $('.check-all', '#main').prop('checked'))
+      },
+      delete() {
+        const userIds = [];
+        $('.check-one', '#main').each(function () {
+          if ($(this).prop('checked')) {
+            userIds.push($(this).val())
+          }
+        });
+        if (!userIds.length) {
+          toastr.error('请先选择要删除的消息')
+        } else {
+          if (confirm('确定要删除所选消息吗？')) {
+            fetch('/message/messages', {
+              method: 'DELETE',
+              body: { userIds: userIds.join(',') }
+            }).then((res) => {
+              this.getMsgList();
+            });
+          }
+        }
+      },
       getMsgList() {
         fetch('/message/messages', {
           method: 'GET',
@@ -207,10 +244,9 @@
           border: solid 1px #81c784;
           background: #81c784;
         }
-        .all-read {
-            margin-left: 10px;
-            font-size: 12px;
-            padding: 5px 10px;
+        .buttons .button {
+          font-size: 12px;
+          margin-left: 15px;
         }
         em {
           font-style: normal;
@@ -219,6 +255,9 @@
           color: #fff;
           text-decoration: initial;
           cursor: auto;
+      }
+      .ui .checkbox {
+        text-align: center;
       }
     }
 </style>

@@ -143,9 +143,12 @@ function ApiCheckForJqueryAjax() {
         ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
         ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
         // ApiCheckInput(settings.data)
+        let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
         if (feteApiUseMockData) {
           settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
           ApiCheckLog.info('Redirect to: ', settings.url)
+        } else {
+          ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
         }
       })
       // check output
@@ -166,9 +169,12 @@ function ApiCheckForJqueryAjax() {
       ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
       ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
       // ApiCheckInput(settings.data)
-      if (feteApiUseMockData) {
+      let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      if (feteApiUseMockData && feteApiForMock[mockKey]) {
         settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
         ApiCheckLog.info('Redirect to: ', settings.url)
+      } else {
+        ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
       }
     })
     $(document).on('ajaxSuccess', function(e, xhr, settings) {

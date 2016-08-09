@@ -3,7 +3,7 @@
 * @Date:   2016-06-24 15:06:00
 * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-08 22:08:35
+* @Last modified time: 2016-08-09 11:08:20
 */
 
 const wrap = require('co-monk')
@@ -33,7 +33,7 @@ router.get('/messages', sutil.login, function* (next) {
     if (!uid) {
         sutil.failed(this, 1003)
     }
-    let msgs = yield msgDao.find({'toUsers.userId': uid}, {sort: {createTime:-1, status:1}, limit: 30})
+    let msgs = yield msgDao.find({'toUsers.userId': uid}, {sort: {createTime:-1, status:1}})
     for(let j in msgs) {
       let status = 0, toUsers = msgs[j].toUsers
       for(let i in toUsers){

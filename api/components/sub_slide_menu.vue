@@ -30,7 +30,6 @@
               }
             }
           })
-          alert(1)
           this.open = true
         }
       },

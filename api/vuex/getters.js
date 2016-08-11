@@ -13,3 +13,7 @@ export const projectId = state => state.projectId
 export const teamId = state => state.teamId
 export const listIndex = state => state.list.indexOf(state.list_active)
 export const apiRoot = state => state.apiRoot
+export const defaultTitle = state => state.settingTitle
+export const defaultUrl = state => state.settingUrl
+export const defaultMethod = state => state.settingMethod
+export const defaultData = state => state.settingData

@@ -17,10 +17,10 @@ const state = {
   teamId: '',
   projectId: '',
   apiRoot: '',
-  settingTitle: '',
-  settingUrl: '',
-  settingMethod: '',
-  settingData: ''
+  defaultTitle: '',
+  defaultUrl: '',
+  defaultMethod: '',
+  defaultData: ''
 }
 const outputModel = [
   {

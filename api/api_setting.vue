@@ -65,7 +65,7 @@
 import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, setTitle, setUrl, setMethod, setData } from './vuex/getters.js'
 require('./directive.js');
 export default {
   vuex: {
@@ -79,7 +79,7 @@ export default {
       apiRoot
     },
     actions: {
-      add, del, tog
+      add, del, tog, setTitle, setUrl, setMethod, setData
     }
   },
   components: {

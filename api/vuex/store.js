@@ -5,6 +5,7 @@
 * @Last modified by:   geyuanjun
 * @Last modified time: 2016-07-12 10:46:48
 */
+
 import Vuex from 'vuex'
 import mutations from './mutations'
 Vue.use(Vuex)
@@ -15,7 +16,11 @@ const state = {
   prdId: '',
   teamId: '',
   projectId: '',
-  apiRoot: ''
+  apiRoot: '',
+  settingTitle: '',
+  settingUrl: '',
+  settingMethod: '',
+  settingData: ''
 }
 const outputModel = [
   {

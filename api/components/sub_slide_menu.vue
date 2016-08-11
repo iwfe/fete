@@ -30,6 +30,7 @@
               }
             }
           })
+          alert(1)
           this.open = true
         }
       },
@@ -43,7 +44,15 @@
   }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass"  scoped>
+.sub-slide-mask{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(000, 000, 000, 0.4);
+}
     .sub-slide-menu {
         display: none;
         position: fixed;
@@ -58,4 +67,5 @@
         overflow:auto;
         z-index: 99;
     }
+
 </style>

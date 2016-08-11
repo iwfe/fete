@@ -2,6 +2,7 @@
     <div class="slide-menu">
         <slot></slot>
     </div>
+    <div class="sub-slide-mask" v-show="open"></div>
 </template>
 
 <script>
@@ -51,6 +52,14 @@
 </script>
 
 <style lang="sass"  scoped>
+.sub-slide-mask{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: rgba(000, 000, 000, 0.4);
+}
   .slide-menu {
     display: none;
     position: fixed;

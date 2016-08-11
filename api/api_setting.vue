@@ -52,7 +52,7 @@
     <div class="detail-bottom">
       <button class="primary mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
+      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
       <button class="primary mini ui button" @click="pageList('')">下一条</button>
     </div>
@@ -62,9 +62,8 @@
 </template>
 
 <script text="text/babel">
-
 import util from '../common/util.js'
-import { add, del, tog } from './vuex/action'
+import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
 require('./directive.js');
@@ -124,6 +123,16 @@ export default {
         this.resetData();
       }
     }
+  },
+  ready() {
+    document.body.addEventListener('keydown', e => {
+      if (e.keyCode === 38) {
+        this.pageList('')
+      }
+      if (e.keyCode === 40) {
+        this.pageList()
+      }
+    })
   },
   methods: {
     /**
@@ -253,6 +262,7 @@ export default {
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
+      removeEvent()
       // this.resetData()
     },
     resetData() {

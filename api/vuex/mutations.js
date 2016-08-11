@@ -7,6 +7,9 @@
 */
 
 export default {
+  SET_LIST(state, list) {
+    state.list = list
+  },
   ADD_LIST(state, list) {
     if (!list || !list.url) {
       list = {
@@ -15,7 +18,8 @@ export default {
         method: '-'
       }
     }
-    state.list.unshift(list);
+    state.list.unshift(list)
+    state.list_active = list
   },
   DEL_LIST(state) {
     if (state.list_active) {

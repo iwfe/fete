@@ -128,7 +128,6 @@
           this.msgList = res.data.msgs;
           this.msgCount = res.data.count;
           this.totalPage = Math.ceil(res.data.count / 10)
-          console.log(this.totalPage);
         });
       },
       // newStatus: 0未读, 1已读, 2已操作

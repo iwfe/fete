@@ -29,11 +29,18 @@ router.get('/', sutil.login, function*(next) {
 
 // 获取用户的所有消息
 router.get('/messages', sutil.login, function* (next) {
-    let uid = this.parse.userId
+    /**
+     * userId: 需要推送过去的人的userId
+     * pageSize: 每一页所需要的消息条数
+     * pageIndex: 需要的是第几页的数据
+     */
+    let [uid, pageSize, pageIndex] = [this.parse.userId, this.parse.pageSize, this.parse.pageIndex]
     if (!uid) {
         sutil.failed(this, 1003)
     }
-    let msgs = yield msgDao.find({'toUsers.userId': uid}, {sort: {createTime:-1, status:1}, limit: 30})
+
+    let msgs = yield msgDao.find({'toUsers.userId': uid}, {sort: {createTime:-1, status:1}, limit: pageSize, skip: (pageIndex - 1)*pageSize})
+    let count = yield msgDao.count({'toUsers.userId': uid})
     for(let j in msgs) {
       let status = 0, toUsers = msgs[j].toUsers
       for(let i in toUsers){
@@ -41,13 +48,17 @@ router.get('/messages', sutil.login, function* (next) {
         if(tu.userId === uid){
           msgs[j].status = tu.status
           const statusMap = { 0: '未读', 1: '已读', 2: (!tu.resultText ? '已操作' : tu.resultText) }
-          console.log(`tu.resultText===${tu.resultText}`)
+          // console.log(`tu.resultText===${tu.resultText}`)
           msgs[j].resultText = statusMap[tu.status]
           break
         }
       }
     }
-    sutil.success(this, msgs)
+    let message = {
+      msgs,
+      count
+    }
+    sutil.success(this, message)
 })
 
 // 更新用户消息状态为已读，如果没有传msgId，则更新所有消息状态为已读

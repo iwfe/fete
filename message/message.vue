@@ -53,12 +53,13 @@
         <div class="ui modal small">
           <div class="header">Header</div>
         </div>
+        <pagination :page-active.sync="pageActive" :total-page="totalPage" v-show="totalPage"></pagination>
     </div>
     </section>
 </template>
 
 <script type="text/babel">
-
+  import pagination from './components/pagination.vue'
   Vue.filter('msgStatus', (message) => {
     const { status, resultText } = message;
     const statusMap = { 0: '未读', 1: '已读', 2: '已操作' };
@@ -69,11 +70,23 @@
     data() {
       return {
         msgList: [],
-        userIds: ''
+        userIds: '',
+        pageActive: 1,
+        msgCount: 0,
+        totalPage: 0,
+        pageSize: 10
       }
     },
     ready() {
       this.getMsgList();
+    },
+    components: {
+      pagination
+    },
+    watch: {
+      pageActive() {
+        this.getMsgList()
+      }
     },
     methods: {
       checkedAll() {
@@ -99,12 +112,23 @@
           }
         }
       },
+      /**
+       * 获取消息列表
+       * @return {[type]} [description]
+       */
       getMsgList() {
         fetch('/message/messages', {
           method: 'GET',
-          body: { userId: username }
+          body: {
+            userId: username,
+            pageSize: this.pageSize,
+            pageIndex: this.pageActive
+          }
         }).then((res) => {
-          this.msgList = res.data;
+          this.msgList = res.data.msgs;
+          this.msgCount = res.data.count;
+          this.totalPage = Math.ceil(res.data.count / 10)
+          console.log(this.totalPage);
         });
       },
       // newStatus: 0未读, 1已读, 2已操作
@@ -258,6 +282,9 @@
       }
       .ui .checkbox {
         text-align: center;
+      }
+      .page-bar {
+        text-align: right;
       }
     }
 </style>

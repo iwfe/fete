@@ -65,21 +65,24 @@
 import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, setTitle, setUrl, setMethod, setData } from './vuex/getters.js'
-require('./directive.js');
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
+require('./directive.js')
 export default {
   vuex: {
     getters: {
       list,
       list_active: listActive,
-      userId, prdId,
+      userId,
+      prdId,
       projectId,
       teamId,
       listIndex,
       apiRoot
     },
     actions: {
-      add, del, tog, setTitle, setUrl, setMethod, setData
+      add,
+      del,
+      tog
     }
   },
   components: {
@@ -123,16 +126,6 @@ export default {
         this.resetData();
       }
     }
-  },
-  ready() {
-    document.body.addEventListener('keydown', e => {
-      if (e.keyCode === 38) {
-        this.pageList('')
-      }
-      if (e.keyCode === 40) {
-        this.pageList()
-      }
-    })
   },
   methods: {
     /**

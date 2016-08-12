@@ -18,7 +18,3 @@ export const addEvent = () => {
 export const removeEvent = () => {
   window.removeEventListener('beforeunload', handler)
 }
-export const setTitle = makeAction('SET_DEFAULT_URL')
-export const setUrl = makeAction('SET_DEFAULT_URL')
-export const setMethod = makeAction('SET_DEFAULT_URL')
-export const setData = makeAction('SET_DEFAULT_URL')

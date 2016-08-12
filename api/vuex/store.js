@@ -16,11 +16,7 @@ const state = {
   prdId: '',
   teamId: '',
   projectId: '',
-  apiRoot: '',
-  defaultTitle: '',
-  defaultUrl: '',
-  defaultMethod: '',
-  defaultData: ''
+  apiRoot: ''
 }
 const outputModel = [
   {

@@ -26,6 +26,7 @@
           <editor-frame :output-model.sync="apiData.output"
                         :output-json.sync="apiData.outputJson"
                         :input-json.sync="apiData.input"
+                        :input-model.sync="apiData.inputModel"
                         :is-add.sync="isAdd"
                         :editor-error.sync="editorError"></editor-frame>
           <div class="field">
@@ -97,6 +98,7 @@ export default {
         title: '',
         method: 'GET',
         input: {},
+        inputModel: [],
         url: '/',
         outputJson: {},
         output: []

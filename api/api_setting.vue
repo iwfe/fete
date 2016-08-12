@@ -144,6 +144,9 @@ export default {
       }
     },
     validate() {
+      const urlRegExp = /^\/[\w\-\/\.]*(?:|\/|\.do)$/
+      let urlValid = false
+      urlValid = urlRegExp.test(this.apiData.url)
       if (!this.apiData.title) {
         // 未输入标题
         toastr.error('请输入API标题！')
@@ -152,8 +155,8 @@ export default {
         // 未输入url地址
         toastr.error('请输入URL地址！')
         this.sendLoad = false
-      } else if (this.apiData.url[0] !== '/') {
-        toastr.error('URL必须以"/"开头')
+      } else if (!urlValid) {
+        toastr.error('请输入正确的URL！')
         this.sendLoad = false
       } else if (this.editorError.status !== 1) {
         this.sendLoad = false

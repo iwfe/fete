@@ -213,13 +213,18 @@ export default {
       }
       // 定义最基本的数据结构
       const apiData = this.apiData;
+      const updateArr = this.list_active.lastModify.split(' ')
+      const date = new Date()
+      let time = ''
+      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
         projectId: this.projectId,
         teamId: this.teamId,
         root: this.apiRoot,
-        updateDesc: this.updateDesc
+        updateDesc: this.updateDesc,
+        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`
       });
       // 如果是新增接口
       if (status === 1) {

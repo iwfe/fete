@@ -9,7 +9,7 @@
                 <th>链接</th>
                 <th>方法</th>
                 <th>最后修改</th>
-                <th>返回数据预览</th>
+                <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
         <tbody>

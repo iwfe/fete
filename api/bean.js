@@ -7,7 +7,10 @@
  */
 
 'use strict';
-
+/*
+  input和outputJson是编辑框里的真实输入值，皆为json对象
+  inputModel和ouput是通过json转换后的数组对象
+ */
 const api = {
   _id: '',
   id: '',
@@ -16,7 +19,16 @@ const api = {
   title: '', // 标题
   url: '', // 请求url
   method: '', //提交方式 (get post)
-  input: '', // 入参
+  input:{},
+  inputModel: [
+    {
+      key: '',
+      dataType: '',
+      comment: '',
+      require: true,
+      children: []
+    }
+  ], // 入参
   output: [ // 出参
     {
       key: 'status', // 属性名

@@ -3,7 +3,7 @@
       <div class="field">
           <label><i class="red">*</i>输入数据格式</label>
           <textarea v-el:inputeditor ></textarea>
-          <div class='' v-if='outputModel.length'>
+          <div class='' v-if='inputModel.length'>
             <div class='table-tr table-head'>
               <ul class='clearfix-sp'>]
                 <li class='td-key' style='text-align:center'>属性</li>

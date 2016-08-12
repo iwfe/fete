@@ -249,7 +249,7 @@ export default {
           toastr.success('修改API成功！')
           // 弹出层提示出现之后再关闭组件
           window.setTimeout(this.closeSlide, 300)
-          _.extend(this.list_active, res.data)
+          _.extend(this.list_active, apiData)
           this.sendLoad = false;
         })
       }

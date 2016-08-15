@@ -147,6 +147,9 @@ export default {
       }
     },
     validate() {
+      const urlRegExp = /^\/[\w\-\/\.]*(?:|\/|\.do)$/
+      let urlValid = false
+      urlValid = urlRegExp.test(this.apiData.url)
       if (!this.apiData.title) {
         // 未输入标题
         toastr.error('请输入API标题！')
@@ -155,8 +158,8 @@ export default {
         // 未输入url地址
         toastr.error('请输入URL地址！')
         this.sendLoad = false
-      } else if (this.apiData.url[0] !== '/') {
-        toastr.error('URL必须以"/"开头')
+      } else if (!urlValid) {
+        toastr.error('请输入正确的URL！')
         this.sendLoad = false
       } else if (this.editorError.status !== 1) {
         this.sendLoad = false
@@ -216,13 +219,18 @@ export default {
       }
       // 定义最基本的数据结构
       const apiData = this.apiData;
+      const updateArr = this.list_active.lastModify.split(' ')
+      const date = new Date()
+      let time = ''
+      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
         projectId: this.projectId,
         teamId: this.teamId,
         root: this.apiRoot,
-        updateDesc: this.updateDesc
+        updateDesc: this.updateDesc,
+        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`
       });
       // 如果是新增接口
       if (status === 1) {
@@ -252,6 +260,7 @@ export default {
           toastr.success('修改API成功！')
           // 弹出层提示出现之后再关闭组件
           window.setTimeout(this.closeSlide, 300)
+          _.extend(this.list_active, apiData)
           this.sendLoad = false;
         })
       }

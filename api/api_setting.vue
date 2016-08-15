@@ -56,6 +56,7 @@
       <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
       <button class="primary mini ui button" @click="pageList('')">下一条</button>
+      <help></help>
     </div>
 
 </div>
@@ -63,6 +64,7 @@
 </template>
 
 <script text="text/babel">
+import Help from './help.vue'
 import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
@@ -87,7 +89,8 @@ export default {
     }
   },
   components: {
-    editorFrame
+    editorFrame,
+    Help
   },
   data() {
     return {
@@ -404,7 +407,5 @@ export default {
       color: #666;
       font-weight: 400;
     }
-
 }
-
 </style>

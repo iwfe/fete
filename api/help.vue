@@ -67,7 +67,7 @@ export default {
     padding: 0 12px;
   }
   a{
-    color: #fff;position:absolute;right:12px;top:6px;
+    color: #fff;position:absolute;right:12px;top:0;
   }
   .document_main > div{
     padding: 0 12px;line-height: 24px;font-weight:400;

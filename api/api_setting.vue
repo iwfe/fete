@@ -147,7 +147,7 @@ export default {
       }
     },
     validate() {
-      const urlRegExp = /^\/[\w\-\/\.]*(?:|\/|\.do)$/
+      const urlRegExp = /^[\w\-\/\.]*(?:|\/|\.do)$/
       let urlValid = false
       urlValid = urlRegExp.test(this.apiData.url)
       if (!this.apiData.title) {

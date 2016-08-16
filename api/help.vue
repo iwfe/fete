@@ -30,10 +30,10 @@ const _string = [{
   name: ':@word(1,10)',
   tips: '随机1-10个字符'
 }, {
-  name: ':@cword(4,4)',
-  tips: '随机1-6个汉子'
+  name: ':@cword(1,4)',
+  tips: '随机1-6个汉字'
 }, {
-  name: ':@cname(1,6)',
+  name: ':@cname()',
   tips: '姓名'
 }, {
   name: ':@date("yyyy-MM-dd")',

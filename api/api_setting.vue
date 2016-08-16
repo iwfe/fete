@@ -51,12 +51,12 @@
       </div>
 
     <div class="detail-bottom">
+      <help></help>
       <button class="primary mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
       <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
       <button class="primary mini ui button" @click="pageList('')">下一条</button>
-      <help></help>
     </div>
 
 </div>
@@ -315,17 +315,21 @@ export default {
     },
     delList() {
       if (confirm('确定要删除此API？')) {
-        this.delLoad = true;
-        fetch(`/api/apis/${this.list_active.id}`, {
-          method: 'DELETE',
-          body: {
-            prdId: this.prdId
-          }
-        }).then(res => {
-          toastr.success('成功删除API！');
-          this.del();
-          this.delLoad = false;
-        });
+        if (this.list_active.id) {
+          this.delLoad = true;
+          fetch(`/api/apis/${this.list_active.id}`, {
+            method: 'DELETE',
+            body: {
+              prdId: this.prdId
+            }
+          }).then(res => {
+            toastr.success('成功删除API！');
+            this.del();
+            this.delLoad = false;
+          });
+        } else {
+          this.del()
+        }
         window.setTimeout(this.closeSlide, 300);
       }
     },

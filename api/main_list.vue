@@ -9,7 +9,7 @@
                 <th>链接</th>
                 <th>方法</th>
                 <th>最后修改</th>
-                <th>返回数据预览</th>
+                <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { tog, add, emptyList } from './vuex/action'
+import { tog, add, emptyList, setList, addEvent } from './vuex/action'
 import MainFilter from './main_filter.vue'
 import { list, listActive, apiRoot } from './vuex/getters.js'
 export default {
@@ -44,7 +44,7 @@ export default {
       apiRoot
     },
     actions: {
-      tog, add, emptyList
+      tog, add, emptyList, setList
     }
   },
   data() {
@@ -59,6 +59,9 @@ export default {
   events: {
     reloadApiList(pid) {
       this.getList(pid)
+    },
+    targetDetail() {
+      this.showDetail(this.list_active)
     }
   },
   methods: {
@@ -67,9 +70,7 @@ export default {
       fetch('/api/apis', {
         body: { prdId: pid }
       }).then(res => {
-        res.data.forEach(v => {
-          this.add(v);
-        });
+        this.setList(res.data)
       });
     },
     showJSON(e) {
@@ -77,6 +78,7 @@ export default {
     },
     showDetail(item, e) {
       this.$parent.$broadcast('slide-menu-open', () => {
+        addEvent()
         this.$parent.$broadcast('init-code-mirror-all')
       });
       this.tog(item);

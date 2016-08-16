@@ -26,6 +26,7 @@
           <editor-frame :output-model.sync="apiData.output"
                         :output-json.sync="apiData.outputJson"
                         :input-json.sync="apiData.input"
+                        :input-model.sync="apiData.inputModel"
                         :is-add.sync="isAdd"
                         :editor-error.sync="editorError"></editor-frame>
           <div class="field">
@@ -50,9 +51,10 @@
       </div>
 
     <div class="detail-bottom">
+      <help></help>
       <button class="primary mini ui button" @click="pageList">上一条</button>
       <button class="positive mini ui button" :class="[sendLoad ? 'loading' : '']" @click="sendData">确定</button>
-      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList" v-show="list_active.id">删除</button>
+      <button class="negative mini ui button" :class="[delLoad ? 'loading' : '']" @click="delList">删除</button>
       <button class="mini ui button" @click="closeSlide">取消</button>
       <button class="primary mini ui button" @click="pageList('')">下一条</button>
     </div>
@@ -62,29 +64,33 @@
 </template>
 
 <script text="text/babel">
-
+import Help from './help.vue'
 import util from '../common/util.js'
-import { add, del, tog } from './vuex/action'
+import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
-require('./directive.js');
+require('./directive.js')
 export default {
   vuex: {
     getters: {
       list,
       list_active: listActive,
-      userId, prdId,
+      userId,
+      prdId,
       projectId,
       teamId,
       listIndex,
       apiRoot
     },
     actions: {
-      add, del, tog
+      add,
+      del,
+      tog
     }
   },
   components: {
-    editorFrame
+    editorFrame,
+    Help
   },
   data() {
     return {
@@ -98,6 +104,7 @@ export default {
         title: '',
         method: 'GET',
         input: {},
+        inputModel: [],
         url: '/',
         outputJson: {},
         output: []
@@ -140,6 +147,9 @@ export default {
       }
     },
     validate() {
+      const urlRegExp = /^\/[\w\-\/\.]*(?:|\/|\.do)$/
+      let urlValid = false
+      urlValid = urlRegExp.test(this.apiData.url)
       if (!this.apiData.title) {
         // 未输入标题
         toastr.error('请输入API标题！')
@@ -148,8 +158,8 @@ export default {
         // 未输入url地址
         toastr.error('请输入URL地址！')
         this.sendLoad = false
-      } else if (this.apiData.url[0] !== '/') {
-        toastr.error('URL必须以"/"开头')
+      } else if (!urlValid) {
+        toastr.error('请输入正确的URL！')
         this.sendLoad = false
       } else if (this.editorError.status !== 1) {
         this.sendLoad = false
@@ -209,13 +219,18 @@ export default {
       }
       // 定义最基本的数据结构
       const apiData = this.apiData;
+      const updateArr = this.list_active.lastModify.split(' ')
+      const date = new Date()
+      let time = ''
+      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
         projectId: this.projectId,
         teamId: this.teamId,
         root: this.apiRoot,
-        updateDesc: this.updateDesc
+        updateDesc: this.updateDesc,
+        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`
       });
       // 如果是新增接口
       if (status === 1) {
@@ -245,6 +260,7 @@ export default {
           toastr.success('修改API成功！')
           // 弹出层提示出现之后再关闭组件
           window.setTimeout(this.closeSlide, 300)
+          _.extend(this.list_active, apiData)
           this.sendLoad = false;
         })
       }
@@ -253,6 +269,7 @@ export default {
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
+      removeEvent()
       // this.resetData()
     },
     resetData() {
@@ -298,17 +315,21 @@ export default {
     },
     delList() {
       if (confirm('确定要删除此API？')) {
-        this.delLoad = true;
-        fetch(`/api/apis/${this.list_active.id}`, {
-          method: 'DELETE',
-          body: {
-            prdId: this.prdId
-          }
-        }).then(res => {
-          toastr.success('成功删除API！');
-          this.del();
-          this.delLoad = false;
-        });
+        if (this.list_active.id) {
+          this.delLoad = true;
+          fetch(`/api/apis/${this.list_active.id}`, {
+            method: 'DELETE',
+            body: {
+              prdId: this.prdId
+            }
+          }).then(res => {
+            toastr.success('成功删除API！');
+            this.del();
+            this.delLoad = false;
+          });
+        } else {
+          this.del()
+        }
         window.setTimeout(this.closeSlide, 300);
       }
     },
@@ -399,7 +420,5 @@ export default {
       color: #666;
       font-weight: 400;
     }
-
 }
-
 </style>

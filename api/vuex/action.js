@@ -18,3 +18,18 @@ export const addEvent = () => {
 export const removeEvent = () => {
   window.removeEventListener('beforeunload', handler)
 }
+export const copy = e => {
+  const t = e.target
+  const c = t.dataset.copytarget
+  const inp = (c ? document.querySelector(c) : null)
+  if (inp && inp.select) {
+    inp.select()
+    try {
+      document.execCommand('copy')
+    } catch (err) {
+      alert('please press Ctrl/Cmd+C to copy')
+    }
+    document.activeElement.blur()
+  }
+}
+document.body.addEventListener('click', copy, true)

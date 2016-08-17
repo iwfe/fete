@@ -5,17 +5,17 @@
     <table class="ui table">
         <thead>
             <tr class="line">
-                <th>描述</th>
-                <th>链接</th>
-                <th>方法</th>
-                <th>最后修改</th>
+                <th @click="changeOrder('title')">描述 <span v-show="orderKey === 'title'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
+                <th @click="changeOrder('url')">链接 <span v-show="orderKey === 'url'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
+                <th @click="changeOrder('method')">方法 <span v-show="orderKey === 'method'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
+                <th @click="changeOrder('lastModify')">最后修改 <span v-show="orderKey === 'lastModify'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
         <tbody>
             <tr track by
                 @click="showDetail(item, $event)"
-                v-for="item in list"
+                v-for="item in list | orderBy orderKey orderType"
                 :class="{'active': list_active === item}">
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
@@ -50,7 +50,9 @@ export default {
   data() {
     return {
       host: pageConfig.host,
-      currentProjectId: pageConfig.me.project.id
+      currentProjectId: pageConfig.me.project.id,
+      orderKey: 'lastModify',
+      orderType: -1
     }
   },
   ready() {
@@ -83,6 +85,13 @@ export default {
       });
       this.tog(item);
       e.stopPropagation();
+    },
+    changeOrder(key) {
+      if (this.orderKey === key) {
+        this.orderType = this.orderType === 1 ? -1 : 1
+      } else {
+        this.orderKey = key
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
   <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
-        <div class="six wide column field small">
+        <div class="four wide column field small">
             <label><i class="red">*</i>标题</label>
             <input type="text" placeholder="一句话描述" v-model="apiData.title">
         </div>
@@ -11,14 +11,20 @@
             <label><i class="red">*</i>URL（首字符请输入/）</label>
             <input type="text" placeholder="接口URL地址" v-model="apiData.url">
         </div>
-        <div class="three wide column field">
-            <label><i class="red">*</i>method</label>
+        <div class="two wide column field">
+            <label>method</label>
             <select class="ui dropdown" v-model="apiData.method">
                 <option value="GET">get</option>
                 <option value="POST">post</option>
                 <option value="PUT">put</option>
                 <option value="DELETE">delete</option>
             </select>
+        </div>
+        <div class="three wide column field">
+            <label><i class="red">*</i>接口返回值使用output数据</label>
+            <div class="ui toggle checkbox" style="margin: 4px;">
+              <input type="checkbox" v-model="useOutputJson">
+            </div>
         </div>
       </div>
 
@@ -100,6 +106,7 @@ export default {
       sendLoad: false,
       delLoad: false,
       userName: pageConfig.me.username,
+      useOutputJson: false,
       apiData: {
         title: '',
         method: 'GET',
@@ -107,7 +114,8 @@ export default {
         inputModel: [],
         url: '/',
         outputJson: {},
-        output: []
+        output: [],
+        useOutputJson: false
       },
       codemirrorReady: false,
       isAdd: true,
@@ -131,6 +139,9 @@ export default {
         this.resetData();
       }
     }
+  },
+  attached() {
+    $('.ui.checkbox').checkbox()
   },
   methods: {
     /**
@@ -230,7 +241,8 @@ export default {
         teamId: this.teamId,
         root: this.apiRoot,
         updateDesc: this.updateDesc,
-        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`
+        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`,
+        useOutputJson: this.useOutputJson
       });
       // 如果是新增接口
       if (status === 1) {
@@ -292,7 +304,8 @@ export default {
           prdId: this.prdId
         }
       }).then(res => {
-        _.extend(this.apiData, res.data)
+        this.apiData = _.extend(this.apiData, res.data)
+        this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
         this.updateDescList = res.data.updateDescList
         this.updateDescList.forEach(v => {
@@ -309,8 +322,10 @@ export default {
           url: res.data.url,
           method: res.data.method,
           input: res.data.input,
-          outputJson: res.data.outputJson
+          outputJson: res.data.outputJson,
+          useOutputJson: !!res.data.useOutputJson
         }
+        console.log(this.apiData.useOutputJson, '#####')
       })
     },
     delList() {
@@ -400,6 +415,9 @@ export default {
         padding: 10px;
         text-align: center;
         border-top: 1px solid #eee;
+      .button {
+        margin-right: 10px;
+      }
     }
     .ui[class*="very relaxed"].list:not(.horizontal)>.item{
       padding: 0;

@@ -46,6 +46,7 @@ const api = {
     }
   ],
   outputJson: {}, //保存outputJson格式
+  useOutputJson: false, // 使用 outputJson 还是 使用 mock
   status: 1, // 1 新建， 2 修改
   updateDescList: [{ // 修改说明list
     updateTime: '', // 更新时间

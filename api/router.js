@@ -215,6 +215,11 @@ router.all('/fete_api/:projectId/:prdId?/mock*', sutil.setRouterParams, sutil.al
     console.log(apiItem);
     if (apiItem && apiItem.id) {
       apiItem = yield apiDao.findOne({ id: apiItem.id })
+      // if use outputJson
+      if (apiItem.useOutputJson) {
+        this.body = apiItem.outputJson
+        return false
+      }
       let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
       // 这里就不要用 sutil 的 success 方法了
       // jquery jsonp has callback&_ but vue-resource just have callback

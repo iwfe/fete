@@ -74,7 +74,7 @@ import Help from './help.vue'
 import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdDataList } from './vuex/getters.js'
 require('./directive.js')
 export default {
   vuex: {
@@ -86,7 +86,8 @@ export default {
       projectId,
       teamId,
       listIndex,
-      apiRoot
+      apiRoot,
+      prdDataList
     },
     actions: {
       add,
@@ -100,6 +101,8 @@ export default {
   },
   data() {
     return {
+      prdId: '',
+      prdVer: '',
       apiName: '',
       updateDesc: '',
       updateDescList: [],
@@ -244,7 +247,8 @@ export default {
         updateDesc: this.updateDesc,
         lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`,
         useOutputJson: this.useOutputJson
-      });
+      })
+      console.log(apiData);
       // 如果是新增接口
       if (status === 1) {
         fetch('/api/apis', {

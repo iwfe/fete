@@ -5,6 +5,7 @@ export const emptyList = makeAction('EMPTY_LIST')
 export const delByIndex = makeAction('DEL_BY_INDEX')
 export const blurList = makeAction('BLUR_LIST')
 export const del = makeAction('DEL_LIST')
+export const setPrd = makeAction('SET_PRD')
 export const add = ({ dispatch }, callback) => {
   dispatch('ADD_LIST', callback)
 }

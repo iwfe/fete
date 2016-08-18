@@ -1,8 +1,8 @@
 /*
  * @Author: jade
  * @Date:   2016-06-06 17:04:44
- * @Last Modified by:   jade
- * @Last Modified time: 2016-06-16 10:30:16
+* @Last modified by:   lancui
+* @Last modified time: 2016-08-15 11:08:76
  */
 
 'use strict';
@@ -29,4 +29,20 @@ const prd = {
   createUser: '', //创建人
   createTime: '', //创建时间
   updateTime: '' //更新时间
+
+  /*
+  prjName: '',
+  prjDir: '', //目录名，英文名
+  members: [{
+    username: '',
+    startTime: '',
+    endTime: ''
+  }],
+  isTest: '', //是否提测
+  isBeta: '',
+  isOnline: '',
+  isMaster: ''
+}
+
+  */
 }

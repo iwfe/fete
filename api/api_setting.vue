@@ -120,7 +120,6 @@ export default {
         output: [],
         useOutputJson: false
       },
-      oldApiDataStr: JSON.stringify(this.apiData),  // 为了浏览器后退时候做检查
       codemirrorReady: false,
       isAdd: true,
       editorError: {},
@@ -283,10 +282,10 @@ export default {
       }
     },
     closeSlide() {
-      window.onbeforeunload = null
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
+      removeEvent()
       // this.resetData()
     },
     resetData() {
@@ -301,8 +300,6 @@ export default {
         url: '/',
         output: []
       }
-      this.oldApiDataStr = JSON.stringify(this.apiData)
-      window.onbeforeunload = this.windowBeforeunloadHandler
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {
@@ -312,10 +309,6 @@ export default {
         }
       }).then(res => {
         this.apiData = _.extend(this.apiData, res.data)
-        const tmpOldApiData = JSON.parse(JSON.stringify(this.apiData))
-        delete(tmpOldApiData.updateDescList)
-        this.oldApiDataStr = JSON.stringify(tmpOldApiData)
-        window.onbeforeunload = this.windowBeforeunloadHandler
         this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
         this.updateDescList = res.data.updateDescList
@@ -336,6 +329,7 @@ export default {
           outputJson: res.data.outputJson,
           useOutputJson: !!res.data.useOutputJson
         }
+        console.log(this.apiData.useOutputJson, '#####')
       })
     },
     delList() {
@@ -373,18 +367,6 @@ export default {
     },
     showMoreLog() {
       this.moreLog = !this.moreLog
-    },
-    windowBeforeunloadHandler() {
-      const tmpApiData = JSON.parse(JSON.stringify(this.apiData))
-      delete(tmpApiData.updateDescList)
-      if (this.useOutputJson) {
-        tmpApiData.useOutputJson = this.useOutputJson
-      }
-      const apiDataStr = JSON.stringify(tmpApiData)
-      if (this.oldApiDataStr !== apiDataStr) {
-        return '你确定要离开'
-      }
-      return undefined
     }
   }
 }

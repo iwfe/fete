@@ -64,13 +64,14 @@
 </template>
 
 <script>
-import { add, changeFilter } from './vuex/action'
+import { add, changeFilter, setPrdList } from './vuex/action'
 export default {
   name: 'main-filter',
   vuex: {
     actions: {
       add,
-      changeFilter
+      changeFilter,
+      setPrdList
     }
   },
   data() {
@@ -127,6 +128,7 @@ export default {
     }).then(res => {
       if (res.code === 200) {
         this.prdData = res.data
+        this.setPrdList(res.data)
       }
     })
 

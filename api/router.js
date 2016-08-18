@@ -52,7 +52,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
       fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1 },
-      sort: { createAt: -1 }
+      sort: { updateTime: -1 }
     })
     _.each(data, item => {
       let last = item.updateDescList[0] // last one is at 0, not .length-1
@@ -215,6 +215,11 @@ router.all('/fete_api/:projectId/:prdId?/mock*', sutil.setRouterParams, sutil.al
     console.log(apiItem);
     if (apiItem && apiItem.id) {
       apiItem = yield apiDao.findOne({ id: apiItem.id })
+      // if use outputJson
+      if (apiItem.useOutputJson) {
+        this.body = apiItem.outputJson
+        return false
+      }
       let data = Mock.mock(util.mockTree2MockTemplate(apiItem.output))
       // 这里就不要用 sutil 的 success 方法了
       // jquery jsonp has callback&_ but vue-resource just have callback

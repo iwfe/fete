@@ -3,6 +3,17 @@
       <div class="field">
           <label><i class="red">*</i>输入数据格式</label>
           <textarea v-el:inputeditor ></textarea>
+          <div class='' v-if='inputModel.length'>
+            <div class='table-tr table-head'>
+              <ul class='clearfix-sp'>]
+                <li class='td-key' style='text-align:center'>属性</li>
+                <li class='td-datatype'>数据类型</li>
+                <li class='td-remark'>含义</li>
+                <li class='td-mock'>是否必须</li>
+              </ul>
+            </div>
+            <table-item :model='model' :is-child=false :loop=1 v-for='model in inputModel' track-by="$index" type="input"></table-item>
+          </div>
       </div>
       <div class="field output-field clearfix-sp">
           <label><i class="red">*</i>返回数据格式</label>
@@ -27,10 +38,10 @@
               <li class='td-key' style='text-align:center'>属性</li>
               <li class='td-datatype'>数据类型</li>
               <li class='td-remark'>含义</li>
-              <li class='td-mock'>mock规则</li>
+              <li class='td-mock'><a href="http://mockjs.com" target="_blank">mock规则</a></li>
             </ul>
           </div>
-          <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel'></table-item>
+          <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel' type="output"></table-item>
         </div>
     </div>
 </template>
@@ -94,6 +105,13 @@ export default {
           msg: '正确'
         }
       }
+    },
+    inputModel: {
+      type: Array,
+      default() {
+        return []
+      },
+      twoWay: true
     }
 
   },
@@ -104,7 +122,6 @@ export default {
        */
       inputEditor: {},
       inputData: '',
-      inputModel: '',
       /**
        * outputEditor 返回数据编辑框对象
        * outputJson 返回数据编辑框取到的值
@@ -132,7 +149,7 @@ export default {
       if (val && self.isJson(val)) {
         console.log('yes, is json');
         self.outputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
-        self.outputModel = self.revertFormat(self.outputJson, []);
+        self.outputModel = self.revertFormat(self.outputJson, [], 'output');
         if (!self.isJson(self.inputData)) {
           return self.setError(2);
         }
@@ -146,6 +163,7 @@ export default {
       if (val && self.isJson(val)) {
         console.log('yes, is json');
         self.inputJson = JSON.parse(val.replace(/[\s\r\n]/, ''));
+        self.inputModel = self.revertFormat(self.inputJson, [], 'input');
         if (!self.isJson(self.outputData)) {
           return self.setError(3);
         }
@@ -267,11 +285,11 @@ export default {
       return _.isObject(val);
     },
     /**
-     * 将inputModel的每个字段转化成api接口字段output的数组元素
-     * @param inputModel
+     * 将outputModel的每个字段转化成api接口字段output的数组元素
+     * @param outputModel
      * @returns {{key: *, comment: string, dataType: string, mock: string, children: Array}}
        */
-    revertFormat(inputModel, parents) {
+    revertFormat(model, parents, type) {
       const self = this;
       const output = [];
       let children = '';
@@ -279,38 +297,44 @@ export default {
       let dataType = '';
       let mockModel = '';
       let child = '';
-      _.each(inputModel, (value, key) => {
+      let require = '';
+      const staticModel = type === 'input' ? self.inputModel : self.outputModel;
+      _.each(model, (value, key) => {
         const _dataType = util.getDataType(value);
         switch (_dataType) {
           case 'Object':
-            child = self.comparison(key, parents, self.outputModel, 0)
+            child = self.comparison(key, parents, staticModel, 0)
             parents.push(key);
-            children = self.revertFormat(value, parents);
+            children = self.revertFormat(value, parents, type);
             comment = child.comment;
             dataType = 'Object';
             mockModel = child.mock || self.defaultMock(key, _dataType);
+            require = child.require || true;
             parents.pop();
             break;
           case 'Array':
-            child = self.comparison(key, parents, self.outputModel, 0)
+            child = self.comparison(key, parents, staticModel, 0)
             parents.push(key);
             if (typeof value[0] === 'object') {
-              children = self.revertFormat(value[0], parents);
+              children = self.revertFormat(value[0], parents, type);
             } else {
               children = null;
             }
             comment = child.comment;
             dataType = 'Array';
             mockModel = child.mock || self.defaultMock(key, _dataType);
+            require = child.require || true;
             parents.pop();
             break;
           default:
-//            if (inputModel.length > 0) {
-            child = self.comparison(key, parents, self.outputModel, 0)
+//            if (outputModel.length > 0) {
+            child = self.comparison(key, parents, staticModel, 0)
             comment = child.comment || '';
             children = child.children || null;
             mockModel = child.mock || self.defaultMock(key, _dataType);
             dataType = _dataType;
+            require = child.require || true;
+
 //            } else {
 //              comment = value;
 //              children = null;
@@ -325,7 +349,13 @@ export default {
           comment: comment,
           dataType: dataType,
           mock: mockModel,
-          children: children
+          children: children,
+          require: require
+        }
+        if (type === 'input') {
+          delete tmp.mock
+        } else {
+          delete tmp.require
         }
         output.push(tmp);
       })
@@ -395,7 +425,6 @@ export default {
       }
     },
     defaultMock(key, type) {
-      console.log(key, type)
       switch (type) {
         case 'Number':
           if (key === 'status') {

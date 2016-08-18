@@ -7,15 +7,20 @@
 */
 
 export default {
+  SET_LIST(state, list) {
+    state.list = list
+  },
   ADD_LIST(state, list) {
     if (!list || !list.url) {
       list = {
         url: '/',
         title: '-',
-        method: '-'
+        method: '-',
+        lastModify: '-'
       }
     }
-    state.list.unshift(list);
+    state.list.unshift(list)
+    state.list_active = list
   },
   DEL_LIST(state) {
     if (state.list_active) {
@@ -38,5 +43,17 @@ export default {
   },
   DEL_BY_INDEX(state, index) {
     state.list.splice(index, 1)
+  },
+  SET_DEFAULT_URL(state, url) {
+    state.defaultUrl = url
+  },
+  SET_DEFAULT_TITLE(state, title) {
+    state.defaultTitle = title
+  },
+  SET_DEFAULT_METHOD(state, method) {
+    state.defaultMethod = method
+  },
+  SET_DEFAULT_DATA(state, data) {
+    state.defaultData = data
   }
 }

@@ -35,6 +35,8 @@ module.exports = {
       'semantic-ui/dist/components/table.css',
       'semantic-ui/dist/components/modal.css',
       'semantic-ui/dist/components/modal.js',
+      'semantic-ui/dist/components/checkbox.min.css',
+      'semantic-ui/dist/components/checkbox.min.js',
       'semantic-ui/dist/components/button.min.css',
       'semantic-ui/dist/components/container.min.css',
       'semantic-ui/dist/components/divider.min.css',

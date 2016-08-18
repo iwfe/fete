@@ -45,7 +45,7 @@
       </div>
     </div>
     <div>
-      <button class="mini ui right floated button add-btn" @click="add">新建API</button>
+      <button class="mini ui right floated button add-btn" @click="addCallback">新建API</button>
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
         当前项目URL：
@@ -158,6 +158,10 @@ export default {
         toastr.success(res.data)
       })
       this.changeFilter({ apiRoot: this.apiRoot })
+    },
+    addCallback() {
+      this.add()
+      this.$parent.$emit('targetDetail')
     }
   }
 };

@@ -33,10 +33,15 @@
         <li class="td-key"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{model.key}}</li>
         <li class="td-datatype">{{model.dataType}}</li>
         <li class="td-remark" @click="toggleInput"><input class="mock-input comment-input" v-model="model.comment"></li>
-        <li class="td-mock"><input class="mock-input" v-model="model.mock" @keyup.enter="revertMock"></li>
+        <li class="td-mock" v-if="type=='output'"><input class="mock-input" v-model="model.mock" @keyup.enter="revertMock"></li>
+        <li class="td-mock" v-if="type=='input'">
+          <input type="checkbox" v-model="model.require" class="mock-input require-checkbox">
+          <label for="checkbox" v-if="model.require" class="require-label">必需</label>
+          <label for="checkbox" v-if="!model.require" class="require-label">非必需</label>
+        </li>
       </ul>
       <div v-if="model.children && showChild" class="children">
-        <table-item :model="model" :is-child=true :loop='loop+1' v-for="model in model.children"></table-item>
+        <table-item :model="model" :is-child=true :loop='loop+1' v-for="model in model.children" :type="type"></table-item>
       </div>
     </div>
   </div>
@@ -48,7 +53,8 @@
     props: {
       model: Object,
       isChild: Boolean,
-      loop: Number
+      loop: Number,
+      type: String
     },
     data() {
       return {
@@ -169,6 +175,9 @@
       .td-mock{
         width: 35%;
       }
+      .td-mock a {
+        color: #333
+      }
       .mock-input{
         display: inline-block;
         width: 100%;
@@ -178,6 +187,12 @@
         &:focus{
           outline: none;
         }
+      }
+      .require-checkbox{
+        width:auto;
+      }
+      .require-label{
+        display:inline-block;
       }
       .files{
         &>li{

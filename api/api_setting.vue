@@ -74,7 +74,7 @@ import Help from './help.vue'
 import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList } from './vuex/getters.js'
 require('./directive.js')
 export default {
   vuex: {
@@ -86,7 +86,8 @@ export default {
       projectId,
       teamId,
       listIndex,
-      apiRoot
+      apiRoot,
+      prdList
     },
     actions: {
       add,
@@ -224,16 +225,24 @@ export default {
         this.sendLoad = false
         return
       }
+      let [time, modifyDesc, modifySubTitile] = ['', '', '']
+      const prdVer = _.find(this.prdList, (prd) => {
+        return prd.id === this.prdId
+      })
       // 判断是新增还是修改接口
       let status = 1
+      modifySubTitile = '新建版本：'
       if (this.list_active.id) {
         status = 2
+        modifySubTitile = '修改版本：'
       }
+      modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+
       // 定义最基本的数据结构
       const apiData = this.apiData;
       const updateArr = this.list_active.lastModify.split(' ')
       const date = new Date()
-      let time = ''
+
       time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
@@ -241,8 +250,8 @@ export default {
         projectId: this.projectId,
         teamId: this.teamId,
         root: this.apiRoot,
-        updateDesc: this.updateDesc,
-        lastModify: `${time} ${updateArr[2]} ${this.updateDesc}`,
+        updateDesc: modifyDesc,
+        lastModify: `${time} ${updateArr[2]} ${modifyDesc}`,
         useOutputJson: this.useOutputJson
       });
       // 如果是新增接口

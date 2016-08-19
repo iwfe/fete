@@ -7,8 +7,8 @@
 */
 
 const wrap = require('co-monk')
-const db = require('../common/db')
-import sutil from '../common/sutil'
+const db = require('../../common/db')
+import sutil from '../../common/sutil'
 import Router from 'koa-router'
 
 const router = new Router({

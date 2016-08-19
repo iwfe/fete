@@ -7,11 +7,11 @@ const router = new Router({
   prefix: '/prd'
 });
 const wrap = require('co-monk');
-const db = require('../common/db');
+const db = require('../../common/db');
 const userDao = wrap(db.get('user'));
 const prdDao = wrap(db.get('prd'));
 
-import sutil from '../common/sutil';
+import sutil from '../../common/sutil';
 
 // PRD
 router.get('/', sutil.projectLogin, function*(next) {

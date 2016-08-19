@@ -8,11 +8,11 @@ const router = new Router({
     prefix: '/project'
 });
 const wrap = require('co-monk');
-const db = require('../common/db');
+const db = require('../../common/db');
 const userDao = wrap(db.get('user'));
 const projectDao = wrap(db.get('project'));
 
-import sutil from '../common/sutil';
+import sutil from '../../common/sutil';
 
 // 项目
 router.get('/', sutil.teamLogin(), function*(next) {

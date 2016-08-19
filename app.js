@@ -112,14 +112,14 @@ app.use(function*(next) {
   }
 });
 
-import main from './main/router';
-import user from './user/router';
-import team from './team/router';
-import project from './project/router';
-import prd from './prd/router';
-import apiModule from './api/router';
-import msgModule from './message/router';
-import importdb from './importdb/router';
+import main from './App/main/router';
+import user from './App/user/router';
+import team from './App/team/router';
+import project from './App/project/router';
+import prd from './App/prd/router';
+import apiModule from './App/api/router';
+import msgModule from './App/message/router';
+import importdb from './App/importdb/router';
 app.use(main.routes());
 app.use(user.routes());
 app.use(team.routes());

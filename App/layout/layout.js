@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import Menu from 'antd/lib/menu';
 import Icon from 'antd/lib/icon';
 import menus from './menu';
-import util from '../common/util';
+import util from '../../common/util';
 import _ from 'underscore';
 
 const SubMenu = Menu.SubMenu;

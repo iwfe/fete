@@ -114,11 +114,19 @@ function GetApiMockByPjId() {
 GetApiMockByPjId()  // get mock data by ajax
 
 // check input
-function ApiCheckInput(key, input) {
-  if (!feteApiForMock[key]) {
-    return 'mock api not found: ' + key
+function ApiCheckInput(mockKey, input) {
+  if (!feteApiForMock[mockKey]) {
+    ApiCheckLog.error('mock api not found: ', mockKey)
   }
-  feteApiForMock[key].inputModel
+  if (!feteApiForMock[mockKey].inputModel) {
+    ApiCheckLog.error('mock api inputModel not found: ', mockKey)
+  }
+  feteApiForMock[mockKey].inputModel.forEach(function(item) {
+    if ((item.require && input[item.key] === undefined) ||
+      typeof input[item.key] !== item.dataType.toLowerCase()) {
+      ApiCheckLog.error('前端请求参数有误，期望参数格式: ', feteApiForMock[mockKey].inputModel)
+    }
+  })
 }
 
 // check output
@@ -210,10 +218,7 @@ function ApiCheckVueResource() {
       // ApiCheckLog.info('AJAX URL: ', mockKey)
       // ApiCheckLog.warn('Request params: ', req.method.toUpperCase() === 'GET' ? req.params : req.data) // req.params: get params ; req.data: post params
       const mockKey = req.method.toUpperCase() + req.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
-      if (!ApiCheckInput(mockKey, req.data)) {
-        ApiCheckLog.error('前端请求参数有误', req.data)
-        alert('前端请求参数有误\n' + JSON.stringify(req.data))
-      }
+      ApiCheckInput(mockKey, req.data)
       if (feteApiUseMockData) {
         req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
         // ApiCheckLog.info('Redirect to: ', req.url)
@@ -230,8 +235,8 @@ function ApiCheckVueResource() {
       var checkResult = ApiCheckOutput(mockKey, res.data)
       // ApiCheckLog.info('Mockjs check output result: ', checkResult)
       if (Array.isArray(checkResult) && checkResult.length > 0) {
-        ApiCheckLog.error('后端返回结果与fete定义的接口不符', checkResult)
-        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        ApiCheckLog.error('后端返回结果与fete定义的接口不符：', checkResult)
+        // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
       }
       return res
     }

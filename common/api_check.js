@@ -114,9 +114,11 @@ function GetApiMockByPjId() {
 GetApiMockByPjId()  // get mock data by ajax
 
 // check input
-function ApiCheckInput(input) {
-  // TODO: chenck input format
-  return false
+function ApiCheckInput(key, input) {
+  if (!feteApiForMock[key]) {
+    return 'mock api not found: ' + key
+  }
+  feteApiForMock[key].inputModel
 }
 
 // check output
@@ -139,51 +141,57 @@ function ApiCheckForJqueryAjax() {
       })
       // check input
     $(document).ajaxSend(function(event, jqxhr, settings) {
-        ApiCheckLog.title('-------- [FROM api_check.js] jquery ajax before send --------')
-        ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
-        ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
+    //     ApiCheckLog.title('-------- [FROM api_check.js] jquery ajax before send --------')
+    //     ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
+    //     ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
         // ApiCheckInput(settings.data)
         let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
         if (feteApiUseMockData) {
           settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
-          ApiCheckLog.info('Redirect to: ', settings.url)
+          // ApiCheckLog.info('Redirect to: ', settings.url)
         } else {
-          ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
+          // ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
         }
       })
       // check output
     $(document).ajaxSuccess(function(event, jqxhr, settings) {
-      ApiCheckLog.title2('-------- [FROM api_check.js] jquery ajax after success --------')
+      // ApiCheckLog.title2('-------- [FROM api_check.js] jquery ajax after success --------')
       let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
-      ApiCheckLog.info('AJAX URL: ', mockKey)
-      ApiCheckLog.success('Response data: ', jqxhr.responseJSON) // 还有一个 responseText
+      // ApiCheckLog.info('AJAX URL: ', mockKey)
+      // ApiCheckLog.success('Response data: ', jqxhr.responseJSON) // 还有一个 responseText
       var checkResult = ApiCheckOutput(mockKey, jqxhr.responseJSON)
-      ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      // ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      if (Array.isArray(checkResult) && checkResult.length > 0) {
+        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+      }
     })
   } else if ($.ajaxSettings) {
     // zepto
     $.ajaxSettings.global = true
 
     $(document).on('ajaxBeforeSend', function(e, xhr, settings) {
-      ApiCheckLog.title('-------- [FROM api_check.js] zepto ajax before send --------')
-      ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
-      ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
+      // ApiCheckLog.title('-------- [FROM api_check.js] zepto ajax before send --------')
+      // ApiCheckLog.info('AJAX URL: ', settings.type.toUpperCase() + settings.url)
+      // ApiCheckLog.warn('Request params: ', settings.data) // post 才有 ，get 直接挂 url 上了
       // ApiCheckInput(settings.data)
       let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
       if (feteApiUseMockData && feteApiForMock[mockKey]) {
         settings.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + settings.url;
-        ApiCheckLog.info('Redirect to: ', settings.url)
+        // ApiCheckLog.info('Redirect to: ', settings.url)
       } else {
-        ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
+        // ApiCheckLog.info('Not redirect, use old request url: ', mockKey)
       }
     })
     $(document).on('ajaxSuccess', function(e, xhr, settings) {
-      ApiCheckLog.title2('-------- [FROM api_check.js] zepto ajax after success --------')
+      // ApiCheckLog.title2('-------- [FROM api_check.js] zepto ajax after success --------')
       let mockKey = settings.type.toUpperCase() + settings.url.split('?')[0].replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
-      ApiCheckLog.info('AJAX URL: ', mockKey)
-      ApiCheckLog.success('Response data: ', xhr.responseJSON) // 还有一个 responseText
+      // ApiCheckLog.info('AJAX URL: ', mockKey)
+      // ApiCheckLog.success('Response data: ', xhr.responseJSON) // 还有一个 responseText
       var checkResult = ApiCheckOutput(mockKey, xhr.responseJSON)
-      ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      // ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      if (Array.isArray(checkResult) && checkResult.length > 0) {
+        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+      }
     })
   }
 }
@@ -198,26 +206,33 @@ function ApiCheckVueResource() {
 
     // check input
     request: req => {
-      ApiCheckLog.title('-------- [FROM api_check.js] vue-resource before send --------')
-      let mockKey = req.method.toUpperCase() + req.url
-      ApiCheckLog.info('AJAX URL: ', mockKey)
-      ApiCheckLog.warn('Request params: ', req.method.toUpperCase() === 'GET' ? req.params : req.data) // req.params: get params ; req.data: post params
-      // ApiCheckInput(req)
+      // ApiCheckLog.title('-------- [FROM api_check.js] vue-resource before send --------')
+      // ApiCheckLog.info('AJAX URL: ', mockKey)
+      // ApiCheckLog.warn('Request params: ', req.method.toUpperCase() === 'GET' ? req.params : req.data) // req.params: get params ; req.data: post params
+      const mockKey = req.method.toUpperCase() + req.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
+      if (!ApiCheckInput(mockKey, req.data)) {
+        ApiCheckLog.error('前端请求参数有误', req.data)
+        alert('前端请求参数有误\n' + JSON.stringify(req.data))
+      }
       if (feteApiUseMockData) {
         req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
-        ApiCheckLog.info('Redirect to: ', req.url)
+        // ApiCheckLog.info('Redirect to: ', req.url)
       }
       return req
     },
 
     // check output
     response: res => {
-      ApiCheckLog.title2('-------- [FROM api_check.js] vue-resource after success --------')
+      // ApiCheckLog.title2('-------- [FROM api_check.js] vue-resource after success --------')
       let mockKey = res.request.method.toUpperCase() + res.request.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
-      ApiCheckLog.info('AJAX URL: ', mockKey)
-      ApiCheckLog.success('Response data: ', res.data)
+      // ApiCheckLog.info('AJAX URL: ', mockKey)
+      // ApiCheckLog.success('Response data: ', res.data)
       var checkResult = ApiCheckOutput(mockKey, res.data)
-      ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      // ApiCheckLog.info('Mockjs check output result: ', checkResult)
+      if (Array.isArray(checkResult) && checkResult.length > 0) {
+        ApiCheckLog.error('后端返回结果与fete定义的接口不符', checkResult)
+        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+      }
       return res
     }
 

@@ -117,9 +117,11 @@ GetApiMockByPjId()  // get mock data by ajax
 function ApiCheckInput(mockKey, input) {
   if (!feteApiForMock[mockKey]) {
     ApiCheckLog.error('mock api not found: ', mockKey)
+    return
   }
   if (!feteApiForMock[mockKey].inputModel) {
     ApiCheckLog.error('mock api inputModel not found: ', mockKey)
+    return
   }
   feteApiForMock[mockKey].inputModel.forEach(function(item) {
     if ((item.require && input[item.key] === undefined) ||

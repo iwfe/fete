@@ -12,10 +12,12 @@
                 <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tables">
             <tr track by
                 @click="showDetail(item, $event)"
                 v-for="item in list | orderBy orderKey orderType"
+                :title="item.lastModify"
+                :data-create="item.createTime"
                 :class="{'active': list_active === item}">
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
@@ -56,7 +58,10 @@ export default {
     }
   },
   ready() {
-    this.getList(this.$route.query.prdId);
+    this.getList(this.$route.query.prdId)
+    setTimeout(() => {
+      this.addLine()
+    }, 1000)
   },
   events: {
     reloadApiList(pid) {
@@ -67,6 +72,23 @@ export default {
     }
   },
   methods: {
+    addLine() {
+      const table = $('#tables tr')
+      table.each((i, v) => {
+        let create = v.dataset.create
+        let last = v.title.slice(0, 10)
+        const d = new Date(last)
+        last = d.valueOf()
+        if (create.indexOf('-') >= 1) {
+          const dd = new Date(create.slice(0, 10))
+          create = dd.valueOf()
+        }
+        console.log(`${create}-${last}`)
+        if (create === last) {
+          $(v).addClass('line')
+        }
+      })
+    },
     getList(pid) {
       this.emptyList()  // empty list first
       fetch('/api/apis', {
@@ -135,4 +157,8 @@ export default {
   color: #2DB7F5;
   cursor: pointer;
 }
+#tables .line td:first-child {
+   border-left: 2px solid #2DB7F5;
+}
+
 </style>

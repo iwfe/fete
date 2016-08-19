@@ -31,6 +31,7 @@ export const copy = e => {
       alert('please press Ctrl/Cmd+C to copy')
     }
     document.activeElement.blur()
+    toastr.info('已复制到剪贴板！', '', { positionClass: 'toast-top-center' })
   }
 }
 document.body.addEventListener('click', copy, true)

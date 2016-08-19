@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-05 14:08:61
+* @Last modified time: 2016-08-18 22:08:32
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-05 14:08:61
+* @Last modified time: 2016-08-18 22:08:32
  */
 
 
@@ -15,7 +15,6 @@ import Router from 'koa-router'
 const router = new Router({
   prefix: '/api'
 })
-
 // var wrap = require('co-monk');
 // var parse = require('co-body');
 // import convert from 'koa-convert';
@@ -42,6 +41,13 @@ router.get('/', sutil.prdLogin, function*(next) {
     staticTag: 'api',
     noHeader: true
   });
+}).get('/j2j', sutil.login, function*(next) {
+  yield sutil.render(this, {
+    commonTag: 'vue',
+    html: '',
+    staticTag: 'api',
+    noHeader: true
+  });
 });
 
 // CURD for api
@@ -51,7 +57,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       sutil.failed(this, 1003)
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1 },
       sort: { updateTime: -1 }
     })
     _.each(data, item => {

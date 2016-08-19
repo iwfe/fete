@@ -21,7 +21,7 @@
             </select>
         </div>
         <div class="three wide column field">
-            <label><i class="red">*</i>接口返回值使用output数据</label>
+            <label><i class="red">*</i>返回output数据</label>
             <div class="ui toggle checkbox" style="margin: 4px;">
               <input type="checkbox" v-model="useOutputJson">
             </div>
@@ -75,6 +75,7 @@ import util from '../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList } from './vuex/getters.js'
+
 require('./directive.js')
 export default {
   vuex: {
@@ -101,6 +102,7 @@ export default {
   },
   data() {
     return {
+      prdVer: '',
       apiName: '',
       updateDesc: '',
       updateDescList: [],
@@ -118,7 +120,6 @@ export default {
         output: [],
         useOutputJson: false
       },
-      oldApiDataStr: JSON.stringify(this.apiData),  // 为了浏览器后退时候做检查
       codemirrorReady: false,
       isAdd: true,
       editorError: {},
@@ -253,7 +254,8 @@ export default {
         updateDesc: modifyDesc,
         lastModify: `${time} ${updateArr[2]} ${modifyDesc}`,
         useOutputJson: this.useOutputJson
-      });
+      })
+      console.log(apiData);
       // 如果是新增接口
       if (status === 1) {
         fetch('/api/apis', {
@@ -288,10 +290,10 @@ export default {
       }
     },
     closeSlide() {
-      window.onbeforeunload = null
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
+      removeEvent()
       // this.resetData()
     },
     resetData() {
@@ -306,8 +308,6 @@ export default {
         url: '/',
         output: []
       }
-      this.oldApiDataStr = JSON.stringify(this.apiData)
-      window.onbeforeunload = this.windowBeforeunloadHandler
     },
     getdata() {
       fetch(`/api/apis/${this.list_active.id}`, {
@@ -317,10 +317,6 @@ export default {
         }
       }).then(res => {
         this.apiData = _.extend(this.apiData, res.data)
-        const tmpOldApiData = JSON.parse(JSON.stringify(this.apiData))
-        delete(tmpOldApiData.updateDescList)
-        this.oldApiDataStr = JSON.stringify(tmpOldApiData)
-        window.onbeforeunload = this.windowBeforeunloadHandler
         this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
         this.updateDescList = res.data.updateDescList
@@ -341,6 +337,7 @@ export default {
           outputJson: res.data.outputJson,
           useOutputJson: !!res.data.useOutputJson
         }
+        console.log(this.apiData.useOutputJson, '#####')
       })
     },
     delList() {
@@ -378,18 +375,6 @@ export default {
     },
     showMoreLog() {
       this.moreLog = !this.moreLog
-    },
-    windowBeforeunloadHandler() {
-      const tmpApiData = JSON.parse(JSON.stringify(this.apiData))
-      delete(tmpApiData.updateDescList)
-      if (this.useOutputJson) {
-        tmpApiData.useOutputJson = this.useOutputJson
-      }
-      const apiDataStr = JSON.stringify(tmpApiData)
-      if (this.oldApiDataStr !== apiDataStr) {
-        return '你确定要离开'
-      }
-      return undefined
     }
   }
 }

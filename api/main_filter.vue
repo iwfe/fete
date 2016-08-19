@@ -46,6 +46,7 @@
     </div>
     <div>
       <button class="mini ui right floated button add-btn" @click="addCallback">新建API</button>
+      <a href="/api/j2j" target="_blank" title="Java转Json" class="mini ui right floated user-help"><i class="coffee icon"></i></a>
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
         当前项目URL：
@@ -65,9 +66,13 @@
 
 <script>
 import { add, changeFilter, setPrdList } from './vuex/action'
+import { prdList } from './vuex/getters'
 export default {
   name: 'main-filter',
   vuex: {
+    getters: {
+      prdList
+    },
     actions: {
       add,
       changeFilter,

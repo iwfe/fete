@@ -3,7 +3,7 @@
  * @Date:   2016-06-22 14:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-06-29 16:06:25
+* @Last modified time: 2016-08-18 13:08:12
  */
 
 
@@ -16,6 +16,10 @@ router.map({
       '/api': {
         name: 'list',
         component: require('./main_list.vue')
+      },
+      '/api/j2j': {
+        name: 'java2json',
+        component: require('./java2json.vue')
       }
     }
   }

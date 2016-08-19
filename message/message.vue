@@ -71,7 +71,7 @@
         pageActive: 1,
         msgCount: 0,
         totalPage: 0,
-        pageSize: 10
+        pageSize: 50
       }
     },
     ready() {
@@ -104,6 +104,7 @@
               method: 'DELETE',
               body: { userIds: userIds.join(',') }
             }).then((res) => {
+              $('.check-all', '#main').prop('checked', false)
               this.getMsgList();
             });
           }

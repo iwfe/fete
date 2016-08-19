@@ -101,7 +101,6 @@ export default {
   },
   data() {
     return {
-      prdId: '',
       prdVer: '',
       apiName: '',
       updateDesc: '',

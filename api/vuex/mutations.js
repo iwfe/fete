@@ -10,8 +10,8 @@ export default {
   SET_LIST(state, list) {
     state.list = list
   },
-  SET_PRD(state, arr) {
-    state.prdDataList = arr
+  SET_PRDlIST(state, arr) {
+    state.prdList = arr
   },
   ADD_LIST(state, list) {
     if (!list || !list.url) {

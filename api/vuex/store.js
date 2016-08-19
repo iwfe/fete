@@ -17,7 +17,7 @@ const state = {
   teamId: '',
   projectId: '',
   apiRoot: '',
-  prdDataList: []
+  prdList: []
 }
 const outputModel = [
   {

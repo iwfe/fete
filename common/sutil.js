@@ -24,7 +24,7 @@ import React from 'react';
 import ReactDom from 'react-dom/server';
 import {
   Header
-} from '../layout/layout';
+} from '../App/layout/layout';
 
 import util from './util';
 

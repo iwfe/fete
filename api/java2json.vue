@@ -84,88 +84,90 @@
   }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .jj-temp {
   display: flex;
   flex-grow: 1;
-}
-.doc-example {
-    display: flex;
-    flex-grow: 1;
-    border: 1px solid #eee;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    padding: 0 15px 0;
-    max-width: 50%;
-}
-.doc-example:before {
-    content: 'java';
-    display: block;
-    color: #bbb;
-    text-transform: uppercase;
-    margin: 0 -15px 15px;
-    padding: 4px 10px;
-    font-size: 12px;
-}
-.doc-example.java {
-  border-right: 0;
-}
-.doc-example.json:before {
-    content: 'json';
-}
-.doc-example:after {
-    content: '';
-    display: table;
-    clear: both;
-}
-*, :after, :before {
-    -webkit-box-sizing: border-box;
+  
+  .doc-example {
+      display: flex;
+      flex-grow: 1;
+      border: 1px solid #eee;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      padding: 0 15px 0;
+      max-width: 50%;
+  }
+  .doc-example:before {
+      content: 'java';
+      display: block;
+      color: #bbb;
+      text-transform: uppercase;
+      margin: 0 -15px 15px;
+      padding: 4px 10px;
+      font-size: 12px;
+  }
+  .doc-example.java {
+    border-right: 0;
+  }
+  .doc-example.json:before {
+      content: 'json';
+  }
+  .doc-example:after {
+      content: '';
+      display: table;
+      clear: both;
+  }
+  *, :after, :before {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+  }
+
+  .am-pre-scrollable {
+      max-height: 24rem;
+      overflow-y: scroll;
+  }
+  pre {
+      display: block;
+      line-height: 1.6;
+      word-break: break-all;
+      word-wrap: break-word;
+      color: #555;
+      background-color: #f8f8f8;
+      border: 1px solid #dedede;
+      border-radius: 0;
+      margin: 24px 10px 20px -10px;
+      width: 100%;
+      min-height: 485px;
+      overflow: hidden;
+      padding: 0px 40px 20px 0;
+  }
+  code, kbd, pre, samp {
+      font-family: Monaco,Menlo,Consolas,"Courier New",FontAwesome,monospace;
+      outline: none;
+  }
+  #java, #json {
     box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0 0 0 -24px;
+    padding: 10px;
+    outline: none;
+    border: 0;
+    background-color: #f8f8f8;
+  }
+  .copy {
+    display: inline-block;
+    width: 60px;
+    height: 21px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .copy:hover {
+    background-color: #f8f8f8;
+    outline: none;
+  }
 }
 
-.am-pre-scrollable {
-    max-height: 24rem;
-    overflow-y: scroll;
-}
-pre {
-    display: block;
-    line-height: 1.6;
-    word-break: break-all;
-    word-wrap: break-word;
-    color: #555;
-    background-color: #f8f8f8;
-    border: 1px solid #dedede;
-    border-radius: 0;
-    margin: 24px 10px 20px -10px;
-    width: 100%;
-    min-height: 485px;
-    overflow: hidden;
-    padding: 0px 40px 20px 0;
-}
-code, kbd, pre, samp {
-    font-family: Monaco,Menlo,Consolas,"Courier New",FontAwesome,monospace;
-    outline: none;
-}
-#java, #json {
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  margin: 0 0 0 -24px;
-  padding: 10px;
-  outline: none;
-  border: 0;
-  background-color: #f8f8f8;
-}
-.copy {
-  display: inline-block;
-  width: 60px;
-  height: 21px;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-.copy:hover {
-  background-color: #f8f8f8;
-  outline: none;
-}
 </style>

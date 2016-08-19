@@ -77,6 +77,7 @@ export default {
       table.each((i, v) => {
         let create = v.dataset.create
         let last = v.title.slice(0, 10)
+        if (create || last) return
         const d = new Date(last)
         last = d.valueOf()
         if (create.indexOf('-') >= 1) {

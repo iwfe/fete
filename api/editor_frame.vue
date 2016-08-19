@@ -41,7 +41,7 @@
               <li class='td-mock'><a href="http://mockjs.com" target="_blank">mock规则</a></li>
             </ul>
           </div>
-          <table-item :model='output' :is-child=false :loop=1 v-for='output in outputModel' type="output"></table-item>
+          <table-item :model='output' :is-child=false :loop=1 v-for="output in outputModel" type="output"></table-item>
         </div>
     </div>
 </template>
@@ -350,7 +350,8 @@ export default {
           dataType: dataType,
           mock: mockModel,
           children: children,
-          require: require
+          require: require,
+          showCommentInput: false
         }
         if (type === 'input') {
           delete tmp.mock

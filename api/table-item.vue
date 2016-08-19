@@ -1,39 +1,23 @@
 <template>
-    <!--<div class="table-item-wrap" >
-      <div class="table-tr" v-for="(key, value) in model">
-        <ul class="clearfix-sp" :class="{'files':isChild}">
-          <li class="td-key" :class="{'folder':isFolder(value)}" @click="toggle"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{key}}</li>
-          <li class="td-remark"><span v-if="getDataType(value)==='String'">{{value}} </span></li>
-          <li class="td-datatype">{{getDataType(value)}}</li>
-          <li class="td-mock"><input class="mock-input" v-model=""></li>
-        </ul>
-        <div v-if="isFolder(value) && showChild" >
-          <table-item :model="value | revertType" :is-child=true></table-item>
-        </div>
-      </div>
-    </div>-->
-
-    <!--<div class="table-item-wrap" >
-      <div class="table-tr" v-for="item in model" :class="getLoopClass(loop)">
-        <ul class="clearfix-sp" :class="{'folder':item.children}">
-          <li class="td-key" @click="toggle"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{item.key}}</li>
-          <li class="td-remark" @click="toggleInput"><input class="mock-input comment-input" v-model="item.comment"></li>
-          <li class="td-datatype">{{item.dataType}}</li>
-          <li class="td-mock"><input class="mock-input" v-model="item.mock"></li>
-        </ul>
-        <div v-if="item.children" class="children">
-          <table-item :model="item.children" :is-child=true :loop='loop+1'></table-item>
-        </div>
-      </div>
-    </div>-->
-
   <div class="table-item-wrap" >
     <div class="table-tr" :class="getLoopClass(loop)">
       <ul class="clearfix-sp" :class="{'folder':model.children}">
+
         <li class="td-key"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{model.key}}</li>
-        <li class="td-datatype">{{model.dataType}}</li>
-        <li class="td-remark" @click="toggleInput"><input class="mock-input comment-input" v-model="model.comment"></li>
-        <li class="td-mock" v-if="type=='output'"><input class="mock-input" v-model="model.mock" @keyup.enter="revertMock"></li>
+
+        <li class="td-datatype">{{model.dataType}}
+          <slot></slot>
+        </li>
+
+        <li class="td-remark" @click="toggleInput">
+          <comment-input v-show="model.showCommentInput" :value.sync="model.comment"></comment-input>
+          <input class="mock-input comment-input" v-model="model.comment" @click="showInput(model)">
+        </li>
+
+        <li class="td-mock" v-if="type=='output'">
+          <input class="mock-input" v-model="model.mock" @keyup.enter="revertMock">
+        </li>
+
         <li class="td-mock" v-if="type=='input'">
           <input type="checkbox" v-model="model.require" class="mock-input require-checkbox">
           <label for="checkbox" v-if="model.require" class="require-label">必需</label>
@@ -48,10 +32,15 @@
 </template>
 <script type="text/babel">
   import util from '../common/util.js'
+  import CommentInput from './comment_input.vue'
   export default {
     name: 'table-item',
+    components: {
+      CommentInput
+    },
     props: {
       model: Object,
+      indexing: Number,
       isChild: Boolean,
       loop: Number,
       type: String
@@ -78,7 +67,6 @@
 
     },
     ready() {
-      $('.datatype-search').dropdown();
     },
     methods: {
       isFolder(obj) {
@@ -125,6 +113,13 @@
       revertMock() {
         const self = this;
         self.$dispatch('revertMock');
+      },
+      showInput(model) {
+        console.log(model);
+        console.log(this.loop);
+        console.log(this.index);
+        $('.comment-input-wrap').hide()
+        model.showCommentInput = true;
       }
     }
   }
@@ -166,6 +161,7 @@
         left: -15px;
       }
       .td-remark{
+        position:relative;
         width: 30%;
       }
       .td-datatype{

@@ -120,10 +120,7 @@ export default {
         output: [],
         useOutputJson: false
       },
-<<<<<<< 6eee10a9f19739c68f0c6258aa46e3e1c281abb7
-=======
       oldApiData: {}, // 为了浏览器后退时候做检查
->>>>>>> fix bug
       codemirrorReady: false,
       isAdd: true,
       editorError: {},
@@ -385,8 +382,6 @@ export default {
     },
     showMoreLog() {
       this.moreLog = !this.moreLog
-<<<<<<< 6eee10a9f19739c68f0c6258aa46e3e1c281abb7
-=======
     },
     windowBeforeunloadHandler() {
       if (this.checkModifyOnunload()) {

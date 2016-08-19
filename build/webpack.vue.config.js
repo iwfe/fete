@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-30 18:48:33
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-14 17:07:12
+* @Last modified time: 2016-08-19 19:08:72
  */
 
 var path = require('path'),
@@ -13,9 +13,9 @@ var path = require('path'),
 module.exports = {
   // watch: isWatch,
   entry: {
-    api: './api/index.js',
-    message: './message/index.js',
-    importdb: './importdb/index.js',
+    api: './App/api/index.js',
+    message: './App/message/index.js',
+    importdb: './App/importdb/index.js',
     vue_common: [
       'vue',
       'vue-router',

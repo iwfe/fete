@@ -166,9 +166,9 @@ export default {
       })
       this.changeFilter({ apiRoot: this.apiRoot })
     },
-    addCallback() {
+    addCallback(e) {
       this.add()
-      this.$parent.$emit('targetDetail')
+      this.$parent.$emit('targetDetail', e)
     }
   }
 };

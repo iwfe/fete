@@ -67,8 +67,8 @@ export default {
     reloadApiList(pid) {
       this.getList(pid)
     },
-    targetDetail() {
-      this.showDetail(this.list_active)
+    targetDetail(e) {
+      this.showDetail(this.list_active, e)
     }
   },
   methods: {
@@ -105,6 +105,7 @@ export default {
       this.$parent.$broadcast('slide-menu-open', () => {
         addEvent()
         this.$parent.$broadcast('init-code-mirror-all')
+        this.$parent.$broadcast('addWindowBeforeunloadOnSlideOpen')
       });
       this.tog(item);
       e.stopPropagation();

@@ -20,7 +20,8 @@ var gulp = require('gulp'),
   fse = require('fs-extra'),
   path = require('path'),
   util = require('util'),
-  zip = require('gulp-zip');
+  zip = require('gulp-zip'),
+  gutil = require('gulp-util');
 
 
 // var auto = require('./automate.js');
@@ -97,8 +98,16 @@ gulp.task('webpack', function(callback) {
   }
   config.entry = entry;
 
-  webpack(config, function(err, stats) {
-    console.log(stats.toString());
+  webpack(config, function (err, stats) {
+    if (err) {
+      throw new gutil.PluginError('webpack:build', err)
+    }
+    gutil.log('[webpack:build]', stats.toString({
+      chunks: false, // Makes the build much quieter
+      assets: isProduct ? true : false,
+      children: false,
+      colors: true
+    }))
     if (!err && isProduct) {
       gulp.start('vue');
     }
@@ -215,8 +224,16 @@ gulp.task('vue', function(callback) {
   vue_config.devtool = isProduct ? false : 'source-map'
   vue_config.plugins = vue_config.plugins.concat(minfy)
 
-  webpack(vue_config, function(err, stats) {
-    console.log(stats.toString());
+  webpack(vue_config, function (err, stats) {
+    if (err) {
+      throw new gutil.PluginError('webpack:build', err)
+    }
+    gutil.log('[webpack:build]', stats.toString({
+      chunks: false, // Makes the build much quieter
+      assets: isProduct ? true : false,
+      children: false,
+      colors: true
+    }))
   });
 });
 

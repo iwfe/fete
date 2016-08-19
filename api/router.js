@@ -265,14 +265,14 @@ router.get('/api_mock_data', sutil.setRouterParams, sutil.allowCORS, function*(n
   if (!this.parse.projectId) {
     sutil.failed(this, 1003)
   } else {
-    let apiItems = yield apiDao.find({projectId: this.parse.projectId}, {
-      fields: { _id: 0, url: 1, method: 1, input: 1, output: 1, root: 1 },
+    let apiItems = yield apiDao.find({ projectId: this.parse.projectId }, {
+      fields: { _id: 0, url: 1, method: 1, inputModel: 1, output: 1, root: 1 },
       sort: { createAt: 1 }
     })
     let allApiForMock = {}
     _.each(apiItems, item => {
       allApiForMock[item.method + item.root + item.url] = {
-        input: item.input,
+        inputModel: item.inputModel,
         output: item.output
       }
     })

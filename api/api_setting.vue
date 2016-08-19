@@ -120,6 +120,10 @@ export default {
         output: [],
         useOutputJson: false
       },
+<<<<<<< 6eee10a9f19739c68f0c6258aa46e3e1c281abb7
+=======
+      oldApiData: {}, // 为了浏览器后退时候做检查
+>>>>>>> fix bug
       codemirrorReady: false,
       isAdd: true,
       editorError: {},
@@ -127,6 +131,11 @@ export default {
       moreLog: false,
       importantDataHasModify: false,
       apiDataCopy: {}
+    }
+  },
+  events: {
+    addWindowBeforeunloadOnSlideOpen() {
+      window.onbeforeunload = this.windowBeforeunloadHandler
     }
   },
   watch: {
@@ -317,6 +326,7 @@ export default {
         }
       }).then(res => {
         this.apiData = _.extend(this.apiData, res.data)
+        this.oldApiData = JSON.parse(JSON.stringify(this.apiData))
         this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
         this.updateDescList = res.data.updateDescList
@@ -375,6 +385,40 @@ export default {
     },
     showMoreLog() {
       this.moreLog = !this.moreLog
+<<<<<<< 6eee10a9f19739c68f0c6258aa46e3e1c281abb7
+=======
+    },
+    windowBeforeunloadHandler() {
+      if (this.checkModifyOnunload()) {
+        return '你确定要离开'
+      }
+      return undefined
+    },
+    checkModifyOnunload() {
+      let result = false
+      if (this.isAdd) {
+        // add new api
+        if (this.apiData.title
+          || this.apiData.method !== 'GET'
+          || this.apiData.url !== '/'
+          || this.useOutputJson
+          || JSON.stringify(this.apiData.input) !== '{"id":123}'
+          || JSON.stringify(this.apiData.outputJson) !== '{"status":1,"data":{"test":"test"}}') {
+          result = true
+        }
+      } else {
+        // edit or not
+        if (this.apiData.title !== this.oldApiData.title
+          || this.apiData.method !== this.oldApiData.method
+          || this.apiData.url !== this.oldApiData.url
+          || this.useOutputJson !== this.oldApiData.useOutputJson
+          || JSON.stringify(this.apiData.input) !== JSON.stringify(this.oldApiData.input)
+          || JSON.stringify(this.apiData.outputJson) !== JSON.stringify(this.oldApiData.outputJson)) {
+          result = true
+        }
+      }
+      return result
+>>>>>>> fix bug
     }
   }
 }

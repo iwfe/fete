@@ -7,14 +7,14 @@
 */
 
 // old database
-import config from '../config';
+import config from '../../config';
 var monk = require('monk');
 var old_db = monk('localhost/iwfe');
 
 const wrap = require('co-monk');
-const db = require('../common/db');
-import sutil from '../common/sutil';
-import util from '../common/util';
+const db = require('../../common/db');
+import sutil from '../../common/sutil';
+import util from '../../common/util';
 import Router from 'koa-router';
 
 const router = new Router({

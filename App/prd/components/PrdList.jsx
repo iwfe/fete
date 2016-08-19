@@ -3,7 +3,7 @@ import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
 import {Link} from 'react-router';
 import Table from 'antd/lib/table';
-import util from '../../common/util';
+import util from '../../../common/util';
 
 export default class PrdList extends Component {
   constructor(props, context) {

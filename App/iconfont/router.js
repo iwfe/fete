@@ -18,13 +18,13 @@ const router = new Router({
   prefix: '/iconfont'
 });
 const wrap = require('co-monk');
-const db = require('../common/db');
+const db = require('../../common/db');
 const userDao = wrap(db.get('user'));
 const iconfontDao = wrap(db.get('iconfont'));
 const projectDao = wrap(db.get('project'));
 const prdDao = wrap(db.get('prd'));
 
-import sutil from '../common/sutil';
+import sutil from '../../common/sutil';
 
 router.get('/data', sutil.login, function*(next) {
   const user = this.locals._user;

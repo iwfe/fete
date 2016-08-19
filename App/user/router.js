@@ -12,11 +12,11 @@ var wrap = require('co-monk');
 // import convert from 'koa-convert';
 
 var wrap = require('co-monk');
-var db = require('../common/db');
+var db = require('../../common/db');
 var userDao = wrap(db.get('user'));
 
-import util from '../common/util';
-import sutil from '../common/sutil';
+import util from '../../common/util';
+import sutil from '../../common/sutil';
 
 import Index from './index';
 

@@ -65,13 +65,18 @@
 </template>
 
 <script>
-import { add, changeFilter } from './vuex/action'
+import { prdDataList } from './vuex/getters'
+import { add, changeFilter, setPrd } from './vuex/action'
 export default {
   name: 'main-filter',
   vuex: {
+    getters: {
+      prdDataList
+    },
     actions: {
       add,
-      changeFilter
+      changeFilter,
+      setPrd
     }
   },
   data() {
@@ -128,6 +133,7 @@ export default {
     }).then(res => {
       if (res.code === 200) {
         this.prdData = res.data
+        this.setPrd(res.data)
       }
     })
 

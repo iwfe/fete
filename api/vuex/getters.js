@@ -13,3 +13,4 @@ export const projectId = state => state.projectId
 export const teamId = state => state.teamId
 export const listIndex = state => state.list.indexOf(state.list_active)
 export const apiRoot = state => state.apiRoot
+export const prdDataList = state => state.prdDataList

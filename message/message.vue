@@ -5,14 +5,13 @@
         <table class="ui selectable celled table">
             <thead>
                 <tr>
-                  <th></th>
-                  <th colspan="6" class="buttons">
+                  <th colspan="7" class="buttons">
                     <div class="ui right floated small labeled icon button" @click="delete"><i class="remove icon"></i>批量删除</div>
                     <div class="ui right floated small labeled icon button" @click="updateStatusBatch()"><i class="user icon"></i>全部已读</div>
                   </th>
                 </tr>
                 <tr>
-                    <th width="8%" class="ui checkbox" @click="checkedAll">
+                    <th width="8%" class="checkbox" @click="checkedAll">
                         <input type="checkbox" class="hidden check-all">
                         <label>全选</label>
                     </th>
@@ -26,7 +25,7 @@
             </thead>
             <tbody>
                 <tr v-for="(index, item) in msgList" :class="item.status !== 0 ? 'positive' : ''">
-                    <td class="ui checkbox">
+                    <td class="checkbox">
                         <input type="checkbox" value="{{item.id}}" class="hidden check-one">
                     </td>
                     <td>{{item.createTime}}</td>
@@ -50,9 +49,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="ui modal small">
-          <div class="header">Header</div>
-        </div>
+
         <pagination :page-active.sync="pageActive" :total-page="totalPage" v-show="totalPage"></pagination>
     </div>
     </section>

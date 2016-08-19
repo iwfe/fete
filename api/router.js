@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-05 14:08:61
+* @Last modified time: 2016-08-18 22:08:32
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-05 14:08:61
+* @Last modified time: 2016-08-18 22:08:32
  */
 
 
@@ -36,6 +36,13 @@ import config from '../config.js'
 
 // api 管理平台
 router.get('/', sutil.prdLogin, function*(next) {
+  yield sutil.render(this, {
+    commonTag: 'vue',
+    html: '',
+    staticTag: 'api',
+    noHeader: true
+  });
+}).get('/j2j', sutil.login, function*(next) {
   yield sutil.render(this, {
     commonTag: 'vue',
     html: '',

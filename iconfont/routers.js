@@ -6,7 +6,7 @@
 'use strict';
 import React from 'react';
 import { IndexRoute, Route, Router } from 'react-router';
-import App from './redux/App';
+import App from './redux/app';
 import Detail from './redux/Detail';
 
 export default (

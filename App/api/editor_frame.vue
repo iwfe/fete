@@ -48,7 +48,7 @@
 
 <script type='text/babel'>
 import tableItem from './table-item.vue'
-import util from '../common/util.js'
+import util from '../../common/util.js'
 require('./codemirror_alias.js');
 const mock = require('mockjs');
 import { listActive } from './vuex/getters.js'

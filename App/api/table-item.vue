@@ -31,7 +31,7 @@
   </div>
 </template>
 <script type="text/babel">
-  import util from '../common/util.js'
+  import util from '../../common/util.js'
   import CommentInput from './comment_input.vue'
   export default {
     name: 'table-item',

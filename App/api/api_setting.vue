@@ -71,7 +71,7 @@
 
 <script text="text/babel">
 import Help from './help.vue'
-import util from '../common/util.js'
+import util from '../../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList } from './vuex/getters.js'

@@ -3,9 +3,9 @@
  * @Date:   2016-06-22 12:06:00
  * @Email:  lancui@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-18 22:08:32
+* @Last modified time: 2016-08-19 19:08:09
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-18 22:08:32
+* @Last modified time: 2016-08-19 19:08:09
  */
 
 
@@ -22,16 +22,16 @@ const router = new Router({
 const fs = require('fs');
 const path = require('path');
 var wrap = require('co-monk');
-var db = require('../common/db');
+var db = require('../../common/db');
 var apiDao = wrap(db.get('api'));
 var teamDao = wrap(db.get('team'));
 var projectDao = wrap(db.get('project'));
 var prdDao = wrap(db.get('prd'));
 var userDao = wrap(db.get('user'));
 
-import sutil from '../common/sutil'
-import util from '../common/util.js'
-import config from '../config.js'
+import sutil from '../../common/sutil'
+import util from '../../common/util.js'
+import config from '../../config.js'
 
 // api 管理平台
 router.get('/', sutil.prdLogin, function*(next) {

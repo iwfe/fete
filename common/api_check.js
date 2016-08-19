@@ -120,7 +120,7 @@ function ApiCheckInput(mockKey, input) {
     return
   }
   if (!feteApiForMock[mockKey].inputModel) {
-    ApiCheckLog.error('mock api inputModel not found: ', mockKey)
+    ApiCheckLog.error('mock api inputModel not found, 请去fete找到对应api保存一下: ', mockKey)
     return
   }
   feteApiForMock[mockKey].inputModel.forEach(function(item) {

@@ -56,7 +56,7 @@
       height:20px;
       position:absolute;
       top:0;
-      right:2px;
+      right:20px;
       cursor:pointer;
     }
     .triangle{

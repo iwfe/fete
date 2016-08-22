@@ -151,6 +151,11 @@ export default {
   },
   attached() {
     $('.ui.checkbox').checkbox()
+    $('html').click(() => {
+      if (!this.checkModifyOnunload()) {
+        this.closeSlide()
+      }
+    })
   },
   methods: {
     /**

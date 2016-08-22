@@ -147,7 +147,7 @@ router.all('/upload', sutil.login, function *() {
   }else{
     var parts = busBoy(this);
     var part;
-    const filePath = path.join(__dirname, '../static.zip');
+    const filePath = path.join(__dirname, '../../static.zip');
     while (part = yield parts) {
       // var stream = fs.createWriteStream(path.join(os.tmpdir(), Math.random().toString()));
       var stream = fs.createWriteStream(filePath);
@@ -155,8 +155,8 @@ router.all('/upload', sutil.login, function *() {
       console.log('uploading %s -> %s', part.filename, stream.path);
     }
     var zip = new AdmZip(filePath);
-    zip.extractAllTo(/*target path*/path.join(__dirname, '../'), /*overwrite*/true);
-    fse.removeSync(path.join(__dirname, '../static.zip'))
+    zip.extractAllTo(/*target path*/path.join(__dirname, '../../'), /*overwrite*/true);
+    fse.removeSync(path.join(__dirname, '../../static.zip'))
     sutil.success(this, 'done')
 
   }

@@ -1,5 +1,5 @@
 <template>
-<div id="api-detail" >
+<div id="api-detail" @click="closeCommentInput">
   <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
@@ -417,6 +417,9 @@ export default {
         }
       }
       return result
+    },
+    closeCommentInput() {
+      $('.comment-input-wrap').removeClass('commentShow')
     }
   }
 }

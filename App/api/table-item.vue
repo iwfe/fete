@@ -11,12 +11,12 @@
 
         <li class="td-remark">
           <comment-input :value.sync="model.comment" :class="getCommentInputClass"></comment-input>
-          <input class="mock-input comment-input" v-model="model.comment" @click.stop="showInput('comment')">
+          <span class="mock-input comment-input" @click.stop="showInput('comment')">{{model.comment}}</span>
         </li>
 
         <li class="td-mock" v-if="type=='output'">
           <comment-input :value.sync="model.mock" :class="getMockInputClass"></comment-input>
-          <input class="mock-input" v-model="model.mock" @keyup.enter="revertMock" @click.stop="showInput('mock')">
+          <span class="mock-input" @keyup.enter="revertMock" @click.stop="showInput('mock')">{{model.mock}}</span>
         </li>
 
         <li class="td-mock" v-if="type=='input'">
@@ -209,6 +209,7 @@
           .td-remark{
             position:relative;
             width: 30%;
+            text-indent:10px;
           }
           .td-datatype{
             width: 10%;
@@ -227,6 +228,8 @@
             height: 100%;
             background-color: transparent!important;
             border: 0!important;
+            text-align:left;
+            text-indent:8px;
             &:focus{
               outline: none;
             }

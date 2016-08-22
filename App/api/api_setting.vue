@@ -263,7 +263,7 @@ export default {
         teamId: this.teamId,
         root: this.apiRoot,
         updateDesc: modifyDesc,
-        lastModify: `${time} ${updateArr[2]} ${modifyDesc}`,
+        lastModify: `${time} ${this.userName} ${modifyDesc}`,
         useOutputJson: this.useOutputJson
       })
       console.log(apiData);

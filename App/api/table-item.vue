@@ -26,7 +26,7 @@
         </li>
       </ul>
       <div v-if="model.children && showChild" class="children">
-        <table-item :model="model" :is-child=true :loop='loop+1' v-for="(index,model) in model.children" :type="type" :index1st="index1st" :index2nd="index+1"></table-item>
+        <table-item :model="model" :is-child=true :loop='loop+1' v-for="(index,model) in model.children" :type="type" :index1="index1st" :index2="index+1"></table-item>
       </div>
     </div>
   </div>
@@ -41,11 +41,15 @@
     },
     props: {
       model: Object,
-      index1st: Number,
+      index1: Number,
       isChild: Boolean,
       loop: Number,
       type: String,
-      index2nd: {
+      index2: {
+        type: Number,
+        default: 0
+      },
+      index3: {
         type: Number,
         default: 0
       }
@@ -70,10 +74,10 @@
     },
     computed: {
       getCommentInputClass() {
-        return `comment-${this.type}-${this.index1st}-${this.index2nd}`
+        return `comment-${this.type}-${this.getRanCode()}`
       },
       getMockInputClass() {
-        return `mock-${this.type}-${this.index1st}-${this.index2nd}`
+        return `mock-${this.type}-${this.getRanCode()}`
       }
     },
     ready() {
@@ -83,6 +87,14 @@
       showInput: 'showInput'
     },
     methods: {
+      getRanCode() {
+        const result = [];
+        for (let i = 0; i < 10; i++) {
+          const ranNum = Math.ceil(Math.random() * 25);
+          result.push(String.fromCharCode(65 + ranNum));
+        }
+        return result.join('').toLowerCase()
+      },
       isFolder(obj) {
         const dataType = util.getDataType(obj);
         let returnData = '';
@@ -130,11 +142,16 @@
       },
       showInput(textareaType) {
         let thisInput;
+        $('.comment-input-wrap').removeClass('commentShow')
+
         if (textareaType === 'comment') {
           thisInput = $(`.${this.getCommentInputClass}`)
-        } else {
+        } else if (textareaType === 'mock') {
           thisInput = $(`.${this.getMockInputClass}`)
+        } else {
+          return false
         }
+
         $('.comment-input-wrap').removeClass('commentShow')
         if (thisInput.hasClass('commentShow')) {
           thisInput.removeClass('commentShow')
@@ -142,6 +159,7 @@
           thisInput.addClass('commentShow')
           thisInput.find('.comment-textarea').focus()
         }
+        return true
       }
     }
   }

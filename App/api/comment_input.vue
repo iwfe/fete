@@ -12,6 +12,10 @@
         type: String,
         default: '',
         twoWay: true
+      },
+      type: {
+        type: String,
+        default: 'comment'
       }
     },
     methods: {
@@ -20,7 +24,6 @@
       },
       showInput() {
         this.$dispatch('showInput')
-        // $('comment-input-wrap').addClass('commentHide')
       }
     }
   }

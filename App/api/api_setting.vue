@@ -301,10 +301,10 @@ export default {
       }
     },
     closeSlide() {
+      window.onbeforeunload = null
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
-      removeEvent()
       // this.resetData()
     },
     resetData() {
@@ -349,7 +349,6 @@ export default {
           outputJson: res.data.outputJson,
           useOutputJson: !!res.data.useOutputJson
         }
-        console.log(this.apiData.useOutputJson, '#####')
       })
     },
     delList() {

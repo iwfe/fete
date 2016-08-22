@@ -124,9 +124,10 @@ function ApiCheckInput(mockKey, input) {
     return
   }
   feteApiForMock[mockKey].inputModel.forEach(function(item) {
-    if ((item.require && input[item.key] === undefined) ||
-      typeof input[item.key] !== item.dataType.toLowerCase()) {
-      ApiCheckLog.error('前端请求参数有误，期望参数格式: ', feteApiForMock[mockKey].inputModel)
+    if (item.require && input[item.key] === undefined) {
+      ApiCheckLog.error('前端请求参数有误: ', item.key + ' 是必填参数，但是前端没有传')
+    } else if (typeof input[item.key] !== item.dataType.toLowerCase()) {
+      ApiCheckLog.error('前端请求参数有误: ', item.key + ' 期望类型是 ' + item.dataType.toLowerCase() + ' , 实际传了 ' + (typeof input[item.key]))
     }
   })
 }

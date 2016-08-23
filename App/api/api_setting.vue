@@ -8,7 +8,7 @@
             <input type="text" placeholder="一句话描述" v-model="apiData.title">
         </div>
         <div class="seven wide column field">
-            <label><i class="red">*</i>URL（首字符请输入/）</label>
+            <label><i class="red">*</i>URL</label>
             <input type="text" placeholder="接口URL地址" v-model="apiData.url">
         </div>
         <div class="two wide column field">
@@ -263,10 +263,9 @@ export default {
         teamId: this.teamId,
         root: this.apiRoot,
         updateDesc: modifyDesc,
-        lastModify: `${time} ${updateArr[2]} ${modifyDesc}`,
+        lastModify: `${time} ${this.userName} ${modifyDesc}`,
         useOutputJson: this.useOutputJson
       })
-      console.log(apiData);
       // 如果是新增接口
       if (status === 1) {
         fetch('/api/apis', {

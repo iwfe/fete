@@ -71,7 +71,7 @@
         pageActive: 1,
         msgCount: 0,
         totalPage: 0,
-        pageSize: 50
+        pageSize: 30
       }
     },
     ready() {
@@ -125,7 +125,7 @@
         }).then((res) => {
           this.msgList = res.data.msgs;
           this.msgCount = res.data.count;
-          this.totalPage = Math.ceil(res.data.count / 10)
+          this.totalPage = Math.ceil(res.data.count / this.pageSize)
         });
       },
       // newStatus: 0未读, 1已读, 2已操作

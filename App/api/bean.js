@@ -58,5 +58,7 @@ const api = {
   root: '', // 如 weixinEnt
   teamId: '', // 项目组Id
   updateTime: '', // 更新时间
-  createTime: '' // 创建时间
+  createTime: '', // 创建时间
+  categories: [], // 已有的分类
+  newCategory: '' // 新创建的分类
 }

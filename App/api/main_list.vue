@@ -80,6 +80,7 @@ export default {
     },
     showDetail(item, e) {
       this.$parent.$broadcast('slide-menu-open', () => {
+        addEvent()
         this.$parent.$broadcast('init-code-mirror-all')
         this.$parent.$broadcast('addWindowBeforeunloadOnSlideOpen')
       });

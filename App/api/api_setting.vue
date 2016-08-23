@@ -1,5 +1,5 @@
 <template>
-<div id="api-detail" >
+<div id="api-detail" @click="closeCommentInput">
   <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
@@ -305,10 +305,10 @@ export default {
       }
     },
     closeSlide() {
+      window.onbeforeunload = null
       this.$dispatch('slide-menu-close', () => {
         this.$dispatch('remove-code-mirror-all')
       })
-      removeEvent()
       // this.resetData()
     },
     resetData() {
@@ -353,7 +353,6 @@ export default {
           outputJson: res.data.outputJson,
           useOutputJson: !!res.data.useOutputJson
         }
-        console.log(this.apiData.useOutputJson, '#####')
       })
     },
     delList() {
@@ -422,6 +421,9 @@ export default {
         }
       }
       return result
+    },
+    closeCommentInput() {
+      $('.comment-input-wrap').removeClass('commentShow')
     }
   }
 }

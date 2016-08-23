@@ -3,16 +3,16 @@
   <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
-        <div class="four wide column field small">
+        <div class="four wide column field">
             <label><i class="red">*</i>标题</label>
             <input type="text" placeholder="一句话描述" v-model="apiData.title">
         </div>
-        <div class="seven wide column field">
+        <div class="six wide column field">
             <label><i class="red">*</i>URL</label>
             <input type="text" placeholder="接口URL地址" v-model="apiData.url">
         </div>
         <div class="two wide column field">
-            <label>method</label>
+            <label><i class="red">*</i>method</label>
             <select class="ui dropdown" v-model="apiData.method">
                 <option value="GET">get</option>
                 <option value="POST">post</option>
@@ -20,12 +20,13 @@
                 <option value="DELETE">delete</option>
             </select>
         </div>
-        <div class="three wide column field">
+        <div class="two wide column field">
             <label><i class="red">*</i>返回output数据</label>
             <div class="ui toggle checkbox" style="margin: 4px;">
               <input type="checkbox" v-model="useOutputJson">
             </div>
         </div>
+        <category :categories="categories" :category.sync="category"></category>
       </div>
 
       <div class="ui form">
@@ -71,6 +72,7 @@
 
 <script text="text/babel">
 import Help from './help.vue'
+import category from './category.vue'
 import util from '../../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
@@ -98,7 +100,8 @@ export default {
   },
   components: {
     editorFrame,
-    Help
+    Help,
+    category
   },
   data() {
     return {
@@ -127,7 +130,9 @@ export default {
       root: '',
       moreLog: false,
       importantDataHasModify: false,
-      apiDataCopy: {}
+      apiDataCopy: {},
+      categories: ['Top', 'middle1', 'middle2', 'middle3', 'middle4', 'bottom'],
+      category: ''
     }
   },
   events: {

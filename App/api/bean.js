@@ -60,5 +60,5 @@ const api = {
   updateTime: '', // 更新时间
   createTime: '', // 创建时间
   categories: [], // 已有的分类
-  newCategory: '' // 新创建的分类
+  category: '' // 这个接口的分类
 }

@@ -2,7 +2,7 @@
   <div class="two wide column field api-sign">
     <label>接口分类</label>
     <input type="text" placeholder="接口分类" @focus="cateShow=true" @blur="blurInput($event)" v-model="category">
-    <div class="ui raised segments api-category" v-show="cateShow">
+    <div class="ui raised segments api-category" v-show="cateShow && categories.length">
       <div class="ui segment category" v-for="item in categories" @click="chooseCate(item)">
         <p>{{item}}</p>
       </div>
@@ -85,8 +85,7 @@
       margin: 0;
     }
     &:hover {
-      color: #fff;
-      background: #666;
+      color: #2db7f5;
     }
   }
 </style>

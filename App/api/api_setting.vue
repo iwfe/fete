@@ -26,7 +26,7 @@
               <input type="checkbox" v-model="useOutputJson">
             </div>
         </div>
-        <category :categories="categories" :category.sync="category"></category>
+        <category :categories="apiData.categories" :category.sync="apiData.category"></category>
       </div>
 
       <div class="ui form">
@@ -121,7 +121,9 @@ export default {
         url: '/',
         outputJson: {},
         output: [],
-        useOutputJson: false
+        useOutputJson: false,
+        categories: ['Top', 'middle1', 'middle2', 'middle3', 'middle4', 'bottom'],
+        category: ''
       },
       oldApiData: {}, // 为了浏览器后退时候做检查
       codemirrorReady: false,
@@ -130,9 +132,7 @@ export default {
       root: '',
       moreLog: false,
       importantDataHasModify: false,
-      apiDataCopy: {},
-      categories: ['Top', 'middle1', 'middle2', 'middle3', 'middle4', 'bottom'],
-      category: ''
+      apiDataCopy: {}
     }
   },
   events: {

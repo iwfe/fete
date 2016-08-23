@@ -72,7 +72,7 @@ export default {
       fetch('/api/apis', {
         body: { prdId: pid }
       }).then(res => {
-        this.setList(res.data)
+        this.setList(res.data.data)
       });
     },
     showJSON(e) {

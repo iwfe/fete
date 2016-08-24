@@ -32,7 +32,7 @@
 <script>
 import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -41,7 +41,8 @@ export default {
     getters: {
       list,
       list_active: listActive,
-      apiRoot
+      apiRoot,
+      cateActive
     },
     actions: {
       tog, add, emptyList, setList, setCategories

@@ -74,7 +74,7 @@
 import Help from './help.vue'
 import category from './category.vue'
 import util from '../../common/util.js'
-import { add, del, tog, removeEvent } from './vuex/action'
+import { add, del, tog, removeEvent, addCategory } from './vuex/action'
 import editorFrame from './editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList, categories } from './vuex/getters.js'
 
@@ -96,7 +96,8 @@ export default {
     actions: {
       add,
       del,
-      tog
+      tog,
+      addCategory
     }
   },
   components: {
@@ -284,6 +285,9 @@ export default {
           if (this.list_active) {
             _.extend(this.list_active, res.data)
           }
+          if (apiData.category) {
+            this.addCategory(apiData.category);
+          }
           toastr.success('新增API成功！')
           window.setTimeout(this.closeSlide, 300)
           this.sendLoad = false;
@@ -301,6 +305,9 @@ export default {
           // 弹出层提示出现之后再关闭组件
           window.setTimeout(this.closeSlide, 300)
           _.extend(this.list_active, apiData)
+          if (apiData.category) {
+            this.addCategory(apiData.category);
+          }
           this.sendLoad = false;
         })
       }
@@ -322,7 +329,8 @@ export default {
         method: 'GET',
         input: {},
         url: '/',
-        output: []
+        output: [],
+        category: ''
       }
     },
     getdata() {
@@ -333,6 +341,10 @@ export default {
         }
       }).then(res => {
         this.apiData = _.extend(this.apiData, res.data)
+        // 兼容老版本API没有category属性
+        if (!res.data.category) {
+          this.apiData.category = ''
+        }
         this.oldApiData = JSON.parse(JSON.stringify(this.apiData))
         this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
@@ -352,7 +364,8 @@ export default {
           method: res.data.method,
           input: res.data.input,
           outputJson: res.data.outputJson,
-          useOutputJson: !!res.data.useOutputJson
+          useOutputJson: !!res.data.useOutputJson,
+          category: res.data.category
         }
       })
     },

@@ -15,3 +15,4 @@ export const listIndex = state => state.list.indexOf(state.list_active)
 export const apiRoot = state => state.apiRoot
 export const prdList = state => state.prdList
 export const categories = state => state.categories
+export const cateActive = state => state.cate_active

@@ -18,7 +18,8 @@ const state = {
   projectId: '',
   apiRoot: '',
   prdList: [],
-  categories: []
+  categories: [],
+  cate_active: '全部'
 }
 const outputModel = [
   {

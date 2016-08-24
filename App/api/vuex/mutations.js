@@ -58,5 +58,8 @@ export default {
   },
   SET_DEFAULT_DATA(state, data) {
     state.defaultData = data
+  },
+  SET_CATEGORIES(state, list) {
+    state.categories = list
   }
 }

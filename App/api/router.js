@@ -57,13 +57,13 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       sutil.failed(this, 1003)
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1, category: 1 },
       sort: { updateTime: -1 }
     })
     let [categories, obj] = [[], {}]
     _.each(data, item => {
       let last = item.updateDescList[0] // last one is at 0, not .length-1
-      if (_.indexOf(categories, item.category) > -1) {
+      if (item.category && _.indexOf(categories, item.category) == -1) {
         categories.push(item.category)
       }
       item.lastModify = `${util.formateDate(last.updateTime, '%F %T')} ${last.userName} ${last.updateDesc}`
@@ -124,7 +124,6 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       apiData.updateDescList.unshift({ updateTime: _now, userName: _user.username, updateDesc: apiData.updateDesc })
     }
     delete apiData.updateDesc; // 不保存到数据库
-
     let updateResult = yield apiDao.update({ id: param.id }, {
       $set: _.extend(apiData, {
         updateTime: _now,
@@ -132,6 +131,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
         operatorName: _user.username
       })
     });
+
     if (updateResult) {
       sutil.success(this, updateResult);
       // 添加消息，并提醒客户端

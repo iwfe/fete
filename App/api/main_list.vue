@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { tog, add, emptyList, setList, addEvent } from './vuex/action'
+import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
 import { list, listActive, apiRoot } from './vuex/getters.js'
 export default {
@@ -44,7 +44,7 @@ export default {
       apiRoot
     },
     actions: {
-      tog, add, emptyList, setList
+      tog, add, emptyList, setList, setCategories
     }
   },
   data() {
@@ -73,6 +73,7 @@ export default {
         body: { prdId: pid }
       }).then(res => {
         this.setList(res.data.data)
+        this.setCategories(res.data.categories)
       });
     },
     showJSON(e) {

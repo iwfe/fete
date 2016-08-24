@@ -10,19 +10,20 @@
   </div>
 </template>
 <script lang="babel">
+
   export default {
     props: {
+      category: {
+        type: String,
+        default: '',
+        twoWay: true,
+        required: true
+      },
       categories: {
         type: Array,
         default: function() {
           return [];
         },
-        required: true
-      },
-      category: {
-        type: String,
-        default: '',
-        twoWay: true,
         required: true
       }
     },

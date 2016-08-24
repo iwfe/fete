@@ -6,6 +6,7 @@ export const delByIndex = makeAction('DEL_BY_INDEX')
 export const blurList = makeAction('BLUR_LIST')
 export const del = makeAction('DEL_LIST')
 export const setPrdList = makeAction('SET_PRDlIST')
+export const setCategories = makeAction('SET_CATEGORIES')
 export const add = ({ dispatch }, callback) => {
   dispatch('ADD_LIST', callback)
 }

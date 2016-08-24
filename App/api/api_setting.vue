@@ -26,7 +26,7 @@
               <input type="checkbox" v-model="useOutputJson">
             </div>
         </div>
-        <category :categories="apiData.categories" :category.sync="apiData.category"></category>
+        <category :category.sync="apiData.category" :categories="categories"></category>
       </div>
 
       <div class="ui form">
@@ -76,7 +76,7 @@ import category from './category.vue'
 import util from '../../common/util.js'
 import { add, del, tog, removeEvent } from './vuex/action'
 import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList } from './vuex/getters.js'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList, categories } from './vuex/getters.js'
 
 require('./directive.js')
 export default {
@@ -90,7 +90,8 @@ export default {
       teamId,
       listIndex,
       apiRoot,
-      prdList
+      prdList,
+      categories
     },
     actions: {
       add,

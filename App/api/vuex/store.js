@@ -17,7 +17,8 @@ const state = {
   teamId: '',
   projectId: '',
   apiRoot: '',
-  prdList: []
+  prdList: [],
+  categories: []
 }
 const outputModel = [
   {

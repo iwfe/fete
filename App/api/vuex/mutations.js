@@ -63,7 +63,9 @@ export default {
     state.categories = list
   },
   ADD_CATEGORY(state, list) {
-    state.categories.push(list);
+    if (_.indexOf(state.categories, list) === -1) {
+      state.categories.push(list)
+    }
   },
   SET_CATEACTIVE(state, cate) {
     state.cate_active = cate

@@ -82,6 +82,7 @@
   .category {
     padding: 0.4rem 0.6rem;
     font-weight: 400;
+    cursor: pointer;
     p {
       margin: 0;
     }

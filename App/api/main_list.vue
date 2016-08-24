@@ -16,7 +16,8 @@
             <tr track by
                 @click="showDetail(item, $event)"
                 v-for="item in list | orderBy orderKey orderType"
-                :class="{'active': list_active === item, 'line': item.createTime !== item.updateTime}">
+                :class="{'active': list_active === item, 'line': item.createTime !== item.updateTime}"
+                v-show="cateActive == item.category || cateActive == '全部'">
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>

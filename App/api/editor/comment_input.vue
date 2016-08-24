@@ -13,6 +13,12 @@
         default: '',
         twoWay: true
       },
+      group: {
+        type: Array,
+        default() {
+          return []
+        }
+      },
       type: {
         type: String,
         default: 'comment'

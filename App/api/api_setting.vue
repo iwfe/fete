@@ -75,10 +75,9 @@ import Help from './help.vue'
 import category from './category.vue'
 import util from '../../common/util.js'
 import { add, del, tog, removeEvent, addCategory } from './vuex/action'
-import editorFrame from './editor_frame.vue'
+import editorFrame from './editor/editor_frame.vue'
 import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList, categories } from './vuex/getters.js'
 
-require('./directive.js')
 export default {
   vuex: {
     getters: {

@@ -1,6 +1,6 @@
 <template>
   <div class="table-item-wrap" >
-    <div class="table-tr" :class="getLoopClass(loop)">
+    <div class="table-tr" :class="getLoopClass">
       <ul class="clearfix-sp" :class="{'folder':model.children}">
 
         <li class="td-key"><i class="icon-plus"><span v-if="showChild">-</span><span v-else>+</span></i>{{model.key}}</li>
@@ -19,6 +19,15 @@
           <span class="mock-input" @keyup.enter="revertMock" @click.stop="showInput('mock')">{{model.mock}}</span>
         </li>
 
+        <li class="td-select" v-if="type=='output' && loop < 3">
+          <comment-input :group.sync="model.selectGroup" :class="getSelectgroupInputClass"></comment-input>
+          <input type="checkbox" v-model="model.isSelect" class="mock-input require-checkbox">
+          <span @click="showInput('select')">
+            <label for="checkbox" v-if="model.isSelect" class="require-label">需要选择</label>
+            <label for="checkbox" v-if="!model.isSelect" class="require-label">无需选择</label>
+          </span>
+        </li>
+
         <li class="td-mock" v-if="type=='input'">
           <input type="checkbox" v-model="model.require" class="mock-input require-checkbox">
           <label for="checkbox" v-if="model.require" class="require-label">必需</label>
@@ -26,13 +35,13 @@
         </li>
       </ul>
       <div v-if="model.children && showChild" class="children">
-        <table-item :model="model" :is-child=true :loop='loop+1' v-for="(index,model) in model.children" :type="type" :index1="index1st" :index2="index+1"></table-item>
+        <table-item :model="model" :is-child=true :loop='loop+1' v-for="model in model.children" :type="type" ></table-item>
       </div>
     </div>
   </div>
 </template>
 <script type="text/babel">
-  import util from '../../common/util.js'
+  import util from '../../../common/util.js'
   import CommentInput from './comment_input.vue'
   export default {
     name: 'table-item',
@@ -45,24 +54,16 @@
       isChild: Boolean,
       loop: Number,
       type: String,
-      index2: {
-        type: Number,
-        default: 0
-      },
-      index3: {
-        type: Number,
-        default: 0
-      }
+      hehe: String
     },
     data() {
       return {
         showChild: true,
-        showCommentInput: false
       }
     },
     filters: {
       revertType(obj) {
-        const dataType = this.getDataType(obj);
+        const dataType = util.getDataType(obj);
         let returnData = '';
         if (dataType === 'Object') {
           returnData = obj;
@@ -78,10 +79,20 @@
       },
       getMockInputClass() {
         return `mock-${this.type}-${this.getRanCode()}`
-      }
+      },
+      getSelectgroupInputClass() {
+        return `select-group-${this.type}-${this.getRanCode()}`
+      },
+      getLoopClass() {
+        const self = this;
+        return `table-loop-${self.loop} table-item-${self.type}`
+      },
+      getTypeClass() {
+        const self = this;
+        return `table-item-${self.type}`
+      },
     },
     ready() {
-      // $('.comment-input-wrap').addClass('commentHide')
     },
     events: {
       showInput: 'showInput'
@@ -104,25 +115,7 @@
         } else {
           returnData = false;
         }
-
         return returnData;
-      },
-      getDataType(obj) {
-        const dataType = Object.prototype.toString.call(obj);
-        switch (dataType) {
-          case '[object String]':
-            return 'String';
-          case '[object Number]':
-            return 'Number';
-          case '[object Array]':
-            return 'Array';
-          case '[object Object]':
-            return 'Object';
-          case '[object Boolean]':
-            return 'Boolean';
-          default:
-            return null;
-        }
       },
       toggle() {
         const self = this;
@@ -132,26 +125,26 @@
         const self = this;
         // self.showCommentInput = !self.showCommentInput;
       },
-      getLoopClass(loop) {
-        const self = this;
-        return `table-loop-${self.loop}`
-      },
       revertMock() {
         const self = this;
         self.$dispatch('revertMock');
       },
       showInput(textareaType) {
-        let thisInput;
-        $('.comment-input-wrap').removeClass('commentShow')
+        let thisInput
 
-        if (textareaType === 'comment') {
-          thisInput = $(`.${this.getCommentInputClass}`)
-        } else if (textareaType === 'mock') {
-          thisInput = $(`.${this.getMockInputClass}`)
-        } else {
-          return false
+        switch (textareaType) {
+          case 'comment':
+            thisInput = $(`.${this.getCommentInputClass}`)
+            break;
+          case 'mock':
+            thisInput = $(`.${this.getMockInputClass}`)
+            break
+          case 'select':
+            thisInput = $(`.${this.getSelectgroupInputClass}`)
+            break
+          default:
+            return false
         }
-
         $('.comment-input-wrap').removeClass('commentShow')
         if (thisInput.hasClass('commentShow')) {
           thisInput.removeClass('commentShow')
@@ -251,7 +244,23 @@
           }
         }
 
-
+        .table-item-output{
+            .td-key{
+              width:20%;
+            }
+            .td-datatype{
+              width:10%;
+            }
+            .td-remark{
+              width:25%
+            }
+            .td-mock{
+              width:25%;
+            }
+            .td-select{
+              width:20%
+            }
+        }
         .clearfix-sp {
           *zoom: 1;
           &:after {

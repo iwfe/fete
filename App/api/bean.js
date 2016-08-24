@@ -35,12 +35,13 @@ const api = {
       dataType: 'Integer', // 属性类型 （Integer,Float, String, Boolean, Array，Object）
       comment: '状态', // 说明
       mock: '', // mock规则
+      selected:'',
       children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
         {
           key: 'type',
           dataType: 'Integer',
           comment: '',
-          mock: ''
+          mock: '',
         }
       ]
     }

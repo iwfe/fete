@@ -32,7 +32,7 @@
   .comment-input-wrap{
     position:absolute;
     width:100%;
-    height:200px;
+    height:180px;
     border:1px solid #ccc;
     background-color:#fff;
     bottom:53px;

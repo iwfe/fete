@@ -20,11 +20,11 @@
         </li>
 
         <li class="td-select" v-if="type=='output' && loop < 3">
-          <comment-input :group.sync="model.selectGroup" :class="getSelectgroupInputClass"></comment-input>
-          <input type="checkbox" v-model="model.select" class="mock-input require-checkbox">
+          <!-- <comment-input :group.sync="model.selectGroup" :class="getSelectgroupInputClass"></comment-input> -->
+          <input type="checkbox" v-model="model.isSelect" class="mock-input require-checkbox">
           <span @click="showInput('select')">
-            <label for="checkbox" v-if="model.select" class="require-label">需要选择</label>
-            <label for="checkbox" v-if="!model.select" class="require-label">无需选择</label>
+            <label for="checkbox" v-if="model.isSelect" class="require-label">需要选择</label>
+            <label for="checkbox" v-if="!model.isSelect" class="require-label">无需选择</label>
           </span>
         </li>
 

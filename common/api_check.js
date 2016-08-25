@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-04 15:08:66
+* @Last modified time: 2016-08-25 14:08:61
  */
 
 var Mock = require('mockjs')
@@ -244,12 +244,70 @@ function ApiCheckVueResource() {
         // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
         ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, res.data)
       return res
     }
 
   })
 
 }
+
+// 提示需要输入的选项
+function setSelectData(mockKey, data) {
+  console.log(JSON.stringify(data, false, 2));
+
+  if (feteApiUseMockData && feteApiForMock[mockKey]) {
+    let output = feteApiForMock[mockKey].output
+    let selects = querySelectKeys(output, {})
+
+    console.log(`selects==${JSON.stringify(selects)}`);
+    if (Object.keys(selects).length === 0) return data;
+
+    for (const key in selects) {
+      let select = selects[key], dataType = select.dataType
+      let items = select.selectItems
+      let keyVal = window.prompt(`请输入${key}的值:${!items ? '' : items}`, '')
+      if (dataType.toUpperCase() === 'NUMBER') {
+        keyVal = keyVal*1
+      }
+
+      if (key.indexOf('[]') != -1){
+        // 包含数组，只考虑一个数组的情况
+        let arr = key.split('[]')
+        if (arr.length <= 2) {
+          let arrDatas = eval(`data.${arr[0]}`)
+          for (let i in arrDatas) {
+            eval(`arrDatas[i]${arr[1]} = ${keyVal}`)
+          }
+        }
+      } else {
+        eval(`data.${key}=${keyVal}`)
+      }
+    }
+    console.log(JSON.stringify(data, false, 2));
+
+    return data;
+  }
+}
+
+// 递归查找isSelect＝true的属性
+function querySelectKeys(output, selects, preParent, parent) {
+  let parentName = !(parent && parent.key) ? '' : parent.key
+  parentName = !parentName ? '' : (parent.dataType.toUpperCase() === 'ARRAY' ? `${parentName}[].` : `${parentName}.`)
+  parentName = `${!preParent?'':preParent}${parentName}`
+  for (let i in output) {
+      let val = output[i]
+      if (val.isSelect) {
+        selects[`${parentName}${val.key}`] = val
+      }
+      if(!!val.children) {
+        querySelectKeys(val.children, selects, parentName, val)
+      }
+  }
+  return selects
+}
+
 
 function initFeteApiCheck() {
   try {

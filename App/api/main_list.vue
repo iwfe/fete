@@ -16,7 +16,8 @@
             <tr track by
                 @click="showDetail(item, $event)"
                 v-for="item in list | orderBy orderKey orderType"
-                :class="{'active': list_active === item, 'line': item.createTime !== item.updateTime}">
+                :class="{'active': list_active === item, 'line': item.createTime !== item.updateTime}"
+                v-show="cateActive == item.category || cateActive == '全部'">
                 <td>{{item.title}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
@@ -30,9 +31,9 @@
 </template>
 
 <script>
-import { tog, add, emptyList, setList, addEvent } from './vuex/action'
+import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -41,10 +42,11 @@ export default {
     getters: {
       list,
       list_active: listActive,
-      apiRoot
+      apiRoot,
+      cateActive
     },
     actions: {
-      tog, add, emptyList, setList
+      tog, add, emptyList, setList, setCategories
     }
   },
   data() {
@@ -72,7 +74,8 @@ export default {
       fetch('/api/apis', {
         body: { prdId: pid }
       }).then(res => {
-        this.setList(res.data)
+        this.setList(res.data.data)
+        this.setCategories(res.data.categories)
       });
     },
     showJSON(e) {
@@ -80,7 +83,6 @@ export default {
     },
     showDetail(item, e) {
       this.$parent.$broadcast('slide-menu-open', () => {
-        addEvent()
         this.$parent.$broadcast('init-code-mirror-all')
         this.$parent.$broadcast('addWindowBeforeunloadOnSlideOpen')
       });

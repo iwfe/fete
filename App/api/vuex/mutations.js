@@ -58,5 +58,16 @@ export default {
   },
   SET_DEFAULT_DATA(state, data) {
     state.defaultData = data
+  },
+  SET_CATEGORIES(state, list) {
+    state.categories = list
+  },
+  ADD_CATEGORY(state, list) {
+    if (_.indexOf(state.categories, list) === -1) {
+      state.categories.push(list)
+    }
+  },
+  SET_CATEACTIVE(state, cate) {
+    state.cate_active = cate
   }
 }

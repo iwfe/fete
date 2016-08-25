@@ -17,7 +17,9 @@ const state = {
   teamId: '',
   projectId: '',
   apiRoot: '',
-  prdList: []
+  prdList: [],
+  categories: [],
+  cate_active: '全部'
 }
 const outputModel = [
   {

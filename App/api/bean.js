@@ -42,7 +42,7 @@ const api = {
           key: 'type',
           dataType: 'Integer',
           comment: '',
-          mock: ''
+          mock: '',
         }
       ]
     }
@@ -61,6 +61,6 @@ const api = {
   teamId: '', // 项目组Id
   updateTime: '', // 更新时间
   createTime: '', // 创建时间
-  categories: [], // 已有的分类
-  newCategory: '' // 新创建的分类
+  categories: [], // 所有已有的分类（从后台返回的数据，前端不做处理）
+  category: '' // 这个接口的分类
 }

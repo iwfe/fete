@@ -12,7 +12,7 @@
                 <li class='td-mock'>是否必须</li>
               </ul>
             </div>
-            <table-item :model='model' :is-child=false :loop=1 v-for='model in inputModel' track-by="$index" type="input"></table-item>
+            <table-item :model='model' :is-child=false :loop=1 v-for='model in inputModel' track-by="$index" type="input" hehe="meme"></table-item>
           </div>
       </div>
       <div class="field output-field clearfix-sp">
@@ -33,25 +33,26 @@
         </div>
 
         <div class='' v-if='outputModel.length'>
-          <div class='table-tr table-head'>
+          <div class='table-tr table-head table-item-output'>
             <ul class='clearfix-sp'>]
               <li class='td-key' style='text-align:center'>属性</li>
               <li class='td-datatype'>数据类型</li>
               <li class='td-remark'>含义</li>
               <li class='td-mock'><a href="http://mockjs.com" target="_blank">mock规则</a></li>
+              <li class="td-select">状态选择</li>
             </ul>
           </div>
-          <table-item :model='output' :is-child=false :loop=1 v-for="output in outputModel" type="output"></table-item>
+          <table-item :model='output' :is-child=false :loop=1 v-for="output in outputModel" type="output" hehe="hehe"></table-item>
         </div>
     </div>
 </template>
 
 <script type='text/babel'>
 import tableItem from './table-item.vue'
-import util from '../../common/util.js'
+import util from '../../../common/util.js'
 require('./codemirror_alias.js');
 const mock = require('mockjs');
-import { listActive } from './vuex/getters.js'
+import { listActive } from '../vuex/getters.js'
 
 export default {
   vuex: {
@@ -298,6 +299,7 @@ export default {
       let mockModel = '';
       let child = '';
       let require = '';
+      let select = '';
       const staticModel = type === 'input' ? self.inputModel : self.outputModel;
       _.each(model, (value, key) => {
         const _dataType = util.getDataType(value);
@@ -309,7 +311,8 @@ export default {
             comment = child.comment;
             dataType = 'Object';
             mockModel = child.mock || self.defaultMock(key, _dataType);
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
             parents.pop();
             break;
           case 'Array':
@@ -323,7 +326,8 @@ export default {
             comment = child.comment;
             dataType = 'Array';
             mockModel = child.mock || self.defaultMock(key, _dataType);
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
             parents.pop();
             break;
           default:
@@ -333,7 +337,8 @@ export default {
             children = child.children || null;
             mockModel = child.mock || self.defaultMock(key, _dataType);
             dataType = _dataType;
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
 
 //            } else {
 //              comment = value;
@@ -351,10 +356,11 @@ export default {
           mock: mockModel,
           children: children,
           require: require,
-          showCommentInput: false
+          select: select
         }
         if (type === 'input') {
           delete tmp.mock
+          delete tmp.select
         } else {
           delete tmp.require
         }

@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-25 14:08:61
+* @Last modified time: 2016-08-25 16:08:11
  */
 
 var Mock = require('mockjs')
@@ -177,6 +177,8 @@ function ApiCheckForJqueryAjax() {
         // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
         ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, jqxhr.responseJSON)
     })
   } else if ($.ajaxSettings) {
     // zepto
@@ -206,6 +208,8 @@ function ApiCheckForJqueryAjax() {
         // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
         ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, xhr.responseJSON)
     })
   }
 }
@@ -255,19 +259,17 @@ function ApiCheckVueResource() {
 
 // 提示需要输入的选项
 function setSelectData(mockKey, data) {
-  console.log(JSON.stringify(data, false, 2));
 
   if (feteApiUseMockData && feteApiForMock[mockKey]) {
     let output = feteApiForMock[mockKey].output
     let selects = querySelectKeys(output, {})
 
-    console.log(`selects==${JSON.stringify(selects)}`);
     if (Object.keys(selects).length === 0) return data;
 
     for (const key in selects) {
       let select = selects[key], dataType = select.dataType
-      let items = select.selectItems
-      let keyVal = window.prompt(`请输入${key}的值:${!items ? '' : items}`, '')
+      let comment = select.comment
+      let keyVal = window.prompt(`请输入${key}的值:${!comment ? '' : '\n' + comment}`, '')
       if (dataType.toUpperCase() === 'NUMBER') {
         keyVal = keyVal*1
       }
@@ -285,7 +287,6 @@ function setSelectData(mockKey, data) {
         eval(`data.${key}=${keyVal}`)
       }
     }
-    console.log(JSON.stringify(data, false, 2));
 
     return data;
   }

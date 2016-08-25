@@ -299,6 +299,7 @@ export default {
       let mockModel = '';
       let child = '';
       let require = '';
+      let select = '';
       const staticModel = type === 'input' ? self.inputModel : self.outputModel;
       _.each(model, (value, key) => {
         const _dataType = util.getDataType(value);
@@ -310,7 +311,8 @@ export default {
             comment = child.comment;
             dataType = 'Object';
             mockModel = child.mock || self.defaultMock(key, _dataType);
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
             parents.pop();
             break;
           case 'Array':
@@ -324,7 +326,8 @@ export default {
             comment = child.comment;
             dataType = 'Array';
             mockModel = child.mock || self.defaultMock(key, _dataType);
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
             parents.pop();
             break;
           default:
@@ -334,7 +337,8 @@ export default {
             children = child.children || null;
             mockModel = child.mock || self.defaultMock(key, _dataType);
             dataType = _dataType;
-            require = child.require || true;
+            require = child.require;
+            select = child.select;
 
 //            } else {
 //              comment = value;
@@ -352,8 +356,7 @@ export default {
           mock: mockModel,
           children: children,
           require: require,
-          select: false,
-          selectGroup: []
+          select: select
         }
         if (type === 'input') {
           delete tmp.mock

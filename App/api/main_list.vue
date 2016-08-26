@@ -9,6 +9,7 @@
                 <th @click="changeOrder('url')">链接 <span v-show="orderKey === 'url'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('method')">方法 <span v-show="orderKey === 'method'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('lastModify')">最后修改 <span v-show="orderKey === 'lastModify'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
+                <th></th>
                 <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>{{item.lastModify}}</td>
+                <td><a class="mini ui blue basic button" @click.stop="pullApi(item)">拉取</a></td>
                 <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
             </tr>
         </tbody>
@@ -33,7 +35,7 @@
 <script>
 import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot, cateActive } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive, originPrdId } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -43,7 +45,8 @@ export default {
       list,
       list_active: listActive,
       apiRoot,
-      cateActive
+      cateActive,
+      originPrdId
     },
     actions: {
       tog, add, emptyList, setList, setCategories
@@ -66,6 +69,12 @@ export default {
     },
     targetDetail(e) {
       this.showDetail(this.list_active, e)
+    },
+    emptyList: 'emptyList',
+    setList: 'setList',
+    setCategories: 'setCategories',
+    currentPrdData() {
+      return this.list
     }
   },
   methods: {
@@ -95,6 +104,23 @@ export default {
       } else {
         this.orderKey = key
       }
+    },
+    pullApi(api) {
+      if (!this.originPrdId) {
+        toastr.error('请先选择需拉取的PRD版本！')
+        return false
+      }
+      fetch('/api/apis/pullone', {
+        body: {
+          prdId: this.$route.query.prdId,
+          id: api.id,
+          originPrdId: this.originPrdId
+        }
+      }).then(res => {
+        toastr.success(res.data)
+        this.getList(this.$route.query.prdId)
+      })
+      return true
     }
   }
 }

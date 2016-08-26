@@ -46,6 +46,16 @@
     </div>
     <div>
       <button class="mini ui right floated button add-btn" @click="addCallback">新建API</button>
+      <div class="ui inline dropdown right floated button basic blue mini">
+        拉取PRD <div class="text"></div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <a class="item"
+            data-text="{{item.name}}"
+            @click="syncPRD(item.id)"
+            v-for="item in prdData | exceptBy currentPrd.name">{{item.name}}</a>
+        </div>
+      </div>
       <a href="/api/j2j" target="_blank" title="Java转Json" class="mini ui right floated user-help"><i class="coffee icon"></i></a>
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
@@ -70,21 +80,24 @@
 </template>
 
 <script>
-import { add, changeFilter, setPrdList, setCateActive } from './vuex/action'
-import { prdList, categories, cateActive } from './vuex/getters'
+import { add, changeFilter, setPrdList, setCateActive, setOriginPrdId } from './vuex/action'
+import { prdList, categories, cateActive, originPrdId } from './vuex/getters'
+require('./filter.js')
 export default {
   name: 'main-filter',
   vuex: {
     getters: {
       prdList,
       categories,
-      cateActive // 标识页面所选择的分
+      cateActive, // 标识页面所选择的分
+      originPrdId
     },
     actions: {
       add,
       changeFilter,
       setPrdList,
-      setCateActive
+      setCateActive,
+      setOriginPrdId
     }
   },
   data() {
@@ -96,7 +109,7 @@ export default {
       currentProject: pageConfig.me.project,
       currentPrd: pageConfig.me.prd,
       host: pageConfig.host,
-      apiRoot: ''
+      apiRoot: '',
     }
   },
   attached() {
@@ -120,44 +133,56 @@ export default {
     })
 
     // team dropdown list
-    fetch('/team/data').then(res => {
-      if (res.code === 200) {
-        this.teamData = res.data
-      }
-    })
+    this.fetchTeam()
 
     // project dropdown list
-    fetch('/project/data', {
-      body: { teamId: this.currentTeam.id }
-    }).then(res => {
-      if (res.code === 200) {
-        this.projectData = res.data
-      }
-    })
+    this.fetchProject()
 
     // prd dropdown list
-    fetch('/prd/data', {
-      body: { projectId: this.currentProject.id }
-    }).then(res => {
-      if (res.code === 200) {
-        this.prdData = res.data
-        this.setPrdList(res.data)
-      }
-    })
+    this.fetchPrd()
 
     // get apiRoot from an api record, by prdId
-    fetch('/api/getLatestApi', {
-      body: {
-        prdId: pageConfig.me.prd.id
-      }
-    }).then(res => {
-      this.apiRoot = res.data.root
-      this.changeFilter({ apiRoot: this.apiRoot })
-    }).catch(err => {
-      // console.log(err.response.message)
-    })
+    this.fetchLatestApi()
   },
   methods: {
+    fetchTeam() {
+      fetch('/team/data').then(res => {
+        if (res.code === 200) {
+          this.teamData = res.data
+        }
+      })
+    },
+    fetchProject() {
+      fetch('/project/data', {
+        body: { teamId: this.currentTeam.id }
+      }).then(res => {
+        if (res.code === 200) {
+          this.projectData = res.data
+        }
+      })
+    },
+    fetchPrd() {
+      fetch('/prd/data', {
+        body: { projectId: this.currentProject.id }
+      }).then(res => {
+        if (res.code === 200) {
+          this.prdData = res.data
+          this.setPrdList(res.data)
+        }
+      })
+    },
+    fetchLatestApi() {
+      fetch('/api/getLatestApi', {
+        body: {
+          prdId: pageConfig.me.prd.id
+        }
+      }).then(res => {
+        this.apiRoot = res.data.root
+        this.changeFilter({ apiRoot: this.apiRoot })
+      }).catch(err => {
+        // console.log(err.response.message)
+      })
+    },
     changeCategory(item) {
       this.setCateActive(item);
     },
@@ -180,6 +205,18 @@ export default {
     addCallback(e) {
       this.add()
       this.$parent.$emit('targetDetail', e)
+    },
+    syncPRD(prdId) {
+      this.setOriginPrdId(prdId)
+      fetch('/api/apis/pull', {
+        body: {
+          prdId: pageConfig.me.prd.id,
+          originPrdId: this.originPrdId
+        }
+      }).then(res => {
+        toastr.success(res.data)
+        this.$parent.$emit('reloadApiList', this.currentPrd.id)
+      });
     }
   }
 };

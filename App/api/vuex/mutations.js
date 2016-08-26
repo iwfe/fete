@@ -69,5 +69,8 @@ export default {
   },
   SET_CATEACTIVE(state, cate) {
     state.cate_active = cate
+  },
+  SET_ORIGIN_PRDID(state, id) {
+    state.originPrdId = id
   }
 }

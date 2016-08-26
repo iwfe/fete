@@ -60,23 +60,31 @@
         工程名：
         <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot" @blur="changeApiRoot">
       </div>
+      <div class="url-info" v-show="categories.length">
+        接口分类：
+        <button class="ui basic button mini" :class="cateActive == '全部' ? 'green' : 'secondary'" @click="changeCategory('全部')">全部</button>
+        <button class="ui basic button mini" v-for="item in categories" :class="cateActive == item ? 'green' : 'secondary'" @click="changeCategory(item)">{{item}}</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { add, changeFilter, setPrdList } from './vuex/action'
-import { prdList } from './vuex/getters'
+import { add, changeFilter, setPrdList, setCateActive } from './vuex/action'
+import { prdList, categories, cateActive } from './vuex/getters'
 export default {
   name: 'main-filter',
   vuex: {
     getters: {
-      prdList
+      prdList,
+      categories,
+      cateActive // 标识页面所选择的分
     },
     actions: {
       add,
       changeFilter,
-      setPrdList
+      setPrdList,
+      setCateActive
     }
   },
   data() {
@@ -150,6 +158,9 @@ export default {
     })
   },
   methods: {
+    changeCategory(item) {
+      this.setCateActive(item);
+    },
     changePrdApi(pid) {
       this.changeFilter({ prdId: pid })
       this.$parent.$emit('reloadApiList', pid)
@@ -219,5 +230,8 @@ export default {
     .icon:hover {
       color: rgba(45,183,245,0.4);
     }
+  }
+  .ui.button {
+    padding: .4rem .8rem;
   }
 </style>

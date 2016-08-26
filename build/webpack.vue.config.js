@@ -48,6 +48,7 @@ module.exports = {
       'semantic-ui/dist/components/label.min.css',
       'semantic-ui/dist/components/list.min.css',
       'semantic-ui/dist/components/breadcrumb.min.css',
+      'semantic-ui/dist/components/segment.min.css',
       './App/layout/layout.scss'
     ]
   },

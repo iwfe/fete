@@ -30,7 +30,7 @@ const _string = [{
   name: ':@word(1,10)',
   tips: '随机1-10个字符'
 }, {
-  name: ':@cword(1,6)',
+  name: ':@cword(1,4)',
   tips: '随机1-6个汉字'
 }, {
   name: ':@cname()',
@@ -135,7 +135,7 @@ export default {
     color: #fff;position:absolute;right:12px;top:0;
   }
   .document_main > div{
-    padding: 0 12px;line-height: 22px;height:22px;font-weight:400;
+    padding: 0 12px;line-height: 24px;height:24px;font-weight:400;
   }
   .document_main > div:hover{
     background: Violet;

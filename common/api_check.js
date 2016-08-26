@@ -2,7 +2,7 @@
  * @Author: wjs
  * @Date:   2016-06-28 23:08:57
 * @Last modified by:   lancui
-* @Last modified time: 2016-08-04 15:08:66
+* @Last modified time: 2016-08-25 16:08:11
  */
 
 var Mock = require('mockjs')
@@ -116,17 +116,18 @@ GetApiMockByPjId()  // get mock data by ajax
 // check input
 function ApiCheckInput(mockKey, input) {
   if (!feteApiForMock[mockKey]) {
-    ApiCheckLog.error('mock api not found: ', mockKey)
+    ApiCheckLog.error('fete上还没有该api，请去先添加: 接口 ', mockKey)
     return
   }
   if (!feteApiForMock[mockKey].inputModel) {
-    ApiCheckLog.error('mock api inputModel not found, 请去fete找到对应api保存一下: ', mockKey)
+    ApiCheckLog.error('fete上的接口输入参数格式未生成, 请去fete找到对应api保存一下: 接口 ', mockKey)
     return
   }
   feteApiForMock[mockKey].inputModel.forEach(function(item) {
-    if ((item.require && input[item.key] === undefined) ||
-      typeof input[item.key] !== item.dataType.toLowerCase()) {
-      ApiCheckLog.error('前端请求参数有误，期望参数格式: ', feteApiForMock[mockKey].inputModel)
+    if (item.require && input[item.key] === undefined) {
+      ApiCheckLog.error('前端请求参数有误: 接口 ', mockKey + ' 的 ' + item.key + ' 是必填参数，但是前端没有传')
+    } else if (typeof input[item.key] !== item.dataType.toLowerCase()) {
+      ApiCheckLog.error('前端请求参数有误: 接口 ', mockKey + ' 的 ' + item.key + ' 期望类型是 ' + item.dataType.toLowerCase() + ' , 实际传了 ' + (typeof input[item.key]))
     }
   })
 }
@@ -134,7 +135,8 @@ function ApiCheckInput(mockKey, input) {
 // check output
 function ApiCheckOutput(key, output) {
   if (!feteApiForMock[key]) {
-    return 'mock api not found: ' + key
+    return 'fete上还没有该api，请去先添加: 接口 ' + key
+
   }
   var mockTemplate = ApiCheckMockTree2MockTemplate(feteApiForMock[key].output)
   return Mock.valid(mockTemplate, output)
@@ -172,8 +174,11 @@ function ApiCheckForJqueryAjax() {
       var checkResult = ApiCheckOutput(mockKey, jqxhr.responseJSON)
       // ApiCheckLog.info('Mockjs check output result: ', checkResult)
       if (Array.isArray(checkResult) && checkResult.length > 0) {
-        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, jqxhr.responseJSON)
     })
   } else if ($.ajaxSettings) {
     // zepto
@@ -200,8 +205,11 @@ function ApiCheckForJqueryAjax() {
       var checkResult = ApiCheckOutput(mockKey, xhr.responseJSON)
       // ApiCheckLog.info('Mockjs check output result: ', checkResult)
       if (Array.isArray(checkResult) && checkResult.length > 0) {
-        alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, xhr.responseJSON)
     })
   }
 }
@@ -237,15 +245,70 @@ function ApiCheckVueResource() {
       var checkResult = ApiCheckOutput(mockKey, res.data)
       // ApiCheckLog.info('Mockjs check output result: ', checkResult)
       if (Array.isArray(checkResult) && checkResult.length > 0) {
-        ApiCheckLog.error('后端返回结果与fete定义的接口不符：', checkResult)
         // alert('后端返回结果与fete定义的接口不符\n' + JSON.stringify(checkResult))
+        ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
+      // 重置选项值
+      res.data = setSelectData(mockKey, res.data)
       return res
     }
 
   })
 
 }
+
+// 提示需要输入的选项
+function setSelectData(mockKey, data) {
+
+  if (feteApiUseMockData && feteApiForMock[mockKey]) {
+    let output = feteApiForMock[mockKey].output
+    let selects = querySelectKeys(output, {})
+
+    if (Object.keys(selects).length === 0) return data;
+
+    for (const key in selects) {
+      let select = selects[key], dataType = select.dataType
+      let comment = select.comment
+      let keyVal = window.prompt(`请输入${key}的值:${!comment ? '' : '\n' + comment}`, '')
+      if (dataType.toUpperCase() === 'NUMBER') {
+        keyVal = keyVal*1
+      }
+
+      if (key.indexOf('[]') != -1){
+        // 包含数组，只考虑一个数组的情况
+        let arr = key.split('[]')
+        if (arr.length <= 2) {
+          let arrDatas = eval(`data.${arr[0]}`)
+          for (let i in arrDatas) {
+            eval(`arrDatas[i]${arr[1]} = ${keyVal}`)
+          }
+        }
+      } else {
+        eval(`data.${key}=${keyVal}`)
+      }
+    }
+
+    return data;
+  }
+}
+
+// 递归查找isSelect＝true的属性
+function querySelectKeys(output, selects, preParent, parent) {
+  let parentName = !(parent && parent.key) ? '' : parent.key
+  parentName = !parentName ? '' : (parent.dataType.toUpperCase() === 'ARRAY' ? `${parentName}[].` : `${parentName}.`)
+  parentName = `${!preParent?'':preParent}${parentName}`
+  for (let i in output) {
+      let val = output[i]
+      if (val.isSelect) {
+        selects[`${parentName}${val.key}`] = val
+      }
+      if(!!val.children) {
+        querySelectKeys(val.children, selects, parentName, val)
+      }
+  }
+  return selects
+}
+
 
 function initFeteApiCheck() {
   try {

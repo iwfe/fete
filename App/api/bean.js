@@ -2,8 +2,8 @@
  * @Author: lancui
  * @Date:   2016-06-23 17:06:00
  * @Email:  lancui@superjia.com
-* @Last modified by:   geyuanjun
-* @Last modified time: 2016-07-15 18:29:52
+* @Last modified by:   lancui
+* @Last modified time: 2016-08-24 11:08:36
  */
 
 'use strict';
@@ -35,12 +35,14 @@ const api = {
       dataType: 'Integer', // 属性类型 （Integer,Float, String, Boolean, Array，Object）
       comment: '状态', // 说明
       mock: '', // mock规则
+      isSelect: false, // 是否支持页面选择
+      selectItems: [], // 如果isSelect＝true，则设置选项值，如：［1, 2, 3］
       children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
         {
           key: 'type',
           dataType: 'Integer',
           comment: '',
-          mock: ''
+          mock: '',
         }
       ]
     }
@@ -59,6 +61,6 @@ const api = {
   teamId: '', // 项目组Id
   updateTime: '', // 更新时间
   createTime: '', // 创建时间
-  categories: [], // 已有的分类
-  newCategory: '' // 新创建的分类
+  categories: [], // 所有已有的分类（从后台返回的数据，前端不做处理）
+  category: '' // 这个接口的分类
 }

@@ -30,6 +30,7 @@ app.use(views(`${__dirname}/view`, {
 app.use(logger());
 
 app.use(mount('/static', serve('dist')));
+app.use(mount('/assets/avatar', serve('assets/avatar')));
 app.use(bodyParser());
 
 app.proxy = true;
@@ -113,21 +114,21 @@ app.use(function*(next) {
 });
 
 import main from './App/main/router';
-import user from './App/user/router';
 import team from './App/team/router';
 import project from './App/project/router';
 import prd from './App/prd/router';
 import apiModule from './App/api/router';
 import msgModule from './App/message/router';
 import importdb from './App/importdb/router';
+import user from './App/user/router';
 app.use(main.routes());
-app.use(user.routes());
 app.use(team.routes());
 app.use(project.routes());
 app.use(prd.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 app.use(importdb.routes());
+app.use(user.routes());
 
 app.on('error', function(err) {
     console.log('sent error %s to the cloud', err.message);

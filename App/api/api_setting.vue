@@ -123,7 +123,7 @@ export default {
         outputJson: {},
         output: [],
         useOutputJson: false,
-        categories: ['Top', 'middle1', 'middle2', 'middle3', 'middle4', 'bottom'],
+        categories: [],
         category: ''
       },
       oldApiData: {}, // 为了浏览器后退时候做检查
@@ -254,14 +254,17 @@ export default {
         status = 2
         modifySubTitile = '修改版本：'
       }
-      modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      // 非必要修改条件则不增加修改条件
+      if (this.updateDesc) {
+        modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      }
 
       // 定义最基本的数据结构
       const apiData = this.apiData;
       const updateArr = this.list_active.lastModify.split(' ')
       const date = new Date()
 
-      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      time = `${date.toISOString().slice(5, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,

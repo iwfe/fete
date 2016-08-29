@@ -10,7 +10,7 @@
                 <th @click="changeOrder('url')">链接 <span v-show="orderKey === 'url'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('method')">方法 <span v-show="orderKey === 'method'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('lastModify')">最后修改 <span v-show="orderKey === 'lastModify'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
-                <th v-show="exceptMePrdData.length"></th>
+                <th v-show="exceptMePrdData.length && originPrd"></th>
                 <th style="width:100px">返回数据预览</th>
             </tr>
         </thead>
@@ -25,7 +25,7 @@
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>{{item.lastModify}}</td>
-                <td v-show="exceptMePrdData.length"><a class="mini ui blue basic button" @click.stop="pullApi(item)">拉取</a></td>
+                <td v-show="exceptMePrdData.length && originPrd"><a class="mini ui blue basic button" @click.stop="pullApi(item)">拉取</a></td>
                 <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
             </tr>
         </tbody>

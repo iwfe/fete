@@ -6,43 +6,18 @@
  */
 
 'use strict';
-const prd = {
-  _id: '',
-  id: '', //自己生成的prdid
-  name: '', //prd名称
-  description: '', //prd描述
-  pm: '', //产品经理
-  type: '', //prd类型
-  selfTest: false,//是否自测
-  jira: '',//jira地址
-  svn: '',//svn地址
-  comment: '',//备注
-  mrdTime: '',//mrd时间
-  prdTime: '',//prd时间
-  devTime: '', //开发时间
-  apiTime: '', //联调时间
-  testTime: '', //提测时间
-  betaTime: '', //beta环境时间
-  onlineTime: '', //上线时间
-  projectId: '',//项目id
-  teamId: '',   //团队id
-  createUser: '', //创建人
-  createTime: '', //创建时间
-  updateTime: '' //更新时间
-
-  /*
-  prjName: '',
-  prjDir: '', //目录名，英文名
-  members: [{
-    username: '',
-    startTime: '',
-    endTime: ''
-  }],
-  isTest: '', //是否提测
-  isBeta: '',
-  isOnline: '',
-  isMaster: ''
-}
-
-  */
+const user = {
+    _id:'',
+    username: '', // 登录名
+    password: '', // 密码
+    sex: '', // 性别
+    role: '', // 角色
+    phone: '', // 手机号
+    message: '', // 消息接收 默认yes
+    img: '', // 头像url
+    teams: [{
+        id: '',
+        role: 'owner|admin|member', //owner:创建者，admin:管理员，member:普通成员
+        status: 'normal|invite|apply'//normal:正常,invited:邀请加入,apply:申请加入
+    }]
 }

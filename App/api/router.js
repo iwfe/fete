@@ -66,7 +66,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       if (item.category && _.indexOf(categories, item.category) == -1) {
         categories.push(item.category)
       }
-      item.lastModify = `${util.formateDate(last.updateTime, '%F %T')} ${last.userName} ${last.updateDesc}`
+      item.lastModify = `${util.formateDate(last.updateTime, '%m-%d %R')} ${last.userName} ${last.updateDesc}`
       delete item.updateDescList
     })
     // 在返回的数据中创建categories这个数组

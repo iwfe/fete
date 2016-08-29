@@ -52,7 +52,7 @@
         <div class="menu">
           <a class="item"
             data-text="{{item.name}}"
-            @click="setOriginPrdId(item.id)"
+            @click="setOriginPrd(item)"
             v-for="item in exceptMePrdData">{{item.name}}</a>
         </div>
       </div>
@@ -108,8 +108,8 @@
 </template>
 
 <script>
-import { add, changeFilter, setPrdList, setCateActive, setOriginPrdId, setExceptPrd } from './vuex/action'
-import { prdList, categories, cateActive, originPrdId, exceptMePrdData } from './vuex/getters'
+import { add, changeFilter, setPrdList, setCateActive, setOriginPrd, setExceptPrd } from './vuex/action'
+import { prdList, categories, cateActive, originPrd, exceptMePrdData } from './vuex/getters'
 require('./filter.js')
 export default {
   name: 'main-filter',
@@ -118,7 +118,7 @@ export default {
       prdList,
       categories,
       cateActive, // 标识页面所选择的分
-      originPrdId,
+      originPrd,
       exceptMePrdData
     },
     actions: {
@@ -126,7 +126,7 @@ export default {
       changeFilter,
       setPrdList,
       setCateActive,
-      setOriginPrdId,
+      setOriginPrd,
       setExceptPrd
     }
   },
@@ -244,8 +244,11 @@ export default {
       this.$parent.$emit('targetDetail', e)
     },
     syncPRD() {
-      // $('.ui.basic.modal').modal('show');
-      if (confirm('确定要拉取吗')) {
+      if (!this.originPrd) {
+        toastr.error('请先选择需拉取的PRD版本！')
+        return false
+      }
+      if (confirm(`确定要拉取 ${this.originPrd.name} 的版本并将新增api同步到本版本吗？`)) {
         fetch('/api/apis/pull', {
           body: {
             prdId: pageConfig.me.prd.id,
@@ -256,6 +259,7 @@ export default {
           this.$parent.$emit('reloadApiList', this.currentPrd.id)
         });
       }
+      return true
     }
   }
 };

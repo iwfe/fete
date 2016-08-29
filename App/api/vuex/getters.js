@@ -16,5 +16,5 @@ export const apiRoot = state => state.apiRoot
 export const prdList = state => state.prdList
 export const categories = state => state.categories
 export const cateActive = state => state.cate_active
-export const originPrdId = state => state.originPrdId
+export const originPrd = state => state.originPrd
 export const exceptMePrdData = state => state.exceptMePrdData

@@ -70,8 +70,8 @@ export default {
   SET_CATEACTIVE(state, cate) {
     state.cate_active = cate
   },
-  SET_ORIGIN_PRDID(state, id) {
-    state.originPrdId = id
+  SET_ORIGIN_PRD(state, prd) {
+    state.originPrd = prd
   },
   SET_EXCEPT_PRD(state, prd, key, value) {
     const ret = []

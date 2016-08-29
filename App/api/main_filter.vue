@@ -38,7 +38,7 @@
             <a class="item"
               data-text="{{item.name}}"
               v-link="{name: 'list', query: {prdId: item.id}}"
-              @click="changePrdApi(item.id)"
+              @click="changePrdApi(item)"
               v-for="item in prdData">{{item.name}}</a>
           </div>
         </div>
@@ -53,7 +53,7 @@
           <a class="item"
             data-text="{{item.name}}"
             @click="syncPRD(item.id)"
-            v-for="item in prdData | exceptBy currentPrd.name">{{item.name}}</a>
+            v-for="item in filterPrdData">{{item.name}}</a>
         </div>
       </div>
       <a href="/api/j2j" target="_blank" title="Java转Json" class="mini ui right floated user-help"><i class="coffee icon"></i></a>
@@ -105,6 +105,7 @@ export default {
       teamData: [],
       projectData: [],
       prdData: [],
+      filterPrdData: [],
       currentTeam: pageConfig.me.team,
       currentProject: pageConfig.me.project,
       currentPrd: pageConfig.me.prd,
@@ -167,6 +168,8 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.prdData = res.data
+          console.log(this.currentPrd.name)
+          this.filterPrdData = this.$options.filters.exceptBy(this.prdData, this.currentPrd.name)
           this.setPrdList(res.data)
         }
       })
@@ -186,8 +189,11 @@ export default {
     changeCategory(item) {
       this.setCateActive(item);
     },
-    changePrdApi(pid) {
+    changePrdApi(item) {
+      const pid = item.id
+      const name = item.name
       this.changeFilter({ prdId: pid })
+      this.filterPrdData = this.$options.filters.exceptBy(this.prdData, name)
       this.$parent.$emit('reloadApiList', pid)
     },
     changeApiRoot() {

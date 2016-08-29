@@ -59,14 +59,14 @@
       <div class="ui mini right floated button basic blue" @click="syncPRD" v-show="exceptMePrdData.length">拉取PRD</div>
       <a href="/api/j2j" target="_blank" title="Java转Json" class="mini ui right floated user-help"><i class="coffee icon"></i></a>
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
-      <div class="url-info">
+      <!-- <div class="url-info">
         当前项目URL：
         <span class="copy-btn" data-clipboard-target="#copyable_project_url" id="copyable_project_url">{{host}}/api/fete_api/{{currentProject.id}}/mock/</span>
       </div>
       <div class="url-info">
         当前PRD URL：
         <span class="copy-btn" data-clipboard-target="#copyable_prd_url" id="copyable_prd_url">{{host}}/api/fete_api/{{currentProject.id}}/{{currentPrd.id}}/mock/</span>
-      </div>
+      </div> -->
       <div class="url-info">
         工程名：
         <input type="text" v-model="apiRoot" @keyup.enter="changeApiRoot" @blur="changeApiRoot">

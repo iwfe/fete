@@ -254,14 +254,17 @@ export default {
         status = 2
         modifySubTitile = '修改版本：'
       }
-      modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      // 非必要修改条件则不增加修改条件
+      if (this.updateDesc) {
+        modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      }
 
       // 定义最基本的数据结构
       const apiData = this.apiData;
       const updateArr = this.list_active.lastModify.split(' ')
       const date = new Date()
 
-      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      time = `${date.toISOString().slice(5, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,

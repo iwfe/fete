@@ -23,7 +23,7 @@ const App = React.createClass ({
       newPassword: '', // 新密码
       repeatPassword: '',
       iconLoading: false, // icon
-      priviewImage: '/assets/avatar/' + pageConfig.me.img
+      priviewImage: '/assets/avatar/' + (pageConfig.me.img || 'default.png')
     }
   },
   componentWillMount() {
@@ -119,11 +119,6 @@ const App = React.createClass ({
             Message.success('信息修改成功')
           }, 2000)
         }
-      }).catch(() => {
-        setTimeout(() => {
-          this.setState({ iconLoading: false })
-          Message.error('信息修改失败')
-        }, 1000)
       })
     }
   },

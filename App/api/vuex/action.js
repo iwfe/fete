@@ -16,7 +16,7 @@ export const handler = e => {
   e.returnValue = '你确定要离开'
 }
 export const setList = makeAction('SET_LIST')
-export const setOriginPrdId = makeAction('SET_ORIGIN_PRDID')
+export const setOriginPrd = makeAction('SET_ORIGIN_PRD')
 export const setExceptPrd = makeAction('SET_EXCEPT_PRD')
 export const addEvent = () => {
   window.addEventListener('beforeunload', handler)

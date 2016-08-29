@@ -20,7 +20,7 @@ const state = {
   prdList: [],
   categories: [],
   cate_active: '全部',
-  originPrdId: '',
+  originPrd: '',
   exceptMePrdData: []
 }
 

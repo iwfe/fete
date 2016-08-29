@@ -35,7 +35,7 @@
 <script>
 import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot, cateActive, originPrdId, exceptMePrdData } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive, originPrd, exceptMePrdData } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -46,7 +46,7 @@ export default {
       list_active: listActive,
       apiRoot,
       cateActive,
-      originPrdId,
+      originPrd,
       exceptMePrdData
     },
     actions: {
@@ -107,11 +107,12 @@ export default {
       }
     },
     pullApi(api) {
-      if (!this.originPrdId) {
+      if (!this.originPrd) {
         toastr.error('请先选择需拉取的PRD版本！')
         return false
       }
-      if (confirm('确定要拉取同步吗？')) {
+      console.log(api)
+      if (confirm(`确定要拉取 ${this.originPrd.name} 版本的接口\n\n"${api.title}"\n\n\的数据并同步覆盖到本版本吗？`)) {
         fetch('/api/apis/pullone', {
           body: {
             prdId: this.$route.query.prdId,

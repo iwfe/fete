@@ -6,7 +6,7 @@
         <thead>
             <tr class="line">
                 <th @click="changeOrder('title')">描述 <span v-show="orderKey === 'title'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
-                <th v-show="categories.length">接口分类</th>
+                <th v-show="categories.length" @click="changeOrder('category')">接口分类 <span v-show="orderKey === 'category'">{{orderType === 1 ? '▲' : '▼'}}</th>
                 <th @click="changeOrder('url')">链接 <span v-show="orderKey === 'url'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('method')">方法 <span v-show="orderKey === 'method'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('lastModify')">最后修改 <span v-show="orderKey === 'lastModify'">{{orderType === 1 ? '▲' : '▼'}}</span></th>

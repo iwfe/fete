@@ -6,7 +6,7 @@
         <thead>
             <tr class="line">
                 <th @click="changeOrder('title')">描述 <span v-show="orderKey === 'title'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
-                <th>接口分类</th>
+                <th v-show="categories.length" @click="changeOrder('category')">接口分类 <span v-show="orderKey === 'category'">{{orderType === 1 ? '▲' : '▼'}}</th>
                 <th @click="changeOrder('url')">链接 <span v-show="orderKey === 'url'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('method')">方法 <span v-show="orderKey === 'method'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
                 <th @click="changeOrder('lastModify')">最后修改 <span v-show="orderKey === 'lastModify'">{{orderType === 1 ? '▲' : '▼'}}</span></th>
@@ -21,7 +21,7 @@
                 :class="{'active': list_active === item, 'line': item.createTime !== item.updateTime}"
                 v-show="cateActive == item.category || cateActive == '全部'">
                 <td>{{item.title}}</td>
-                <td>{{item.category}}</td>
+                <td v-show="categories.length">{{item.category}}</td>
                 <td>{{item.url}}</td>
                 <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>{{item.lastModify}}</td>
@@ -37,7 +37,7 @@
 <script>
 import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot, cateActive, originPrd, exceptMePrdData } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive, originPrd, exceptMePrdData, categories } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -49,7 +49,8 @@ export default {
       apiRoot,
       cateActive,
       originPrd,
-      exceptMePrdData
+      exceptMePrdData,
+      categories
     },
     actions: {
       tog, add, emptyList, setList, setCategories

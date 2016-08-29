@@ -72,5 +72,15 @@ export default {
   },
   SET_ORIGIN_PRDID(state, id) {
     state.originPrdId = id
+  },
+  SET_EXCEPT_PRD(state, prd, key, value) {
+    const ret = []
+    for (let i = 0, len = prd.length; i < len; i++) {
+      const item = prd[i]
+      if (item[key] !== value) {
+        ret.push(item)
+      }
+    }
+    state.exceptMePrdData = ret
   }
 }

@@ -17,6 +17,7 @@ export const handler = e => {
 }
 export const setList = makeAction('SET_LIST')
 export const setOriginPrdId = makeAction('SET_ORIGIN_PRDID')
+export const setExceptPrd = makeAction('SET_EXCEPT_PRD')
 export const addEvent = () => {
   window.addEventListener('beforeunload', handler)
 }

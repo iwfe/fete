@@ -46,16 +46,17 @@
     </div>
     <div>
       <button class="mini ui right floated button add-btn" @click="addCallback">新建API</button>
-      <div class="ui inline dropdown right floated button basic blue mini">
-        拉取PRD <div class="text"></div>
+      <div class="ui inline dropdown right floated button basic blue mini" v-show="exceptMePrdData.length">
+        <div class="text">选择拉取版本</div>
         <i class="dropdown icon"></i>
         <div class="menu">
           <a class="item"
             data-text="{{item.name}}"
-            @click="syncPRD(item.id)"
-            v-for="item in filterPrdData">{{item.name}}</a>
+            @click="setOriginPrdId(item.id)"
+            v-for="item in exceptMePrdData">{{item.name}}</a>
         </div>
       </div>
+      <div class="ui mini right floated button basic blue" @click="syncPRD" v-show="exceptMePrdData.length">拉取PRD</div>
       <a href="/api/j2j" target="_blank" title="Java转Json" class="mini ui right floated user-help"><i class="coffee icon"></i></a>
       <a href="/static/document/API管理平台操作手册.pdf" target="_blank" title="API管理平台操作手册" class="mini ui right floated user-help"><i class="help circle icon"></i></a>
       <div class="url-info">
@@ -77,11 +78,38 @@
       </div>
     </div>
   </div>
+
+  <div class="ui basic modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Archive Old Messages
+    </div>
+    <div class="image content">
+      <div class="image">
+        <i class="archive icon"></i>
+      </div>
+      <div class="description">
+        <p>Your inbox is getting full, would you like us to enable automatic archiving of old messages?</p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="two fluid ui inverted buttons">
+        <div class="ui cancel red basic inverted button">
+          <i class="remove icon"></i>
+          No
+        </div>
+        <div class="ui ok green basic inverted button">
+          <i class="checkmark icon"></i>
+          Yes
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { add, changeFilter, setPrdList, setCateActive, setOriginPrdId } from './vuex/action'
-import { prdList, categories, cateActive, originPrdId } from './vuex/getters'
+import { add, changeFilter, setPrdList, setCateActive, setOriginPrdId, setExceptPrd } from './vuex/action'
+import { prdList, categories, cateActive, originPrdId, exceptMePrdData } from './vuex/getters'
 require('./filter.js')
 export default {
   name: 'main-filter',
@@ -90,14 +118,16 @@ export default {
       prdList,
       categories,
       cateActive, // 标识页面所选择的分
-      originPrdId
+      originPrdId,
+      exceptMePrdData
     },
     actions: {
       add,
       changeFilter,
       setPrdList,
       setCateActive,
-      setOriginPrdId
+      setOriginPrdId,
+      setExceptPrd
     }
   },
   data() {
@@ -168,8 +198,8 @@ export default {
       }).then(res => {
         if (res.code === 200) {
           this.prdData = res.data
-          console.log(this.currentPrd.name)
-          this.filterPrdData = this.$options.filters.exceptBy(this.prdData, this.currentPrd.name)
+          this.setExceptPrd(this.prdData, 'name', this.currentPrd.name)
+          // this.filterPrdData = this.$options.filters.exceptBy(this.prdData, this.currentPrd.name)
           this.setPrdList(res.data)
         }
       })
@@ -193,7 +223,8 @@ export default {
       const pid = item.id
       const name = item.name
       this.changeFilter({ prdId: pid })
-      this.filterPrdData = this.$options.filters.exceptBy(this.prdData, name)
+      this.setExceptPrd(this.prdData, 'name', name)
+      // this.filterPrdData = this.$options.filters.exceptBy(this.prdData, name)
       this.$parent.$emit('reloadApiList', pid)
     },
     changeApiRoot() {
@@ -212,17 +243,19 @@ export default {
       this.add()
       this.$parent.$emit('targetDetail', e)
     },
-    syncPRD(prdId) {
-      this.setOriginPrdId(prdId)
-      fetch('/api/apis/pull', {
-        body: {
-          prdId: pageConfig.me.prd.id,
-          originPrdId: this.originPrdId
-        }
-      }).then(res => {
-        toastr.success(res.data)
-        this.$parent.$emit('reloadApiList', this.currentPrd.id)
-      });
+    syncPRD() {
+      // $('.ui.basic.modal').modal('show');
+      if (confirm('确定要拉取吗')) {
+        fetch('/api/apis/pull', {
+          body: {
+            prdId: pageConfig.me.prd.id,
+            originPrdId: this.originPrdId
+          }
+        }).then(res => {
+          toastr.success(res.data)
+          this.$parent.$emit('reloadApiList', this.currentPrd.id)
+        });
+      }
     }
   }
 };

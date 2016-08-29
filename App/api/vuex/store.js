@@ -20,7 +20,8 @@ const state = {
   prdList: [],
   categories: [],
   cate_active: '全部',
-  originPrdId: ''
+  originPrdId: '',
+  exceptMePrdData: []
 }
 
 export default new Vuex.Store({

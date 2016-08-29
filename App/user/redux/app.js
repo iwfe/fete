@@ -1,3 +1,13 @@
+/**
+* @Author: lancui
+* @Date:   2016-08-29 15:08:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-08-29 19:08:57
+*/
+
+
+
 /*判断数据变动的值*/
 import './app.less'
 import React, {Component, PropTypes} from 'react'
@@ -42,10 +52,6 @@ const App = React.createClass ({
         !res.data.sex ? this.setState({'sex': "female"}) : this.setState({'sex': res.data.sex})
       }
     })
-  },
-  setName(e) {
-    const name = e.target.value.replace(/^\s+|\s+$/g, '')
-    this.setState({name: name})
   },
   setSex(e) {
     this.setState({sex: e.target.dataset.sex})
@@ -98,7 +104,7 @@ const App = React.createClass ({
     e.target.style.height = e.target.scrollHeight + 'px'
   },
   saveInfo(e) {
-    if (this.state.sex && this.state.name && this.state.phone && this.state.role && this.state.message) {
+    if (this.state.name) {
       if (this.state.iconLoading === true) return
       this.setState({ iconLoading: true })
       const data = {
@@ -108,6 +114,7 @@ const App = React.createClass ({
         role: this.state.role,
         message: this.state.message
       }
+      alert(JSON.stringify(data))
       if (this.state.remarks) data.remarks = this.state.remarks.empy()
       fetch('/user/upload', {
         method: 'POST',
@@ -120,6 +127,8 @@ const App = React.createClass ({
           }, 2000)
         }
       })
+    } else {
+      Message.error('用户名为必填项')
     }
   },
   savePassword() {
@@ -238,7 +247,7 @@ const App = React.createClass ({
                 <label data-sex="female" onClick={this.setSex}>女</label>
               </li>
               <li>{role}</li>
-              <li><Input style={{ height: 30 }} placeholder="姓名" value={this.state.name} onChange={this.setName} />
+              <li><Input style={{ height: 30 }} placeholder="姓名" value={this.state.name} disabled="true"/>
               </li>
               <li>
                 <Input style={{ height: 30 }} placeholder="手机号" value={this.state.phone} onChange={this.setPhone} />

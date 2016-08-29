@@ -1,4 +1,14 @@
 /**
+* @Author: lancui
+* @Date:   2016-08-29 10:08:00
+* @Email:  lancui@superjia.com
+* @Last modified by:   lancui
+* @Last modified time: 2016-08-29 19:08:86
+*/
+
+
+
+/**
  * Created by zyy on 15/7/7.
  * zhangyuyu@superjia.com
  */
@@ -37,17 +47,16 @@ router.get('/data', sutil.login, function*(next) {
 })
 router.post('/upload', sutil.login, function*(next) {
   const {sex, name, phone, role, message, remarks} = this.parse
-  if (!sex || !name || !phone || !role) {
+  if (!name) {
     sutil.failed(this, 1003)
   } else {
     const data = {
       sex: sex,
       role: role,
       phone: phone,
-      username: name,
-      message: message
+      message: message,
+      remarks: remarks
     }
-    if (remarks) data.remarks = remarks
     let updateResult = yield userDao.update({ username: name }, {
       $set: data
     })

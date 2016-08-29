@@ -123,7 +123,7 @@ export default {
         outputJson: {},
         output: [],
         useOutputJson: false,
-        categories: ['Top', 'middle1', 'middle2', 'middle3', 'middle4', 'bottom'],
+        categories: [],
         category: ''
       },
       oldApiData: {}, // 为了浏览器后退时候做检查

@@ -3,16 +3,16 @@
   <h3 class="ui header"><i class="icon settings"></i><div class="content">{{apiName?apiName:'新建API'}}</div></h3>
   <div class="container body">
       <div class="ui grid form">
-        <div class="four wide column field small">
+        <div class="four wide column field">
             <label><i class="red">*</i>标题</label>
             <input type="text" placeholder="一句话描述" v-model="apiData.title">
         </div>
-        <div class="seven wide column field">
+        <div class="six wide column field">
             <label><i class="red">*</i>URL</label>
             <input type="text" placeholder="接口URL地址" v-model="apiData.url">
         </div>
         <div class="two wide column field">
-            <label>method</label>
+            <label><i class="red">*</i>method</label>
             <select class="ui dropdown" v-model="apiData.method">
                 <option value="GET">get</option>
                 <option value="POST">post</option>
@@ -20,12 +20,13 @@
                 <option value="DELETE">delete</option>
             </select>
         </div>
-        <div class="three wide column field">
+        <div class="two wide column field">
             <label><i class="red">*</i>返回output数据</label>
             <div class="ui toggle checkbox" style="margin: 4px;">
               <input type="checkbox" v-model="useOutputJson">
             </div>
         </div>
+        <category :category.sync="apiData.category" :categories="categories"></category>
       </div>
 
       <div class="ui form">
@@ -71,12 +72,12 @@
 
 <script text="text/babel">
 import Help from './help.vue'
+import category from './category.vue'
 import util from '../../common/util.js'
-import { add, del, tog, removeEvent } from './vuex/action'
-import editorFrame from './editor_frame.vue'
-import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList } from './vuex/getters.js'
+import { add, del, tog, removeEvent, addCategory } from './vuex/action'
+import editorFrame from './editor/editor_frame.vue'
+import { list, listActive, userId, prdId, projectId, teamId, listIndex, apiRoot, prdList, categories } from './vuex/getters.js'
 
-require('./directive.js')
 export default {
   vuex: {
     getters: {
@@ -88,17 +89,20 @@ export default {
       teamId,
       listIndex,
       apiRoot,
-      prdList
+      prdList,
+      categories
     },
     actions: {
       add,
       del,
-      tog
+      tog,
+      addCategory
     }
   },
   components: {
     editorFrame,
-    Help
+    Help,
+    category
   },
   data() {
     return {
@@ -118,7 +122,8 @@ export default {
         url: '/',
         outputJson: {},
         output: [],
-        useOutputJson: false
+        useOutputJson: false,
+        category: ''
       },
       oldApiData: {}, // 为了浏览器后退时候做检查
       codemirrorReady: false,
@@ -248,14 +253,17 @@ export default {
         status = 2
         modifySubTitile = '修改版本：'
       }
-      modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      // 非必要修改条件则不增加修改条件
+      if (this.updateDesc) {
+        modifyDesc = `${this.updateDesc} ${modifySubTitile}${prdVer.name}`
+      }
 
       // 定义最基本的数据结构
       const apiData = this.apiData;
       const updateArr = this.list_active.lastModify.split(' ')
       const date = new Date()
 
-      time = `${date.toISOString().slice(0, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+      time = `${date.toISOString().slice(5, 10)} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       _.extend(apiData, {
         status: status,
         prdId: this.prdId,
@@ -278,6 +286,9 @@ export default {
           if (this.list_active) {
             _.extend(this.list_active, res.data)
           }
+          if (apiData.category) {
+            this.addCategory(apiData.category);
+          }
           toastr.success('新增API成功！')
           window.setTimeout(this.closeSlide, 300)
           this.sendLoad = false;
@@ -295,6 +306,9 @@ export default {
           // 弹出层提示出现之后再关闭组件
           window.setTimeout(this.closeSlide, 300)
           _.extend(this.list_active, apiData)
+          if (apiData.category) {
+            this.addCategory(apiData.category);
+          }
           this.sendLoad = false;
         })
       }
@@ -316,7 +330,8 @@ export default {
         method: 'GET',
         input: {},
         url: '/',
-        output: []
+        output: [],
+        category: ''
       }
     },
     getdata() {
@@ -327,6 +342,10 @@ export default {
         }
       }).then(res => {
         this.apiData = _.extend(this.apiData, res.data)
+        // 兼容老版本API没有category属性
+        if (!res.data.category) {
+          this.apiData.category = ''
+        }
         this.oldApiData = JSON.parse(JSON.stringify(this.apiData))
         this.useOutputJson = this.apiData.useOutputJson
         this.apiName = res.data.title
@@ -346,7 +365,8 @@ export default {
           method: res.data.method,
           input: res.data.input,
           outputJson: res.data.outputJson,
-          useOutputJson: !!res.data.useOutputJson
+          useOutputJson: !!res.data.useOutputJson,
+          category: res.data.category
         }
       })
     },

@@ -57,15 +57,22 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       sutil.failed(this, 1003)
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1, category: 1 },
       sort: { updateTime: -1 }
     })
+    let [categories, obj] = [[], {}]
     _.each(data, item => {
       let last = item.updateDescList[0] // last one is at 0, not .length-1
-      item.lastModify = `${util.formateDate(last.updateTime, '%F %T')} ${last.userName} ${last.updateDesc}`
+      if (item.category && _.indexOf(categories, item.category) == -1) {
+        categories.push(item.category)
+      }
+      item.lastModify = `${util.formateDate(last.updateTime, '%m-%d %R')} ${last.userName} ${last.updateDesc}`
       delete item.updateDescList
     })
-    sutil.success(this, data)
+    // 在返回的数据中创建categories这个数组
+    obj.data = data
+    obj.categories = categories
+    sutil.success(this, obj)
   })
   // 新建一个 api
   .post('/apis', sutil.prdLogin, function*(next) {
@@ -95,6 +102,55 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       sutil.failed(this, 150001);
     }
   })
+  //拉取api列表
+  .get('/apis/pull', sutil.prdLogin, function*(next) {
+    if (!this.parse.prdId || !this.parse.originPrdId) {
+      sutil.failed(this, 1003)
+    }
+    const prdId = this.parse.prdId
+    let diff = []
+    let insertResult
+
+    const query = {
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1, category: 1 },
+    }
+
+    const currentData = yield apiDao.find({ prdId: prdId }, query)
+    const originData = yield apiDao.find({ prdId: this.parse.originPrdId }, query)
+    _.each(originData, originApi => {
+      for (let i = 0, len = currentData.length; i < len; i++) {
+        const currentApi = currentData[i]
+        if ( currentApi.url == originApi.url ) {
+          break
+        }
+        if (i == len-1) {
+          diff.push(originApi)
+        }
+      }
+    })
+    //如果diff为空，则表示已经是同步后的版本了
+    if (diff.length) {
+      for (let i = 0, len = diff.length; i < len; i++) {
+        const item = diff[i]
+        const apiData = yield apiDao.findOne({id: item.id})
+        delete(apiData._id)
+        const result = yield apiDao.insert(_.extend(apiData, {
+          id: yield sutil.genId(apiDao, 8),
+          prdId: prdId
+        }))
+        insertResult = result
+      }
+    } else {
+      sutil.success(this, 'PRD 已同步！')
+      return true
+    }
+
+    if (insertResult) {
+      sutil.success(this, '拉取同步 PRD 成功！')
+    } else {
+      sutil.failed(this, 150004)
+    }
+  })
   // 获取某个api详细信息
   .get('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
     if (!this.parse.id) {
@@ -117,7 +173,6 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       apiData.updateDescList.unshift({ updateTime: _now, userName: _user.username, updateDesc: apiData.updateDesc })
     }
     delete apiData.updateDesc; // 不保存到数据库
-
     let updateResult = yield apiDao.update({ id: param.id }, {
       $set: _.extend(apiData, {
         updateTime: _now,
@@ -125,6 +180,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
         operatorName: _user.username
       })
     });
+
     if (updateResult) {
       sutil.success(this, updateResult);
       // 添加消息，并提醒客户端
@@ -152,6 +208,40 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       sutil.success(this, updateResult);
     } else {
       sutil.failed(this, 150001);
+    }
+  })
+  //拉取同步某个api
+  .get('/apis/pullone', sutil.prdLogin, function*(next) {
+    if (!this.parse.id && !this.parse.originPrdId) {
+      sutil.failed(this, 1003);
+    }
+    const currentApi = yield apiDao.findOne({ id:this.parse.id })
+    const originData = yield apiDao.find({ prdId:this.parse.originPrdId })
+    const url = currentApi.url;
+    let originApi
+
+    for (let i = 0, len = originData.length; i < len; i++) {
+      const api = originData[i]
+      if (api.url == url) {
+        originApi = api
+        break
+      }
+    }
+
+    const updateResult = yield apiDao.update({ id:this.parse.id }, {
+      $set: {
+        title: originApi.title,
+        method: originApi.method,
+        output: originApi.output,
+        outputJson: originApi.outputJson,
+        inputModel: originApi.inputModel,
+        input: originApi.input
+      }
+    })
+    if (updateResult) {
+      sutil.success(this, '拉取同步 API 成功！');
+    } else {
+      sutil.failed(this, 150005);
     }
   })
   // 删除某个 api

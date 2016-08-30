@@ -17,31 +17,14 @@ const state = {
   teamId: '',
   projectId: '',
   apiRoot: '',
-  prdList: []
+  prdList: [],
+  categories: [],
+  cate_active: '全部',
+  originPrd: '',
+  exceptMePrdData: []
 }
-const outputModel = [
-  {
-    key: '', // 属性名
-    dataType: '', // 属性类型
-    comment: '', // 说明
-    mock: '', // mock规则
-    children: [ // 子元素 （可选，只有dataType是Array，Object才会有）
-      {
-        key: '',
-        dataType: '',
-        comment: '',
-        mock: ''
-      }
-    ]
-  }
-]
-// const editOutputModel = {
-//   SET() {
-//
-//   }
-// }
+
 export default new Vuex.Store({
   state,
-  mutations,
-  outputModel
+  mutations
 })

@@ -123,7 +123,6 @@ export default {
         outputJson: {},
         output: [],
         useOutputJson: false,
-        categories: [],
         category: ''
       },
       oldApiData: {}, // 为了浏览器后退时候做检查

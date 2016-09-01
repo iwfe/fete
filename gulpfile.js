@@ -3,16 +3,10 @@
  * @Date:   2016-06-24 17:09:44
  * @Email:  geyuanjun.sh@superjia.com
 * @Last modified by:   lancui
-* @Last modified time: 2016-07-13 15:07:19
+* @Last modified time: 2016-09-01 11:09:09
  */
 
 
-
-
-/**
- * Created by zyy on 15/4/29.
- * zhangyuyu@superjia.com
- //  */
 
 var gulp = require('gulp'),
   argv = require('yargs').argv,
@@ -240,7 +234,7 @@ gulp.task('vue', function(callback) {
 gulp.task('server', function() {
   require('gulp-nodemon')({
     script: './server.js',
-    ignore: ['dist/*', '*.vue']
+    ignore: ['dist/*', '**/*.vue']
   }).on('restart', function() {
     console.log('server restarted!')
   });

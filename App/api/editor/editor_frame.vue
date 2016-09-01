@@ -12,7 +12,7 @@
                 <li class='td-mock'>是否必须</li>
               </ul>
             </div>
-            <table-item :model='model' :is-child=false :loop=1 v-for='model in inputModel' track-by="$index" type="input" hehe="meme"></table-item>
+            <table-item :model='model' :is-child=false :loop=1 v-for='model in inputModel' track-by="$index" type="input"></table-item>
           </div>
       </div>
       <div class="field output-field clearfix-sp">
@@ -42,7 +42,7 @@
               <li class="td-select">状态选择</li>
             </ul>
           </div>
-          <table-item :model='output' :is-child=false :loop=1 v-for="output in outputModel" type="output" hehe="hehe"></table-item>
+          <table-item :model='output' :is-child=false :loop=1 v-for="output in outputModel" type="output"></table-item>
         </div>
     </div>
 </template>

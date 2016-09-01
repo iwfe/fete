@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/server",
-    "dev-vue": "webpack-dev-server --port=3811 --config=build/webpack.vue.dev.config.js --inline --hot"
+    "dev-vue": "webpack-dev-server --port=3811 --config=build/webpack.vue.dev.config.js --inline --hot",
+    "build": "gulp --product && gulp --zip"
   },
   "dependencies": {
     "antd": "*",

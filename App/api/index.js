@@ -20,6 +20,10 @@ router.map({
       '/api/j2j': {
         name: 'java2json',
         component: require('./java2json.vue')
+      },
+      '/api/detail_preview': {
+        name: 'detail_preview',
+        component: require('./detail_preview.vue')
       }
     }
   }

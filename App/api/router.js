@@ -49,6 +49,30 @@ router.get('/', sutil.prdLogin, function*(next) {
     noHeader: true
   });
 });
+router.get('/detail_preview', function*(next) {
+  if (!this.parse.method || !this.parse.url) {
+    sutil.failed(this, 1003)
+    return false
+  }
+  const realUrl = this.parse.url.indexOf('/weixinEnt') > -1 ? this.parse.url.substring(10) : this.parse.url
+  const apiItem = yield apiDao.findOne({
+    method: this.parse.method.toUpperCase(),
+    url: realUrl
+  }, {
+    fields: { _id: 0, id: 1, url: 1, method: 1, root: 1, input: 1, inputModel: 1, outputJson: 1, output: 1 },
+    sort: { updateTime: -1 }
+  })
+  if (apiItem) {
+    apiItem.inputModel = apiItem.inputModel || []
+  }
+  yield sutil.render(this, {
+    commonTag: 'vue',
+    html: '',
+    staticTag: 'api',
+    noHeader: true,
+    data: apiItem
+  })
+})
 
 // CURD for api
 // api 列表

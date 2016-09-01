@@ -412,8 +412,8 @@ var sutil = {
 
   * allowCORS (next) {
     this.set('Access-Control-Allow-Origin', '*')
-    this.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    this.set('Access-Control-Allow-Headers', 'X-Requested-With,ajax_log_id')
+    this.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    this.set('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,ajax_log_id')
     yield next
   },
   // 初始化 socket.io

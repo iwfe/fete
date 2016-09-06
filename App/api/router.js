@@ -89,7 +89,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
       let last = item.updateDescList[0] // last one is at 0, not .length-1
       if (item.category && _.indexOf(categories, item.category) == -1) {
         categories.push(item.category)
-      } else {
+      } else if (!item.category) {
         item.category = ''
       }
       item.lastModify = `${util.formateDate(last.updateTime, '%m-%d %R')} ${last.userName} ${last.updateDesc}`

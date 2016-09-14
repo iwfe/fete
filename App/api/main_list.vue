@@ -114,13 +114,12 @@ export default {
         toastr.error('请先选择需拉取的PRD版本！')
         return false
       }
-      console.log(api)
       if (confirm(`确定要拉取 ${this.originPrd.name} 版本的接口\n\n"${api.title}"\n\n\的数据并同步覆盖到本版本吗？`)) {
         fetch('/api/apis/pullone', {
           body: {
             prdId: this.$route.query.prdId,
             id: api.id,
-            originPrdId: this.originPrdId
+            originPrdId: this.originPrd.id
           }
         }).then(res => {
           toastr.success(res.data)

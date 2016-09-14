@@ -245,7 +245,6 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     const originData = yield apiDao.find({ prdId:this.parse.originPrdId })
     const url = currentApi.url;
     let originApi
-
     for (let i = 0, len = originData.length; i < len; i++) {
       const api = originData[i]
       if (api.url == url) {
@@ -253,7 +252,6 @@ router.get('/apis', sutil.prdLogin, function*(next) {
         break
       }
     }
-
     const updateResult = yield apiDao.update({ id:this.parse.id }, {
       $set: {
         title: originApi.title,

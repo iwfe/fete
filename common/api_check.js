@@ -178,7 +178,7 @@ function ApiCheckForJqueryAjax() {
         ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
       // 重置选项值
-      res.data = setSelectData(mockKey, jqxhr.responseJSON)
+      jqxhr.responseJSON = setSelectData(mockKey, jqxhr.responseJSON)
     })
   } else if ($.ajaxSettings) {
     // zepto
@@ -209,7 +209,7 @@ function ApiCheckForJqueryAjax() {
         ApiCheckLog.error('后端返回结果与fete定义的接口不符，接口：' + mockKey, checkResult)
       }
       // 重置选项值
-      res.data = setSelectData(mockKey, xhr.responseJSON)
+      xhr.responseJSON = setSelectData(mockKey, xhr.responseJSON)
     })
   }
 }

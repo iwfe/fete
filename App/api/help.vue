@@ -80,6 +80,7 @@ const _array = [{
   name: '|1-4:["m"]',
   tips: '随机1-4次m'
 }]
+
 export default {
   data() {
     return {

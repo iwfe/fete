@@ -9,6 +9,7 @@ var Mock = require('mockjs')
 
 // 企业号组自用，express server 的 index 里面有 pageConfig.pjid
 feteApiProjectId = pageConfig && pageConfig.pjid ? pageConfig.pjid : feteApiProjectId
+feteApiCommonProjectId = pageConfig && pageConfig.commonPjid ? pageConfig.commonPjid : ''
 
 function ApiCheckMockTree2MockTemplate(data, result) {
   if (!result) {
@@ -230,7 +231,11 @@ function ApiCheckVueResource() {
       const mockKey = req.method.toUpperCase() + req.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
       ApiCheckInput(mockKey, req.data)
       if (feteApiUseMockData) {
-        req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
+        if (req.url.startsWith('/weixinEnt/common/')) {
+          req.url = feteApiHost + '/api/fete_api/' + feteApiCommonProjectId + '/mock' + req.url;
+        } else {
+          req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;
+        }
         // ApiCheckLog.info('Redirect to: ', req.url)
       }
       return req

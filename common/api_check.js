@@ -9,7 +9,7 @@ var Mock = require('mockjs')
 
 // 企业号组自用，express server 的 index 里面有 pageConfig.pjid
 feteApiProjectId = pageConfig && pageConfig.pjid ? pageConfig.pjid : feteApiProjectId
-feteApiCommonProjectId = pageConfig && pageConfig.commonPjid ? pageConfig.commonPjid : ''
+var feteApiCommonProjectId = pageConfig && pageConfig.commonPjid ? pageConfig.commonPjid : ''
 
 function ApiCheckMockTree2MockTemplate(data, result) {
   if (!result) {

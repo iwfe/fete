@@ -231,7 +231,9 @@ function ApiCheckVueResource() {
       const mockKey = req.method.toUpperCase() + req.url.replace(feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock', '')
       ApiCheckInput(mockKey, req.data)
       if (feteApiUseMockData) {
-        if (req.url.startsWith('/weixinEnt/common/')) {
+        if (req.url.startsWith('http')) {
+
+        } else if (req.url.startsWith('/weixinEnt/common/')) {
           req.url = feteApiHost + '/api/fete_api/' + feteApiCommonProjectId + '/mock' + req.url;
         } else {
           req.url = feteApiHost + '/api/fete_api/' + feteApiProjectId + '/mock' + req.url;

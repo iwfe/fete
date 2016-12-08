@@ -463,7 +463,6 @@ var sutil = {
         toUsers.push(users[i].username);
       }
     }
-    console.log(`===toUsers==${toUsers}`);
     // 保存消息对象
     let addToUsers = [];
     for(let i in toUsers) {
@@ -491,12 +490,13 @@ var sutil = {
   * copyApisByPrd (oldPrdId, newPrdId) {
     let copyCount = 0
     let apis = yield apiDao.find({prdId: oldPrdId})
+    let _now = Date.now()
     for (var i = apis.length - 1; i >= 0; i--) {
       apis[i] = _.extend(apis[i], {
         id: yield sutil.genId(apiDao, 8),
         prdId: newPrdId,
-        createTime: new Date,
-        updateTime: new Date
+        createTime: _now,
+        updateTime: _now
       })
       delete apis[i]._id
       try {

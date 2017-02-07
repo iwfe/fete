@@ -57,15 +57,19 @@ export default {
     }
   },
   data() {
+    const prjId = !pageConfig.me.project ? null : pageConfig.me.project.id
     return {
       host: pageConfig.host,
-      currentProjectId: pageConfig.me.project.id,
+      currentProjectId: prjId,
       orderKey: 'lastModify',
-      orderType: -1
+      orderType: -1,
+      queryPrdId: this.$route.query.prdId
     }
   },
   ready() {
-    this.getList(this.$route.query.prdId)
+    if (!this.queryPrdId) {
+      this.fetchPrdFirst(this.getList)
+    }
   },
   events: {
     reloadApiList(pid) {
@@ -82,6 +86,16 @@ export default {
     }
   },
   methods: {
+    fetchPrdFirst(cb) {
+      fetch('/prd/data/first').then(res => {
+        if (res.code === 200) {
+          this.queryPrdId = res.data.id
+          console.log(`prdId====${this.queryPrdId}`)
+          cb(res.data.id)
+        }
+      })
+    },
+
     getList(pid) {
       this.emptyList()  // empty list first
       fetch('/api/apis', {

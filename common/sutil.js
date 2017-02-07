@@ -74,6 +74,7 @@ var sutil = {
     delete user._id;
     delete user.teams;
     ctx.locals._user = user;
+    console.log(`data=====${data}`);
     yield ctx.render(data.tpl || 'layout', _.extend({
       commonTag: 'react_',
       staticTag: staticTag,

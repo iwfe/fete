@@ -18,7 +18,8 @@
     "no-unused-vars": 1,
     "object-shorthand": 1,
     "arrow-body-style": 1,
-    "no-new": 0
+    "no-new": 0,
+    "no-unused-expressions": 0
   },
   "globals": {
     "$": true,

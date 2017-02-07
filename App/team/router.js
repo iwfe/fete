@@ -32,9 +32,9 @@ router.get('/data', sutil.login, function*(next) {
   const teamIds = _.pluck(teams, 'id');
   if (teams && teams.length) {
     teams = yield teamDao.find({
-      id: {
-        $in: teamIds
-      }
+      // id: {
+      //   $in: teamIds
+      // }
     }, {
       sort: {createTime: -1}
     });

@@ -10,7 +10,7 @@
           <div class="menu">
             <a class="item"
               data-text="{{item.name}}"
-              href="/project?teamId={{item.id}}"
+              @click="fetchProject(item.id, true)"
               v-for="item in teamData">{{item.name}}</a>
           </div>
         </div>
@@ -23,7 +23,7 @@
           <div class="menu">
             <a class="item"
               data-text="{{item.name}}"
-              href="/prd?projectId={{item.id}}"
+              @click="fetchPrd(item.id, true)"
               v-for="item in projectData">{{item.name}}</a>
           </div>
         </div>
@@ -157,57 +157,78 @@ export default {
   },
   ready() {
     // set vuex state
-    this.changeFilter({
-      teamId: pageConfig.me.team.id,
-      projectId: pageConfig.me.project.id,
-      prdId: pageConfig.me.prd.id
-    })
+    // this.changeFilter({
+    //   teamId: pageConfig.me.team.id,
+    //   projectId: pageConfig.me.project.id,
+    //   prdId: pageConfig.me.prd.id
+    // })
 
     // team dropdown list
     this.fetchTeam()
 
-    // project dropdown list
-    this.fetchProject()
+    // this.fetchProject(this.currentTeam.id)
 
-    // prd dropdown list
-    this.fetchPrd()
+    // this.fetchPrd(this.currentProject.id)
 
-    // get apiRoot from an api record, by prdId
-    this.fetchLatestApi()
+    // this.fetchLatestApi(pageConfig.me.prd.id)
   },
   methods: {
     fetchTeam() {
       fetch('/team/data').then(res => {
         if (res.code === 200) {
           this.teamData = res.data
+
+          if (res.data.length > 0) {
+            !this.currentTeam && (pageConfig.me.team = res.data[0], this.currentTeam = res.data[0])
+            this.fetchProject(this.currentTeam.id)
+            // set vuex state
+            this.changeFilter({ teamId: pageConfig.me.team.id })
+          }
         }
       })
     },
-    fetchProject() {
+    fetchProject(teamId, isClick) {
+      const self = this
       fetch('/project/data', {
-        body: { teamId: this.currentTeam.id }
+        body: { teamId: teamId }
       }).then(res => {
         if (res.code === 200) {
           this.projectData = res.data
+
+          if (res.data.length > 0) {
+            (!self.currentProject || isClick) && (pageConfig.me.project = res.data[0], self.currentProject = res.data[0])
+            this.fetchPrd(self.currentProject.id, isClick)
+            // set vuex state
+            this.changeFilter({ projectId: pageConfig.me.project.id })
+          }
         }
       })
     },
-    fetchPrd() {
+    fetchPrd(projectId, isClick) {
       fetch('/prd/data', {
-        body: { projectId: this.currentProject.id }
+        body: { projectId: projectId }
       }).then(res => {
         if (res.code === 200) {
           this.prdData = res.data
-          this.setExceptPrd(this.prdData, 'name', this.currentPrd.name)
           // this.filterPrdData = this.$options.filters.exceptBy(this.prdData, this.currentPrd.name)
           this.setPrdList(res.data)
+
+          if (res.data.length > 0) {
+            (!this.currentPrd || isClick) && (pageConfig.me.prd = res.data[0], this.currentPrd = res.data[0])
+            this.setExceptPrd(this.prdData, 'name', this.currentPrd.name)
+            const pid = this.currentPrd.id
+            this.fetchLatestApi(pid)
+            this.$parent.$emit('reloadApiList', pid)
+            // set vuex state
+            this.changeFilter({ prdId: pid })
+          }
         }
       })
     },
-    fetchLatestApi() {
+    fetchLatestApi(prdId) {
       fetch('/api/getLatestApi', {
         body: {
-          prdId: pageConfig.me.prd.id
+          prdId: prdId
         }
       }).then(res => {
         this.apiRoot = res.data.root

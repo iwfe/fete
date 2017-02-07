@@ -14,17 +14,24 @@ const prdDao = wrap(db.get('prd'));
 import sutil from '../../common/sutil';
 
 // PRD
+router.get('/data/first', sutil.login, function*(next) {
+  sutil.success(this, yield prdDao.findOne({}, {
+    sort: {createTime: -1}
+  }));
+});
+
 router.get('/', sutil.projectLogin, function*(next) {
   yield sutil.render(this, {});
 });
 
-router.get('/data', sutil.projectLogin, function*(next) {
+router.get('/data', sutil.login, function*(next) {
   sutil.success(this, yield prdDao.find({
     projectId: this.parse.projectId
   }, {
     sort: {createTime: -1}
   }));
 });
+
 
 router.post('/data', sutil.projectLogin, function*(next) {
   const parse = this.parse;

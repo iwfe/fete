@@ -28,7 +28,7 @@ router.get('/:projectId', sutil.setRouterParams, sutil.projectLogin, function*(n
   });
 });
 
-router.get('/data', sutil.teamLogin(), function*(next) {
+router.get('/data', sutil.login, function*(next) {
     sutil.success(this, yield projectDao.find({
       teamId: this.parse.teamId
     }, {

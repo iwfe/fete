@@ -34,7 +34,7 @@ import util from '../../common/util.js'
 import config from '../../config.js'
 
 // api 管理平台
-router.get('/', sutil.prdLogin, function*(next) {
+router.get('/', sutil.login, function*(next) {
   yield sutil.render(this, {
     commonTag: 'vue',
     html: '',
@@ -76,7 +76,7 @@ router.get('/detail_preview', function*(next) {
 
 // CURD for api
 // api 列表
-router.get('/apis', sutil.prdLogin, function*(next) {
+router.get('/apis', sutil.login, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003)
     }
@@ -101,7 +101,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     sutil.success(this, obj)
   })
   // 新建一个 api
-  .post('/apis', sutil.prdLogin, function*(next) {
+  .post('/apis', sutil.login, function*(next) {
     if (!this.parse.apiData) {
       sutil.failed(this, 1003)
     }
@@ -129,7 +129,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   //拉取api列表
-  .get('/apis/pull', sutil.prdLogin, function*(next) {
+  .get('/apis/pull', sutil.login, function*(next) {
     if (!this.parse.prdId || !this.parse.originPrdId) {
       sutil.failed(this, 1003)
     }
@@ -178,7 +178,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 获取某个api详细信息
-  .get('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .get('/apis/:id', sutil.setRouterParams, sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -186,7 +186,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     sutil.success(this, data);
   })
   // 更新某个 api, 需要提供完整 api 对象
-  .put('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .put('/apis/:id', sutil.setRouterParams, sutil.login, function*(next) {
     let param = this.parse;
     if (!param.id) {
       sutil.failed(this, 1003);
@@ -219,7 +219,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 更新某个 api, 仅提供更新的字段
-  .patch('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .patch('/apis/:id', sutil.setRouterParams, sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -237,7 +237,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   //拉取同步某个api
-  .get('/apis/pullone', sutil.prdLogin, function*(next) {
+  .get('/apis/pullone', sutil.login, function*(next) {
     if (!this.parse.id && !this.parse.originPrdId) {
       sutil.failed(this, 1003);
     }
@@ -269,7 +269,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
     }
   })
   // 删除某个 api
-  .delete('/apis/:id', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .delete('/apis/:id', sutil.setRouterParams, sutil.login, function*(next) {
     if (!this.parse.id) {
       sutil.failed(this, 1003);
     }
@@ -287,7 +287,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
   })
 
   // 根据prdId获取最新的API
-  .get('/getLatestApi', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .get('/getLatestApi', sutil.setRouterParams, sutil.login, function*(next) {
     if (!this.parse.prdId) {
       sutil.failed(this, 1003)
     }
@@ -300,7 +300,7 @@ router.get('/apis', sutil.prdLogin, function*(next) {
   })
 
   // 更新最新的API root 字段
-  .patch('/apiRoot', sutil.setRouterParams, sutil.prdLogin, function*(next) {
+  .patch('/apiRoot', sutil.setRouterParams, sutil.login, function*(next) {
     if (!this.parse.prdId && !this.parse.apiRoot) {
       sutil.failed(this, 1003)
     }

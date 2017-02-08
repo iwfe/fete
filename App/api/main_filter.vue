@@ -7,7 +7,7 @@
         <div class="ui inline dropdown">
           <div class="text">{{currentTeam.name}}</div>
           <i class="dropdown icon"></i>
-          <div class="menu">
+          <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
               @click="fetchProject(item.id, true)"
@@ -20,7 +20,7 @@
         <div class="ui inline dropdown">
           <div class="text">{{currentProject.name}}</div>
           <i class="dropdown icon"></i>
-          <div class="menu">
+          <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
               @click="fetchPrd(item.id, true)"
@@ -34,7 +34,7 @@
         <div class="ui inline dropdown">
           <div class="text">{{currentPrd.name}}</div>
           <i class="dropdown icon"></i>
-          <div class="menu">
+          <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
               v-link="{name: 'list', query: {prdId: item.id}}"
@@ -334,5 +334,9 @@ export default {
   }
   .ui.button {
     padding: .4rem .8rem;
+  }
+  .filter-menu {
+    max-height: 500px;
+    overflow: scroll;
   }
 </style>

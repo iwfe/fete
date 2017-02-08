@@ -26,7 +26,7 @@
                 <td><span @click="showJSON">{{item.method}}</span></td>
                 <td>{{item.lastModify}}</td>
                 <td v-show="exceptMePrdData.length && originPrd"><a class="mini ui blue basic button" @click.stop="pullApi(item)">拉取</a></td>
-                <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{$route.query.prdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
+                <td><a class="mini ui button" href="{{host}}/api/fete_api/{{currentProjectId}}/{{currentPrdId}}/mock{{apiRoot}}{{item.url}}" target="_blank" @click="$event.stopPropagation()">预览</a></td>
             </tr>
         </tbody>
     </table>
@@ -37,7 +37,7 @@
 <script>
 import { tog, add, emptyList, setList, addEvent, setCategories } from './vuex/action'
 import MainFilter from './main_filter.vue'
-import { list, listActive, apiRoot, cateActive, originPrd, exceptMePrdData, categories } from './vuex/getters.js'
+import { list, listActive, apiRoot, cateActive, originPrd, exceptMePrdData, categories, projectId, prdId } from './vuex/getters.js'
 export default {
   components: {
     MainFilter
@@ -50,20 +50,28 @@ export default {
       cateActive,
       originPrd,
       exceptMePrdData,
-      categories
+      categories,
+      projectId,
+      prdId
     },
     actions: {
       tog, add, emptyList, setList, setCategories
     }
   },
   data() {
-    const prjId = !pageConfig.me.project ? null : pageConfig.me.project.id
     return {
       host: pageConfig.host,
-      currentProjectId: prjId,
       orderKey: 'lastModify',
       orderType: -1,
       queryPrdId: this.$route.query.prdId
+    }
+  },
+  computed: {
+    currentProjectId() {
+      return !pageConfig.me.project ? this.projectId : pageConfig.me.project.id
+    },
+    currentPrdId() {
+      return !this.$route.query.prdId ? this.prdId : this.$route.query.prdId
     }
   },
   ready() {

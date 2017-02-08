@@ -17,6 +17,10 @@ router.map({
         name: 'list',
         component: require('./main_list.vue')
       },
+      '/api/all': {
+        name: 'list',
+        component: require('./main_list.vue')
+      },
       '/api/j2j': {
         name: 'java2json',
         component: require('./java2json.vue')

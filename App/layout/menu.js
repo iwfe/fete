@@ -18,7 +18,7 @@ const menus = [{
 }, {
     key: 'api',
     text: 'API',
-    link: '/api',
+    link: '/api/all',
     isVueLink: false
 }];
 

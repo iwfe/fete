@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     fetchTeam() {
-      fetch('/team/data').then(res => {
+      fetch('/team/alldata').then(res => {
         if (res.code === 200) {
           this.teamData = res.data
 
@@ -189,7 +189,7 @@ export default {
     },
     fetchProject(teamId, isClick) {
       const self = this
-      fetch('/project/data', {
+      fetch('/project/alldata', {
         body: { teamId: teamId }
       }).then(res => {
         if (res.code === 200) {
@@ -205,7 +205,7 @@ export default {
       })
     },
     fetchPrd(projectId, isClick) {
-      fetch('/prd/data', {
+      fetch('/prd/alldata', {
         body: { projectId: projectId }
       }).then(res => {
         if (res.code === 200) {

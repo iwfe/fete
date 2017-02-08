@@ -24,7 +24,8 @@ router.get('/', sutil.projectLogin, function*(next) {
   yield sutil.render(this, {});
 });
 
-router.get('/data', sutil.login, function*(next) {
+// 所有数据，不受权限限制
+router.get('/alldata', sutil.login, function*(next) {
   sutil.success(this, yield prdDao.find({
     projectId: this.parse.projectId
   }, {
@@ -32,6 +33,13 @@ router.get('/data', sutil.login, function*(next) {
   }));
 });
 
+router.get('/data', sutil.projectLogin, function*(next) {
+  sutil.success(this, yield prdDao.find({
+    projectId: this.parse.projectId
+  }, {
+    sort: {createTime: -1}
+  }));
+});
 
 router.post('/data', sutil.projectLogin, function*(next) {
   const parse = this.parse;
@@ -73,10 +81,10 @@ router.put('/data', sutil.projectLogin, function*(next) {
     return false;
   }
 
-  if (prd.createUser !== user.username) {
-    sutil.failed(this, 13001);
-    return false;
-  }
+  // if (prd.createUser !== user.username) {
+  //   sutil.failed(this, 13001);
+  //   return false;
+  // }
 
 
   yield prdDao.update({

@@ -26,15 +26,23 @@ const prdDao = wrap(db.get('prd'));
 
 import sutil from '../../common/sutil';
 
+
+router.get('/alldata', sutil.login, function*(next) {
+  let teams = yield teamDao.find({}, {
+    sort: {createTime: -1}
+  });
+  sutil.success(this, teams);
+});
+
 router.get('/data', sutil.login, function*(next) {
   const user = this.locals._user;
   let teams = user.teams;
   const teamIds = _.pluck(teams, 'id');
   if (teams && teams.length) {
     teams = yield teamDao.find({
-      // id: {
-      //   $in: teamIds
-      // }
+      id: {
+        $in: teamIds
+      }
     }, {
       sort: {createTime: -1}
     });

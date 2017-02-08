@@ -34,7 +34,14 @@ import util from '../../common/util.js'
 import config from '../../config.js'
 
 // api 管理平台
-router.get('/', sutil.login, function*(next) {
+router.get('/', sutil.prdLogin, function*(next) {
+  yield sutil.render(this, {
+    commonTag: 'vue',
+    html: '',
+    staticTag: 'api',
+    noHeader: true
+  });
+}).get('/all', sutil.login, function*(next) {
   yield sutil.render(this, {
     commonTag: 'vue',
     html: '',
@@ -81,7 +88,7 @@ router.get('/apis', sutil.login, function*(next) {
       sutil.failed(this, 1003)
     }
     let data = yield apiDao.find({ prdId: this.parse.prdId }, {
-      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1, category: 1 },
+      fields: { _id: 0, id: 1, title: 1, url: 1, method: 1, updateDescList: 1, createTime: 1, updateTime: 1, category: 1, projectId: 1, prdId: 1 },
       sort: { updateTime: -1 }
     })
     let [categories, obj] = [[], {}]
@@ -321,6 +328,7 @@ router.all('/fete_api/:projectId/:prdId?/mock*', sutil.setRouterParams, sutil.al
   if (this.parse.prdId) {
     filter.prdId = this.parse.prdId
   }
+  console.log(filter)
 
   let apiItems = yield apiDao.find(filter, {
     fields: { _id: 0, id: 1, url: 1, root: 1, createTime: 1 },

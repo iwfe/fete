@@ -195,8 +195,9 @@ export default {
         this.sendLoad = false
         toastr.error(this.editorError.msg)
       } else if (!this.verifyModifyImportant() && !this.updateDesc) {
-        toastr.error('请输入接口修改说明！')
-        this.sendLoad = false
+        // toastr.error('请输入接口修改说明！')
+        // this.sendLoad = false
+        this.updateDesc = '更新了一些关键数据'
       }
 
       if (this.sendLoad === false) {

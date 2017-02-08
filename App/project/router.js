@@ -28,7 +28,16 @@ router.get('/:projectId', sutil.setRouterParams, sutil.projectLogin, function*(n
   });
 });
 
-router.get('/data', sutil.login, function*(next) {
+// 所有数据，不受权限限制
+router.get('/alldata', sutil.login, function*(next) {
+    sutil.success(this, yield projectDao.find({
+      teamId: this.parse.teamId
+    }, {
+      sort: {createTime: -1}
+    }));
+});
+
+router.get('/data', sutil.teamLogin(), function*(next) {
     sutil.success(this, yield projectDao.find({
       teamId: this.parse.teamId
     }, {

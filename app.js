@@ -120,6 +120,7 @@ import prd from './App/prd/router';
 import apiModule from './App/api/router';
 import msgModule from './App/message/router';
 import importdb from './App/importdb/router';
+import calendarModule from './App/calendar/router';
 import user from './App/user/router';
 app.use(main.routes());
 app.use(team.routes());
@@ -128,6 +129,7 @@ app.use(prd.routes());
 app.use(apiModule.routes());
 app.use(msgModule.routes());
 app.use(importdb.routes());
+app.use(calendarModule.routes());
 app.use(user.routes());
 
 app.on('error', function(err) {

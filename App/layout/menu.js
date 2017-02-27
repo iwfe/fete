@@ -20,6 +20,11 @@ const menus = [{
     text: 'API',
     link: '/api/all',
     isVueLink: false
+}, {
+    key: 'calendar',
+    text: '日历',
+    link: '/calendar',
+    isVueLink: false
 }];
 
 export default menus;

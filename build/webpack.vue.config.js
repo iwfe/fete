@@ -16,6 +16,7 @@ module.exports = {
     api: './App/api/index.js',
     message: './App/message/index.js',
     importdb: './App/importdb/index.js',
+    calendar: './App/calendar/index.js',
     vue_common: [
       'vue',
       'vue-router',

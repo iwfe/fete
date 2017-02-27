@@ -5,9 +5,11 @@
   "scripts": {
     "start": "node ./bin/server",
     "dev-vue": "webpack-dev-server --port=3811 --config=build/webpack.vue.dev.config.js --inline --hot",
-    "build": "gulp --product && gulp --zip"
+    "build": "gulp --product && gulp --zip",
+    "server": "supervisor --harmony server.js"
   },
   "dependencies": {
+    "adm-zip": "*",
     "antd": "*",
     "arale": "^0.2.0",
     "babel-core": "^6.7.4",
@@ -32,6 +34,7 @@
     "co-monk": "*",
     "co-views": "*",
     "codemirror": "^5.16.0",
+    "components-jqueryui": "github:components/jqueryui",
     "css-loader": "^0.16.0",
     "emit": "0.0.2",
     "exports-loader": "^0.6.2",
@@ -40,6 +43,7 @@
     "file-loader": "~0.8.4",
     "fs": "0.0.2",
     "fs-extra": "*",
+    "fullcalendar": "*",
     "gulp-minify-css": "*",
     "gulp-rename": "*",
     "gulp-uglify": "*",
@@ -94,8 +98,7 @@
     "vuex": "^0.8.0",
     "webpack": "~1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "whatwg-fetch": "*",
-    "adm-zip": "*"
+    "whatwg-fetch": "*"
   },
   "devDependencies": {
     "eslint": "^2.13.1",

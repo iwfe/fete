@@ -113,7 +113,8 @@ class AddPrd extends Component {
     });
     const mrdTimeProps = getFieldProps('mrdTime', {
       getValueFromEvent: (value, timeString) => timeString,
-      initialValue: prd && prd.mrdTime ? new Date(prd.mrdTime) : new Date()
+      initialValue: prd && prd.mrdTime ? new Date(prd.mrdTime) : new Date(),
+      showTime: true
     });
     const prdTimeProps = getFieldProps('prdTime', {
       getValueFromEvent: (value, timeString) => timeString,

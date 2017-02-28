@@ -37,7 +37,6 @@
           <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
-              v-link="{name: 'list', query: {prdId: item.id}}"
               @click="changePrdApi(item)"
               v-for="item in prdData">{{item.name}}</a>
           </div>
@@ -141,6 +140,13 @@ export default {
       currentPrd: pageConfig.me.prd,
       host: pageConfig.host,
       apiRoot: '',
+    }
+  },
+  watch: {
+    currentPrd(val, old) {
+      let param = `?prdId=${val.id}`
+      if (location.href.indexOf('all') !== -1) param = `./${param}`
+      history.pushState('', '', param);
     }
   },
   attached() {
@@ -254,6 +260,9 @@ export default {
     changePrdApi(item) {
       const pid = item.id
       const name = item.name
+      // 更新prd
+      pageConfig.me.prd = item
+      this.currentPrd = item
       this.changeFilter({ prdId: pid })
       this.setExceptPrd(this.prdData, 'name', name)
       // this.filterPrdData = this.$options.filters.exceptBy(this.prdData, name)

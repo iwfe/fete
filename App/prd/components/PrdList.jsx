@@ -20,17 +20,13 @@ export default class PrdList extends Component {
 
   render() {
     const {prds, showProject, actions} = this.props;
+    let rowClassName = () => { return '' }
     const columns = [
       {
         title: '版本号',
         dataIndex: 'name',
         key: 'name',
         width: 60,
-      }, {
-        title: '主要功能',
-        dataIndex: 'description',
-        key: 'description',
-        width: 150,
       }, {
         title: '项目类型',
         dataIndex: 'type',
@@ -47,51 +43,69 @@ export default class PrdList extends Component {
         dataIndex: 'testTimeUI',
         key: 'testTimeUI',
         width: 80,
+        sorter: (a, b) => a.testTime - b.testTime
       }, {
         title: '上线时间',
         dataIndex: 'onlineTimeUI',
         key: 'onlineTimeUI',
         width: 80,
+        sorter: (a, b) => a.onlineTime - b.onlineTime
+      }, {
+        title: '是否合master',
+        dataIndex: 'mergeMaster',
+        key: 'mergeMaster',
+        width: 90,
       }, {
         title: '产品',
         dataIndex: 'pm',
         key: 'pm',
+        width: 80,
+      }, {
+        title: '开发人员',
+        dataIndex: 'developer',
+        key: 'developer',
         width: 100,
       }, {
-        title: '自测',
-        dataIndex: 'selfTest',
-        key: 'selfTest',
-        width: 40,
-      }, {
-        title: 'JIRA地址',
-        dataIndex: 'jira',
-        key: 'jira',
-        width: 100,
-        render: (text, prd) =>
-          <a href={prd.jira} target="_blank">{prd.jira}</a>
-      }, {
-        title: 'svn地址',
-        dataIndex: 'svn',
-        key: 'svn',
-        width: 150,
-        render: (text, prd) =>
-          <a href={prd.svn} target="_blank">{prd.svn}</a>
-      }, {
-        title: '备注',
-        dataIndex: 'comment',
-        key: 'comment',
-      }];
+        title: '主要功能',
+        dataIndex: 'description',
+        key: 'description',
+        width: 200,
+      }
+      // , {
+      //   title: 'JIRA地址',
+      //   dataIndex: 'jira',
+      //   key: 'jira',
+      //   width: 100,
+      //   render: (text, prd) =>
+      //     <a href={prd.jira} target="_blank">{prd.jira}</a>
+      // }, {
+      //   title: 'svn地址',
+      //   dataIndex: 'svn',
+      //   key: 'svn',
+      //   width: 150,
+      //   render: (text, prd) =>
+      //     <a href={prd.svn} target="_blank">{prd.svn}</a>
+      // }, {
+      //   title: '备注',
+      //   dataIndex: 'comment',
+      //   key: 'comment',
+      // }
+    ];
     if (showProject) {
       columns.splice(0, 0, {
         title: '所属项目',
         dataIndex: 'project',
         key: 'project',
-        width: 70,
+        width: 100,
         render: (text, prd) =>
           <div>
             <a target="_blank" href={`/prd?projectId=${prd.projectId}`}>{prd.project.name}</a>
           </div>
       })
+      rowClassName = (record, index) => {
+        if (record.phaseOrder === 7 && record.mergeMaster === '是') return `phase-bg8`
+        return `phase-bg${record.phaseOrder}`
+      }
     }
     if (actions) {
       columns.splice(0, 0, {
@@ -141,7 +155,7 @@ export default class PrdList extends Component {
       item.phaseOrder = phaseOrder;
     })
     return (
-      <Table dataSource={prds} columns={columns} useFixedHeader={true} rowKey={prd => prd.id}/>
+      <Table dataSource={prds} columns={columns} rowClassName={rowClassName} useFixedHeader={true} rowKey={prd => prd.id}/>
     )
   }
 }

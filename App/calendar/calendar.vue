@@ -9,59 +9,18 @@
   // require('fullcalendar/dist/fullcalendar.print.css')
   require('jquery/dist/jquery.js')
   require('moment/moment.js')
+  require('../../plugins/jquery.qtip.min.css')
+  require('../../plugins/jquery.qtip.min.js')
   require('fullcalendar/dist/fullcalendar.js')
+
+  import util from '../../common/util.js'
   export default {
     ready() {
       this.getEventList()
     },
     data() {
       return {
-        events: [{
-          title: 'sdfdsfdsfsdfdsfsdf',
-          start: 1487920714545
-        }, {
-          title: 'All Day Event',
-          start: '2017-02-01'
-        }, {
-          title: 'Long Event',
-          start: '2017-02-07',
-          end: '2017-02-10'
-        }, {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2017-02-09T16:00:00'
-        }, {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2017-02-16T16:00:00'
-        }, {
-          title: 'Conference',
-          start: '2017-02-11',
-          end: '2017-02-13'
-        }, {
-          title: 'Meeting',
-          start: '2017-02-12T10:30:00',
-          end: '2017-02-12T12:30:00'
-        }, {
-          title: 'Lunch',
-          start: '2017-02-12T12:00:00'
-        }, {
-          title: 'Meeting',
-          start: '2017-02-12T14:30:00'
-        }, {
-          title: 'Happy Hour',
-          start: '2017-02-12T17:30:00'
-        }, {
-          title: 'Dinner',
-          start: '2017-02-12T20:00:00'
-        }, {
-          title: 'Birthday Party',
-          start: '2017-02-13T07:00:00'
-        }, {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2017-02-28'
-        }]
+        events: []
       }
     },
     methods: {
@@ -83,7 +42,12 @@
           navLinks: true, // can click day/week names to navigate views
           editable: true,
           eventLimit: true, // allow "more" link when too many events
-          events: events
+          events: events,
+          eventRender: function (event, element) {
+            element.qtip({
+              content: event.description
+            })
+          }
         })
 
         // build the locale selector's options
@@ -120,22 +84,26 @@
             self.__createEvents(`联调_${title}`, prd.apiTime, events)
             self.__createEvents(`提测_${title}`, prd.testTime, events)
             self.__createEvents(`beta_${title}`, prd.betaTime, events)
-            self.__createEvents(`上线_${title}`, prd.onlineTime, events)
+            self.__createEvents(`上线_${title}`, prd.onlineTime, events, { className: 'red' })
           })
-
+          // console.log(`${JSON.stringify(events)}`);
           // 初始化
           self.__initFullCalendar(events)
         })
       },
-      __createEvents(title, eventTime, events) {
+      __createEvents(title, eventTime, events, assignObj) {
         if (!eventTime) return
-        console.log(`eventTime${eventTime}`);
-        events.push({
+        const d = new Date(eventTime)
+        eventTime = util.formateDate(d, '%Y-%m-%dT%H:%M:%S')
+        const content = `${title}\n开始时间：${util.formateDate(d, '%H:%M')}`
+
+        events.push(Object.assign({
           title: title,
-          start: eventTime
+          start: eventTime,
+          description: content
           // end: '2017-02-12T12:30:00',
           // url: ''
-        })
+        }, assignObj))
       }
     }
   }
@@ -159,6 +127,9 @@
     }
     .fc-event {
       border-color: #8dc9ec;
+    }
+    .red {
+      color: #e84a01;
     }
   }
 </style>

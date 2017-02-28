@@ -65,3 +65,24 @@
     right: 10px;
   }
 }
+
+/*未开始，mrd，prd*/
+.phase-bg0, .phase-bg1, .phase-bg2 {
+  background: #c3f4cb;
+}
+/*开发，连调*/
+.phase-bg3, .phase-bg4{
+  background: #f6ecb8;
+}
+/*test测试，beta测试*/
+.phase-bg5, .phase-bg6 {
+  background: #f2b48f;
+}
+/*上线*/
+.phase-bg7{
+  background: #c298c4;
+}
+/*已合master*/
+.phase-bg8 {
+  background: #a980b0;
+}

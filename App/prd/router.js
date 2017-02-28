@@ -53,8 +53,6 @@ router.post('/data', sutil.projectLogin, function*(next) {
     sort: {createTime: -1}
   });
 
-  console.log(oldPrd)
-
   const prd = yield prdDao.insert(Object.assign({}, {
     id: id,
     teamId: project.teamId,

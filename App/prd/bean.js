@@ -12,6 +12,7 @@ const prd = {
   name: '', //prd名称
   description: '', //prd描述
   pm: '', //产品经理
+  developer: '', // 开发人员
   type: '', //prd类型
   selfTest: false,//是否自测
   jira: '',//jira地址
@@ -28,8 +29,8 @@ const prd = {
   teamId: '',   //团队id
   createUser: '', //创建人
   createTime: '', //创建时间
-  updateTime: '' //更新时间
-
+  updateTime: '', //更新时间
+  mergeMaster: false // 是否合到 master分支 1:是，2:否
   /*
   prjName: '',
   prjDir: '', //目录名，英文名

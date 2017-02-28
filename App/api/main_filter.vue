@@ -10,7 +10,7 @@
           <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
-              @click="fetchProject(item.id, true)"
+              @click="fetchProject(item, true)"
               v-for="item in teamData">{{item.name}}</a>
           </div>
         </div>
@@ -23,7 +23,7 @@
           <div class="menu filter-menu">
             <a class="item"
               data-text="{{item.name}}"
-              @click="fetchPrd(item.id, true)"
+              @click="fetchPrd(item, true)"
               v-for="item in projectData">{{item.name}}</a>
           </div>
         </div>
@@ -180,15 +180,20 @@ export default {
 
           if (res.data.length > 0) {
             !this.currentTeam && (pageConfig.me.team = res.data[0], this.currentTeam = res.data[0])
-            this.fetchProject(this.currentTeam.id)
+            this.fetchProject(this.currentTeam)
             // set vuex state
             this.changeFilter({ teamId: pageConfig.me.team.id })
           }
         }
       })
     },
-    fetchProject(teamId, isClick) {
-      const self = this
+    fetchProject(team, isClick) {
+      const [self, teamId] = [this, team.id]
+      // 更新team
+      pageConfig.me.team = team
+      self.currentTeam = team
+      this.changeFilter({ teamId: teamId })
+
       fetch('/project/alldata', {
         body: { teamId: teamId }
       }).then(res => {
@@ -197,14 +202,20 @@ export default {
 
           if (res.data.length > 0) {
             (!self.currentProject || isClick) && (pageConfig.me.project = res.data[0], self.currentProject = res.data[0])
-            this.fetchPrd(self.currentProject.id, isClick)
+            this.fetchPrd(self.currentProject, isClick)
             // set vuex state
             this.changeFilter({ projectId: pageConfig.me.project.id })
           }
         }
       })
     },
-    fetchPrd(projectId, isClick) {
+    fetchPrd(project, isClick) {
+      const [self, projectId] = [this, project.id]
+      // 更新project
+      pageConfig.me.project = project
+      self.currentProject = project
+      this.changeFilter({ projectId: projectId })
+
       fetch('/prd/alldata', {
         body: { projectId: projectId }
       }).then(res => {

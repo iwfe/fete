@@ -40,6 +40,7 @@ class AddPrd extends Component {
             'name',
             'description',
             'pm',
+            'developer',
             'type',
             'selfTest',
             'jira',
@@ -51,7 +52,8 @@ class AddPrd extends Component {
             'apiTime',
             'testTime',
             'betaTime',
-            'onlineTime'
+            'onlineTime',
+            'mergeMaster'
           ]),
           {
             id: prd && prd.id
@@ -88,6 +90,8 @@ class AddPrd extends Component {
       ],
       id: 'name',
       initialValue: prd && prd.name
+      // format="YYYY-MM-DD HH:mm",
+      // showTime: true
     });
 
     const descriptionProps = getFieldProps('description', {
@@ -95,6 +99,9 @@ class AddPrd extends Component {
     });
     const pmProps = getFieldProps('pm', {
       initialValue: prd && prd.pm
+    });
+    const developerProps = getFieldProps('developer', {
+      initialValue: prd && prd.developer
     });
     const typeProps = getFieldProps('type', {
       initialValue: prd && prd.type
@@ -113,8 +120,7 @@ class AddPrd extends Component {
     });
     const mrdTimeProps = getFieldProps('mrdTime', {
       getValueFromEvent: (value, timeString) => timeString,
-      initialValue: prd && prd.mrdTime ? new Date(prd.mrdTime) : new Date(),
-      showTime: true
+      initialValue: prd && prd.mrdTime ? new Date(prd.mrdTime) : ''
     });
     const prdTimeProps = getFieldProps('prdTime', {
       getValueFromEvent: (value, timeString) => timeString,
@@ -122,11 +128,12 @@ class AddPrd extends Component {
     });
     const devTimeProps = getFieldProps('devTime', {
       getValueFromEvent: (value, timeString) => timeString,
-      initialValue: prd && prd.devTime ? new Date(prd.devTime) : new Date()
+      initialValue: prd && prd.devTime ? new Date(prd.devTime) : new Date(),
+      showTime: true
     });
     const apiTimeProps = getFieldProps('apiTime', {
       getValueFromEvent: (value, timeString) => timeString,
-      initialValue: prd && prd.apiTime? new Date(prd.apiTime) : new Date()
+      initialValue: prd && prd.apiTime? new Date(prd.apiTime) : ''
     });
     const testTimeProps = getFieldProps('testTime', {
       getValueFromEvent: (value, timeString) => timeString,
@@ -134,11 +141,14 @@ class AddPrd extends Component {
     });
     const betaTimeProps = getFieldProps('betaTime', {
       getValueFromEvent: (value, timeString) => timeString,
-      initialValue: prd && prd.betaTime ? new Date(prd.betaTime) : new Date()
+      initialValue: prd && prd.betaTime ? new Date(prd.betaTime) : ''
     });
     const onlineTimeProps = getFieldProps('onlineTime', {
       getValueFromEvent: (value, timeString) => timeString,
       initialValue: prd && prd.onlineTime ? new Date(prd.onlineTime) : new Date()
+    });
+    const mergeMasterProps = getFieldProps('mergeMaster', {
+      initialValue: prd && prd.mergeMaster ? prd.mergeMaster : '否'
     });
 
     return (
@@ -190,6 +200,15 @@ class AddPrd extends Component {
           </FormItem>
           <FormItem
             {...formItemLayout}
+            label="开发人员： ">
+            <Input
+              name="developer"
+              {...developerProps}
+              placeholder="请输入开发人员"
+            />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
             label="是否自测： ">
             <RadioGroup {...selfTestProps}>
               <Radio value="是">是</Radio>
@@ -217,37 +236,45 @@ class AddPrd extends Component {
           <FormItem
             {...formItemLayout}
             label="mrd时间： ">
-            <DatePicker {...mrdTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...mrdTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="prd时间： ">
-            <DatePicker {...prdTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...prdTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="开发时间： ">
-            <DatePicker {...devTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...devTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="联调时间： ">
-            <DatePicker {...apiTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...apiTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="提测时间： ">
-            <DatePicker {...testTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...testTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="beta测试： ">
-            <DatePicker {...betaTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...betaTimeProps} />
           </FormItem>
           <FormItem
             {...formItemLayout}
             label="上线时间： ">
-            <DatePicker {...onlineTimeProps} />
+            <DatePicker showTime format="yyyy-MM-dd HH:mm" {...onlineTimeProps} />
+          </FormItem>
+          <FormItem
+            {...formItemLayout}
+            label="是否合master： ">
+            <RadioGroup {...mergeMasterProps}>
+              <Radio value="是">是</Radio>
+              <Radio value="否">否</Radio>
+            </RadioGroup>
           </FormItem>
           <FormItem
             {...formItemLayout}

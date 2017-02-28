@@ -16,8 +16,9 @@
           </div>
       </div>
       <div class="field output-field clearfix-sp">
-          <label><i class="red">*</i>返回数据格式</label>
-          <div class="output-editor">
+          <label><i class="red">*</i>返回数据格式<i :title="isHideOutputData ? '展开' : '隐藏'" @click="isHideOutputData = !isHideOutputData" class="chevron circle icon" :class="isHideOutputData ? 'up' : 'down'"></i>
+          </label>
+          <div class="output-editor" :class="{'hide' : isHideOutputData}">
             <div class='input-frame'>
               <form>
                 <textarea v-el:outputeditor ></textarea>
@@ -141,7 +142,9 @@ export default {
       testData: '',
       mockData: 'lalla',
       parants: '',
-      editorReady: false
+      editorReady: false,
+
+      isHideOutputData: false // 是否隐藏返回数据格式
     }
   },
   watch: {
@@ -487,11 +490,15 @@ export default {
       min-height:300px;
       border-right: 1px solid rgb(221,221,221);
     }
+    .CodeMirror-scroll{
+      max-height:800px;
+    }
     .mock-frame{
         /* display:inline-block; */
         float:right;
         width:50%;
         min-height:300px;
+        max-height:800px;
         /* border:1px solid rgb(221,221,221) */
     }
     .save-button{
@@ -512,6 +519,14 @@ export default {
     }
     .table-head{
       font-weight: bold;
+    }
+    .icon.chevron {
+      font-size: 16px;
+      color: #3380b6;
+      cursor: pointer;
+    }
+    .hide {
+      display: none;
     }
   }
   .CodeMirror-gutters{

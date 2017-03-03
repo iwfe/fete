@@ -33,6 +33,7 @@ module.exports = {
       './App/layout/layout.js',
       './App/layout/layout.scss',
       './socket/client.js',
+      './notify/index.js',
       'toastr/toastr.less',
       'toastr',
     ]

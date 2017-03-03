@@ -9,6 +9,8 @@
 const prd = {
   _id: '',
   id: '', //自己生成的prdid
+  'teamId' : 'MdoXhb',
+  'projectId' : 'sUjNtV',
   name: '', //prd名称
   description: '', //prd描述
   pm: '', //产品经理

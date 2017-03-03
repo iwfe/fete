@@ -27,6 +27,7 @@ module.exports = {
       'toastr',
       'clipboard',
       './socket/client.js',
+      './notify/index.js',
       'semantic-ui/dist/components/reset.css',
       'semantic-ui/dist/components/transition.css',
       'semantic-ui/dist/components/transition.js',

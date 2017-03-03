@@ -2,11 +2,14 @@
   "name": "sri-node",
   "version": "0.0.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
     "start": "node ./bin/server",
     "dev-vue": "webpack-dev-server --port=3811 --config=build/webpack.vue.dev.config.js --inline --hot",
     "build": "gulp --product && gulp --zip",
-    "server": "supervisor --harmony server.js"
+    "server": "supervisor --harmony server.js",
+    "startapp": "electron .",
+    "appPackage": "electron-packager ./ electronDemo --platform=mas --out ~/iwjw/deskapp/electronDemo --version 0.1.1 --overwrite --download.mirror=https://npm.taobao.org/mirrors/electron/"
   },
   "dependencies": {
     "adm-zip": "*",
@@ -114,6 +117,7 @@
     "vue-html-loader": "^1.2.2",
     "vue-loader": "^8.5.2",
     "vue-style-loader": "^1.0.0",
-    "webpack-notifier": "^1.3.0"
+    "webpack-notifier": "^1.3.0",
+    "electron": "^1.4.1"
   }
 }
